@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #16305c;
+  --navy-deep: #0f2f5e;
+  --navy-mid: #2e4a75;
+  --cream: #f6f0e9;
+  --slate-brand: #6c82a2;
+  --slate-steel: #a5b8d0;
+  --slate-pale: #d8e3f0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  background: var(--navy);
+  font-family: 'Kanit', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  overflow-x: clip;
+}
+
+/* Gradient headline treatment — steel to pale, the navy-context analogue of
+   the reference's silver-on-black. */
+.headline-gradient {
+  background: linear-gradient(180deg, var(--slate-brand) 0%, var(--slate-pale) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+::selection {
+  background: var(--slate-steel);
+  color: var(--navy);
+}
+
+/* Lenis coordinates its virtual scroll with the document via these. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* The pinned sequences stack their panels absolutely and reveal one at a
+     time. With the scroll animation gone, that would render every panel on
+     top of the others — so lay them out in normal flow instead. */
+  [data-sequence] {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  [data-sequence-track] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5rem !important;
+    min-height: 0 !important;
+  }
+
+  [data-sequence-track] > [data-question],
+  [data-sequence-track] > [data-belief] {
+    position: relative !important;
+    inset: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+  }
+}
