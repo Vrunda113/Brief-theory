@@ -32,7 +32,7 @@ export function Hero({ ready }: HeroProps) {
           {/* Two lines on phones, one on anything wider — the full lockup at a
               legible size overruns a narrow viewport. */}
           <motion.h1
-            className="headline-gradient w-full text-center text-[20vw] font-black uppercase leading-[0.88] tracking-tight sm:whitespace-nowrap sm:text-[15vw] sm:leading-none"
+            className="headline-gradient w-full text-center text-[16vw] font-black uppercase leading-[0.88] tracking-tight sm:whitespace-nowrap sm:text-[12vw] sm:leading-none"
             initial={{ opacity: 0, y: 60 }}
             animate={ready ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.15, duration: 1.1, ease: EASE }}
@@ -56,7 +56,7 @@ export function Hero({ ready }: HeroProps) {
         <FadeIn delay={0.75} y={20} className="max-w-[200px] sm:max-w-[280px] md:max-w-[340px]">
           <p
             className="font-light uppercase leading-snug tracking-wide text-slate-pale"
-            style={{ fontSize: 'clamp(0.7rem, 1.2vw, 1rem)' }}
+            style={{ fontSize: 'clamp(0.66rem, 1.05vw, 0.88rem)' }}
           >
             {HERO.intro}
           </p>

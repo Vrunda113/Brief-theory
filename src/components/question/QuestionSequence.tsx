@@ -83,7 +83,7 @@ export function QuestionSequence() {
 
       <div className="relative z-10 flex h-full flex-col justify-center px-6 md:px-10">
         <div className="mx-auto w-full max-w-5xl">
-          <p className="mb-14 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-brand sm:text-xs">
+          <p className="mb-7 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-brand sm:text-xs">
             Four questions sit beneath every engagement
           </p>
 
@@ -98,13 +98,13 @@ export function QuestionSequence() {
                 </p>
                 <h3
                   className="headline-gradient mb-6 font-black uppercase leading-none tracking-tight"
-                  style={{ fontSize: 'clamp(2.5rem, 8vw, 7rem)' }}
+                  style={{ fontSize: 'clamp(1.9rem, 6vw, 4.75rem)' }}
                 >
                   {q.title}
                 </h3>
                 <p
                   className="max-w-2xl font-light leading-snug text-cream"
-                  style={{ fontSize: 'clamp(1rem, 2.4vw, 1.9rem)' }}
+                  style={{ fontSize: 'clamp(0.95rem, 1.95vw, 1.45rem)' }}
                 >
                   {q.body}
                 </p>
@@ -112,7 +112,7 @@ export function QuestionSequence() {
             ))}
           </div>
 
-          <div className="mt-14 flex gap-2">
+          <div className="mt-7 flex gap-2">
             {QUESTIONS.map((q) => (
               <div key={q.index} className="h-px flex-1 bg-cream/15">
                 <div data-bar className="h-full origin-left bg-cream" />

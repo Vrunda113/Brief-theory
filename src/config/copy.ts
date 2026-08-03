@@ -15,7 +15,7 @@ export const BRAND = {
 
 export const NAV_LINKS = [
   { label: 'Thinking', href: '#question' },
-  { label: 'Beliefs', href: '#context' },
+  { label: 'Practice', href: '#practice' },
   { label: 'Work', href: '#expression' },
   { label: 'Contact', href: '#invitation' },
 ]
@@ -64,40 +64,6 @@ export const QUESTION_INTRO = {
   emphasis: 'They fail from a lack of clarity.',
   body: 'Trends move faster than judgement. Assumptions replace understanding. And a brand built on noise is rebuilt every eighteen months.',
 }
-
-/** Beat 3 — six core beliefs, revealed one at a time. */
-export const BELIEFS = [
-  {
-    index: '01',
-    title: 'Think before you make',
-    body: 'Strategy isn’t a phase. It is the foundation of everything that follows.',
-  },
-  {
-    index: '02',
-    title: 'Depth creates distinction',
-    body: 'Great brands aren’t built through volume. They’re built through understanding.',
-  },
-  {
-    index: '03',
-    title: 'Purpose before popularity',
-    body: 'We don’t reject trends. We make sure strategy leads them.',
-  },
-  {
-    index: '04',
-    title: 'Partnership over projects',
-    body: 'Long-term partners. Never short-term vendors.',
-  },
-  {
-    index: '05',
-    title: 'Stay curious',
-    body: 'Curiosity expands perspective. Perspective improves the work.',
-  },
-  {
-    index: '06',
-    title: 'Clarity creates confidence',
-    body: 'When a brand knows who it is, every decision becomes easier.',
-  },
-]
 
 /** Beat 4 — the five disciplines where strategy becomes tangible. */
 export const PRACTICE = {
@@ -149,15 +115,6 @@ export const PRACTICE = {
   ],
 }
 
-/** Beat 4b — one engagement, reduced to its logic. */
-export const CASE_LOGIC = [
-  { label: 'The brief', value: '“We need more customers.”' },
-  { label: 'Our first question', value: 'Why aren’t the current ones staying?' },
-  { label: 'The insight', value: 'The problem isn’t awareness. It’s trust.' },
-  { label: 'The theory', value: 'Position around expertise, not price.', accent: true },
-  { label: 'The result', value: 'Every creative decision now serves one idea.' },
-]
-
 export type Media = { type: 'video' | 'image'; src: string; poster?: string }
 
 export type CaseStudy = {
@@ -176,6 +133,11 @@ const reel = (name: string): Media => ({
   type: 'video',
   src: `/video/cafe-pulp/${name}.mp4`,
   poster: `/video/cafe-pulp/${name}.jpg`,
+})
+
+const still = (name: string): Media => ({
+  type: 'image',
+  src: `/images/skin-world/${name}.webp`,
 })
 
 /**
@@ -207,7 +169,16 @@ export const CASE_STUDIES: CaseStudy[] = [
     sector: 'Healthcare & Aesthetics',
     theory: 'Position around expertise, not price.',
     body: 'A dermatology practice in a category that shouts discounts. The theory: in medicine, trust outsells offers. The work leads with the doctor’s judgement — correcting myths, explaining mechanisms, showing the reasoning — so the practice is chosen for what it knows.',
-    media: [],
+    // Ordered so the strip alternates in tone rather than running warm-on-warm.
+    // The discount promo in the source folder is deliberately left out: this
+    // card argues against competing on price.
+    media: [
+      still('myth-and-fact'),
+      still('benefits-of-vitamin-c'),
+      still('benefits-of-micro-needling-instagram-story'),
+      still('lip-filler-story'),
+      still('laser-hair-removal-instagram-story'),
+    ],
     live: 'https://www.instagram.com/skin_world_thane',
   },
   {

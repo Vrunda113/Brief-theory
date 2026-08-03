@@ -21,8 +21,8 @@ export function Expression() {
 
         <FadeIn y={30} delay={0.05}>
           <h2
-            className="headline-gradient mb-16 font-black uppercase leading-none tracking-tight md:mb-24"
-            style={{ fontSize: 'clamp(2.75rem, 12vw, 10rem)' }}
+            className="headline-gradient mb-11 font-black uppercase leading-none tracking-tight md:mb-11"
+            style={{ fontSize: 'clamp(2.1rem, 8.5vw, 6.5rem)' }}
           >
             Selected work
           </h2>

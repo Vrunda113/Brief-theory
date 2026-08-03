@@ -38,7 +38,7 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
           <div className="flex items-start gap-5 md:gap-8">
             <p
               className="font-black leading-none text-cream/15"
-              style={{ fontSize: 'clamp(2.75rem, 7vw, 6rem)' }}
+              style={{ fontSize: 'clamp(2rem, 5vw, 4.25rem)' }}
             >
               {study.index}
             </p>
@@ -48,7 +48,7 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
               </p>
               <h3
                 className="font-medium uppercase leading-tight tracking-wide text-cream"
-                style={{ fontSize: 'clamp(1.15rem, 2.6vw, 2.25rem)' }}
+                style={{ fontSize: 'clamp(1rem, 2.1vw, 1.7rem)' }}
               >
                 {study.client}
               </h3>
@@ -60,14 +60,14 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
           )}
         </header>
 
-        <div className="mb-7 grid gap-6 md:mb-9 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:gap-10">
+        <div className="mb-7 grid gap-6 md:mb-9 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:gap-7">
           <div>
             <p className="mb-2 text-[0.6rem] font-light uppercase tracking-[0.3em] text-slate-brand sm:text-[0.7rem]">
               The theory
             </p>
             <p
               className="mb-5 font-light italic leading-snug text-slate-steel"
-              style={{ fontSize: 'clamp(1.15rem, 2.6vw, 2rem)' }}
+              style={{ fontSize: 'clamp(1rem, 2.1vw, 1.55rem)' }}
             >
               {study.theory}
             </p>
@@ -97,7 +97,7 @@ function MediaStrip({ study }: { study: CaseStudy }) {
           className={`relative overflow-hidden rounded-2xl bg-navy sm:rounded-3xl ${
             i > 2 ? 'hidden md:block' : ''
           }`}
-          style={{ height: 'clamp(180px, 24vw, 320px)' }}
+          style={{ height: 'clamp(140px, 17vw, 232px)' }}
         >
           {item.type === 'video' ? (
             <CinematicVideo
@@ -128,7 +128,7 @@ function PlaceholderStrip() {
           className={`flex items-center justify-center rounded-2xl border border-dashed border-cream/15 bg-cream/[0.03] sm:rounded-3xl ${
             i > 2 ? 'hidden md:flex' : ''
           }`}
-          style={{ height: 'clamp(180px, 24vw, 320px)' }}
+          style={{ height: 'clamp(140px, 17vw, 232px)' }}
         >
           <span className="text-[0.55rem] font-light uppercase tracking-[0.25em] text-slate-brand/60">
             Soon

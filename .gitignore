@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw client exports — optimised into public/ by scripts/optimise-stills.mjs
+source-images/

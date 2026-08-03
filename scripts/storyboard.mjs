@@ -12,22 +12,18 @@ const URL = process.env.SHOT_URL ?? 'http://localhost:5173/'
 const OUT =
   'C:/Users/vrund/AppData/Local/Temp/claude/D--DeepFack-main/4e5e8675-6bf1-4504-94c3-282edbb43007/scratchpad/storyboard'
 const PORT = 9337
-const W = 1440
-const H = 900
+const W = Number(process.env.VW ?? 1440)
+const H = Number(process.env.VH ?? 900)
 
 const BEATS = [
-  { at: 0.0, label: '1 — HERO' },
-  { at: 0.115, label: '2 — PROLOGUE / the clarity argument' },
-  { at: 0.185, label: '3 — THE QUESTION (01 of 04)' },
-  { at: 0.25, label: '3 — THE QUESTION (03 of 04)' },
-  { at: 0.35, label: '4 — THE CONTEXT (belief 01)' },
-  { at: 0.52, label: '4 — THE CONTEXT (belief 06)' },
-  { at: 0.6, label: '5 — FROM BRIEF TO THEORY' },
-  { at: 0.68, label: '6 — PRACTICE (cut to cream)' },
-  { at: 0.75, label: '6 — PRACTICE / pillars' },
-  { at: 0.85, label: '7 — SELECTED WORK / stacking cards' },
-  { at: 0.93, label: '7 — SELECTED WORK / card 03' },
-  { at: 1.0, label: '8 — INVITATION / closing frame' },
+  { at: 0.0,  label: '1 — HERO' },
+  { at: 0.16, label: '2 — PROLOGUE' },
+  { at: 0.27, label: '3 — THE QUESTION (01)' },
+  { at: 0.40, label: '3 — THE QUESTION (04)' },
+  { at: 0.50, label: '4 — PRACTICE / cut to cream  <- the new join' },
+  { at: 0.60, label: '4 — PRACTICE / pillars' },
+  { at: 0.76, label: '5 — SELECTED WORK' },
+  { at: 1.0,  label: '6 — INVITATION' },
 ]
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))

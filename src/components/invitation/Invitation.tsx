@@ -17,14 +17,14 @@ export function Invitation() {
         <FadeIn y={30} delay={0.05}>
           <h2
             className="mb-8 font-black uppercase leading-[0.95] tracking-tight text-cream"
-            style={{ fontSize: 'clamp(2.25rem, 8vw, 6.5rem)' }}
+            style={{ fontSize: 'clamp(1.8rem, 6vw, 4.75rem)' }}
           >
             {INVITATION.headline}
           </h2>
         </FadeIn>
 
         <FadeIn y={20} delay={0.12}>
-          <p className="mb-12 max-w-xl font-light leading-relaxed text-slate-steel sm:text-lg">
+          <p className="mb-9 max-w-xl font-light leading-relaxed text-slate-steel sm:text-lg">
             {INVITATION.body}
           </p>
         </FadeIn>
@@ -33,7 +33,7 @@ export function Invitation() {
           <ContactButton href={`mailto:${BRAND.email}`}>{INVITATION.cta}</ContactButton>
         </FadeIn>
 
-        <div className="mt-20 grid gap-10 border-t border-cream/10 pt-12 sm:grid-cols-2 md:mt-28">
+        <div className="mt-7 grid gap-7 border-t border-cream/10 pt-12 sm:grid-cols-2 md:mt-18">
           <FadeIn y={20}>
             <p className="mb-5 text-[0.6rem] font-light uppercase tracking-[0.3em] text-slate-brand">
               Who we work with
@@ -87,7 +87,7 @@ export function Invitation() {
       </div>
 
       {/* The last frame: their own closing line, earned by everything above it. */}
-      <div className="mx-auto mt-28 max-w-4xl border-t border-cream/10 pt-24 text-center md:mt-40 md:pt-32">
+      <div className="mx-auto mt-18 max-w-4xl border-t border-cream/10 pt-24 text-center md:mt-40 md:pt-32">
         {INVITATION.closing.map((line, i) => (
           <AnimatedText
             key={line}
@@ -97,12 +97,12 @@ export function Invitation() {
             className={`font-light italic leading-tight ${
               i === 0 ? 'text-slate-steel' : 'text-cream'
             }`}
-            style={{ fontSize: 'clamp(1.5rem, 4.5vw, 3.5rem)' }}
+            style={{ fontSize: 'clamp(1.3rem, 3.4vw, 2.6rem)' }}
           />
         ))}
 
         <FadeIn y={20} delay={0.2}>
-          <div className="mt-20 flex justify-center">
+          <div className="mt-7 flex justify-center">
             <Wordmark className="h-16 md:h-20" />
           </div>
           <p className="mt-8 text-[0.6rem] font-light uppercase tracking-[0.3em] text-slate-brand/60">

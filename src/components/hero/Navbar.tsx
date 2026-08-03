@@ -14,7 +14,7 @@ export function Navbar() {
         <Wordmark className="h-12 sm:h-14 md:h-16" />
       </a>
 
-      <div className="flex items-center gap-3.5 sm:gap-8 md:gap-12">
+      <div className="flex items-center gap-3.5 sm:gap-8 md:gap-9">
         {NAV_LINKS.map((link) => (
           <a
             key={link.href}
