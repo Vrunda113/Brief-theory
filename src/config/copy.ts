@@ -14,8 +14,6 @@ export const BRAND = {
 }
 
 export const NAV_LINKS = [
-  { label: 'Thinking', href: '#thinking' },
-  { label: 'Practice', href: '#practice' },
   { label: 'Work', href: '#expression' },
   { label: 'Method', href: '#method' },
   { label: 'Contact', href: '#invitation' },
@@ -60,7 +58,7 @@ export const QUESTIONS = [
 ]
 
 export const QUESTION_INTRO = {
-  eyebrow: 'Before process, perspective',
+  eyebrow: '04 — The problem',
   headline: 'Most brands don’t fail from a lack of creativity.',
   emphasis: 'They fail from a lack of clarity.',
   body: 'Trends move faster than judgement. Assumptions replace understanding. And a brand built on noise is rebuilt every eighteen months.',
@@ -336,3 +334,18 @@ export const INVITATION = {
     'Established houses seeking clarity',
   ],
 }
+
+/**
+ * Chapter 08 as a spread of its own. The kicker and the long line come from
+ * QUESTIONS so the two presentations can never drift apart; only the short
+ * headline — the thing you can read across a room — is stated here.
+ */
+export const PERSPECTIVE_TITLES = [
+  'What must be true?',
+  'What does the category reward?',
+  'The single idea',
+  'Where thinking becomes visible',
+]
+
+/** Marginal letters for the chapter-09 timeline: brief, question, insight, theory, result. */
+export const CASE_LOGIC_LETTERS = ['B', 'Q', 'I', 'T', 'R']

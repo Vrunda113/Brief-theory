@@ -10,12 +10,17 @@ export function Expression() {
   return (
     <section
       id="expression"
-      className="relative z-20 -mt-10 rounded-t-[40px] bg-navy px-6 pb-24 pt-24 sm:-mt-12 sm:rounded-t-[50px] md:-mt-14 md:rounded-t-[60px] md:px-10 md:pb-32 md:pt-32"
+      className="relative z-20 bg-navy px-6 pb-24 pt-16 md:px-10 md:pb-32 md:pt-20"
     >
       <div className="mx-auto max-w-6xl">
+        {/* The rule and the chapter number are the whole boundary here: the
+            section above is navy too, so without them the work simply runs on
+            from the argument that precedes it. */}
+        <div className="h-px w-full bg-cream/15" />
+
         <FadeIn y={20}>
-          <p className="mb-4 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-brand sm:text-xs">
-            The expression
+          <p className="mb-4 mt-14 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-brand sm:text-xs md:mt-20">
+            05 — The expression
           </p>
         </FadeIn>
 

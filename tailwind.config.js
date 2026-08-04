@@ -18,6 +18,7 @@ export default {
       },
       fontFamily: {
         sans: ['Kanit', 'sans-serif'],
+        serif: ['"Playfair Display"', 'Georgia', 'serif'],
       },
     },
   },

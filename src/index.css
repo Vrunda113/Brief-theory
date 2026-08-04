@@ -59,40 +59,6 @@ body {
   color: transparent;
 }
 
-/* Below the breakpoint the row is a sideways-scrolling strip of fixed-width
-   cards — six will not fit on a phone — and the lean is dropped there, since
-   tilted copy sliding under a thumb is the worst of both. Above it the cards
-   share the width evenly and sit on the arc. */
-.method-row {
-  display: flex;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-  scrollbar-width: none;
-}
-
-.method-row::-webkit-scrollbar {
-  display: none;
-}
-
-.method-row > * {
-  flex: 0 0 clamp(200px, 62vw, 260px);
-}
-
-@media (min-width: 768px) {
-  .method-row {
-    overflow-x: visible;
-    padding-bottom: 0;
-  }
-
-  .method-row > * {
-    flex: 1 1 0;
-  }
-
-  .method-card {
-    transform: rotate(var(--tilt, 0deg)) translateY(var(--sag, 0));
-  }
-}
-
 ::selection {
   background: var(--slate-steel);
   color: var(--navy);
@@ -139,8 +105,19 @@ html.lenis body {
   }
 
 
-  .method-card {
+  [data-rail] {
+    display: none !important;
+  }
+
+  /* The leaves stack in normal flow instead of turning. */
+  [data-page] {
     transform: none !important;
+    backface-visibility: visible !important;
+  }
+
+  [data-page] > [data-shade],
+  [data-page] > [data-lift] {
+    display: none !important;
   }
 
   [data-sequence-track] > [data-step],
