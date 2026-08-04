@@ -7,23 +7,39 @@ import { gsap, prefersReducedMotion } from '../../lib/motion'
  * what the practice believes, the questions beneath every engagement, then how
  * an engagement actually unfolds.
  *
- * Every point is shown exactly once, all of it on screen at the same time. The
- * cards sit in a fixed row with a slight arc — outer cards lean away from the
- * middle and ride a little lower — so the set reads as a considered spread
- * rather than a grid, without anything moving on its own.
+ * Every point is shown exactly once, all of it on screen at the same time, in
+ * one navy panel ruled into equal columns. Nothing moves on its own; scroll
+ * only advances from one spread to the next.
  */
 
-/** Lean of the outermost cards, in degrees. Small on purpose: the copy has to stay readable. */
+/** Scroll distance each spread holds for, as a share of the pinned timeline. */
+const DWELL = 1.6
+
+/** Lean of the outermost cards, in degrees. Small: the copy has to stay readable. */
 const MAX_TILT = 4.5
 /** How far the outermost cards drop, in px, to carry the tilt into a curve. */
 const MAX_SAG = 26
-/** Scroll distance each spread holds for, as a share of the pinned timeline. */
-const DWELL = 1.6
 
 /** Tilt and drop for card `i` of `n`, measured out from the centre of the row. */
 function arc(i: number, n: number) {
   const t = n < 2 ? 0 : (i - (n - 1) / 2) / ((n - 1) / 2)
   return { tilt: t * MAX_TILT, sag: t * t * MAX_SAG }
+}
+
+/**
+ * Columns lighten left to right, navy into navy-mid, so the row reads as a
+ * progression rather than six identical blocks. It stops well short of
+ * navy-mid: past roughly this point cream type starts losing its bite against
+ * the lighter end of the row.
+ */
+const TINT_FROM = [0x16, 0x30, 0x5c]
+const TINT_TO = [0x2e, 0x4a, 0x75]
+const TINT_REACH = 0.6
+
+function tint(i: number, n: number) {
+  const t = n < 2 ? 0 : (i / (n - 1)) * TINT_REACH
+  const [r, g, b] = TINT_FROM.map((from, k) => Math.round(from + (TINT_TO[k] - from) * t))
+  return `rgb(${r}, ${g}, ${b})`
 }
 
 export function Method() {
@@ -99,8 +115,8 @@ export function Method() {
           const n = stage.items.length
           return (
             <div key={stage.heading} data-stage className="absolute inset-0">
-              <div className="flex h-full flex-col justify-center pb-10">
-                <div data-head className="mx-auto w-full max-w-6xl px-6 md:px-10">
+              <div className="flex h-full flex-col justify-center px-6 pb-10 md:px-10">
+                <div data-head className="mx-auto w-full max-w-5xl">
                   <p className="mb-3 text-[0.65rem] font-light uppercase tracking-[0.45em] text-navy/60 sm:text-xs">
                     {stage.eyebrow}
                   </p>
@@ -117,38 +133,40 @@ export function Method() {
                   )}
                 </div>
 
-                {/* Below the arc breakpoint the row scrolls sideways instead of
-                    squeezing six cards into a phone. */}
-                <div className="method-row mt-8 flex snap-x gap-3 overflow-x-auto px-6 pb-4 pt-6 sm:mt-10 sm:gap-4 md:justify-center md:overflow-visible md:px-10">
-                  {stage.items.map((item, i) => {
-                    const { tilt, sag } = arc(i, n)
-                    return (
+                {/* Same container as the headline, so the row starts on the
+                    same line the H2 does rather than floating centred inside it. */}
+                <div className="mx-auto mt-12 w-full max-w-5xl">
+                  <div className="method-row gap-3 sm:gap-4">
+                    {stage.items.map((item, i) => {
+                      const { tilt, sag } = arc(i, n)
+                      return (
                       <article
                         key={item.index}
                         data-card
-                        className="method-card flex flex-none snap-start flex-col rounded-2xl border border-slate-steel/25 bg-navy p-5 shadow-[0_18px_40px_-24px_rgba(15,47,94,0.7)] sm:rounded-3xl sm:p-6"
+                        className="method-card flex flex-col rounded-2xl px-4 pb-9 pt-6 shadow-[0_18px_40px_-24px_rgba(15,47,94,0.75)] sm:rounded-3xl sm:px-5 sm:pb-11 sm:pt-7"
                         style={{
-                          width: 'clamp(158px, 15.5vw, 202px)',
-                          height: 'clamp(206px, 24vw, 272px)',
+                          minHeight: 'clamp(190px, 19vw, 246px)',
+                          backgroundColor: tint(i, n),
                           ['--tilt' as string]: `${tilt}deg`,
                           ['--sag' as string]: `${sag}px`,
                         }}
                       >
-                        <p className="mb-4 text-[0.7rem] font-light tracking-[0.3em] text-slate-steel">
+                        <p className="mb-5 text-[0.7rem] font-light tracking-[0.3em] text-slate-steel">
                           {item.index}
                         </p>
                         <h3
-                          className="mb-3 font-medium leading-snug text-cream"
-                          style={{ fontSize: 'clamp(0.95rem, 1.5vw, 1.2rem)' }}
+                          className="mb-2.5 font-medium leading-snug text-cream"
+                          style={{ fontSize: 'clamp(0.95rem, 1.35vw, 1.15rem)' }}
                         >
                           {item.title}
                         </h3>
-                        <p className="text-xs font-light leading-relaxed text-slate-pale/85 sm:text-[0.8rem]">
+                        <p className="text-xs font-light leading-relaxed text-slate-pale/75 sm:text-[0.8rem]">
                           {item.body}
                         </p>
                       </article>
-                    )
-                  })}
+                      )
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
@@ -157,12 +175,14 @@ export function Method() {
       </div>
 
       {/* Which of the three spreads is on screen. */}
-      <div className="absolute inset-x-0 bottom-8 mx-auto flex w-full max-w-6xl gap-2 px-6 md:px-10">
-        {METHOD_STAGES.map((stage) => (
-          <div key={stage.heading} className="h-px flex-1 bg-navy/15">
-            <div data-bar className="h-full origin-left bg-navy" />
-          </div>
-        ))}
+      <div className="absolute inset-x-0 bottom-8 px-6 md:px-10">
+        <div className="mx-auto flex w-full max-w-5xl gap-2">
+          {METHOD_STAGES.map((stage) => (
+            <div key={stage.heading} className="h-px flex-1 bg-navy/15">
+              <div data-bar className="h-full origin-left bg-navy" />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )

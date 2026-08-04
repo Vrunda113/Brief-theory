@@ -7,9 +7,13 @@ import { FadeIn } from '../shared/FadeIn'
  */
 export function Practice() {
   return (
+    // Pulled up over the section above so the curve rises out of it, the way
+    // Expression rises out of this one. Without the overlap the rounded corners
+    // only expose the navy main behind, which reads as two notches cut out of a
+    // cream-to-cream seam.
     <section
       id="practice"
-      className="relative z-10 rounded-t-[40px] bg-cream px-6 py-16 sm:rounded-t-[50px] md:rounded-t-[60px] md:px-10 md:py-14"
+      className="relative z-10 -mt-10 rounded-t-[40px] bg-cream px-6 py-16 sm:-mt-12 sm:rounded-t-[50px] md:-mt-14 md:rounded-t-[60px] md:px-10 md:py-14"
     >
       <div className="mx-auto max-w-5xl">
         <FadeIn y={20}>

@@ -59,26 +59,38 @@ body {
   color: transparent;
 }
 
-/* The arc is applied only where the whole row fits at once. Narrower than that
-   the row is a sideways scroller, and tilting its cards would just make the
-   copy harder to read while it moves under the thumb. */
-.method-card {
-  transform: none;
-}
-
-@media (min-width: 768px) {
-  .method-card {
-    transform: rotate(var(--tilt, 0deg)) translateY(var(--sag, 0));
-  }
-}
-
-/* No visible scrollbar cutting across the cream. */
+/* Below the breakpoint the row is a sideways-scrolling strip of fixed-width
+   cards — six will not fit on a phone — and the lean is dropped there, since
+   tilted copy sliding under a thumb is the worst of both. Above it the cards
+   share the width evenly and sit on the arc. */
 .method-row {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
   scrollbar-width: none;
 }
 
 .method-row::-webkit-scrollbar {
   display: none;
+}
+
+.method-row > * {
+  flex: 0 0 clamp(200px, 62vw, 260px);
+}
+
+@media (min-width: 768px) {
+  .method-row {
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+
+  .method-row > * {
+    flex: 1 1 0;
+  }
+
+  .method-card {
+    transform: rotate(var(--tilt, 0deg)) translateY(var(--sag, 0));
+  }
 }
 
 ::selection {
@@ -126,16 +138,9 @@ html.lenis body {
     min-height: 0 !important;
   }
 
-  /* The lean is decoration; without motion the cards simply sit square. */
-  .method-row {
-    flex-wrap: wrap !important;
-    justify-content: flex-start !important;
-    overflow-x: visible !important;
-  }
 
   .method-card {
     transform: none !important;
-    height: auto !important;
   }
 
   [data-sequence-track] > [data-step],

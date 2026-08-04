@@ -16,9 +16,16 @@ const W = Number(process.env.VW ?? 1440)
 const H = Number(process.env.VH ?? 900)
 
 const BEATS = [
-  { at: 0.700, label: 'spread 1 — six beliefs' },
-  { at: 0.800, label: 'spread 2 — four questions' },
-  { at: 0.885, label: 'spread 3 — five stages' },
+  { at: 0.000, label: 'cold open' },
+  { at: 0.075, label: 'hero' },
+  { at: 0.170, label: 'question' },
+  { at: 0.280, label: 'context' },
+  { at: 0.390, label: 'theory' },
+  { at: 0.520, label: 'work' },
+  { at: 0.700, label: 'method 1' },
+  { at: 0.800, label: 'method 2' },
+  { at: 0.885, label: 'method 3' },
+  { at: 0.960, label: 'invitation' },
 ]
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))

@@ -127,13 +127,17 @@ export function ThinkingInPractice() {
             ))}
           </div>
 
-          <div className="mt-7 flex gap-2">
-            {CASE_LOGIC.steps.map((step) => (
-              <div key={step.index} className="h-px flex-1 bg-navy/15">
-                <div data-bar className="h-full origin-left bg-navy" />
-              </div>
-            ))}
-          </div>
+        </div>
+      </div>
+
+      {/* Same chrome, in the same place, as the other pinned sequence. */}
+      <div className="absolute inset-x-0 bottom-8 z-10 px-6 md:px-10">
+        <div className="mx-auto flex w-full max-w-5xl gap-2">
+          {CASE_LOGIC.steps.map((step) => (
+            <div key={step.index} className="h-px flex-1 bg-navy/15">
+              <div data-bar className="h-full origin-left bg-navy" />
+            </div>
+          ))}
         </div>
       </div>
     </section>
