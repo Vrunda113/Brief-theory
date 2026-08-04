@@ -14,9 +14,10 @@ export const BRAND = {
 }
 
 export const NAV_LINKS = [
-  { label: 'Thinking', href: '#question' },
+  { label: 'Thinking', href: '#thinking' },
   { label: 'Practice', href: '#practice' },
   { label: 'Work', href: '#expression' },
+  { label: 'Method', href: '#method' },
   { label: 'Contact', href: '#invitation' },
 ]
 
@@ -115,6 +116,111 @@ export const PRACTICE = {
   ],
 }
 
+/**
+ * Beat 3 — one engagement reduced to its logic, revealed a line at a time over
+ * the held frame. The theory step is the turn the whole sequence builds to.
+ */
+export const CASE_LOGIC = {
+  eyebrow: 'Thinking in practice',
+  heading: 'From brief to theory.',
+  lede: 'One engagement, reduced to its logic.',
+  steps: [
+    { index: '01', label: 'The brief', line: '“We need more customers.”' },
+    { index: '02', label: 'Our first question', line: 'Why aren’t the current ones staying?' },
+    { index: '03', label: 'The insight', line: 'The problem isn’t awareness. It’s trust.' },
+    {
+      index: '04',
+      label: 'The theory',
+      line: 'Position around expertise, not price.',
+      turn: true,
+    },
+    { index: '05', label: 'The result', line: 'Every creative decision now serves one idea.' },
+  ],
+}
+
+/**
+ * The three stages of the pinned method section — beliefs, then the questions
+ * beneath every engagement, then how an engagement actually unfolds. Lifted
+ * from the brand profile, which presents them as three consecutive spreads.
+ *
+ * Stage two reuses QUESTIONS rather than restating it, so the four questions
+ * can never drift out of sync with the sequence earlier in the page.
+ */
+export const METHOD_STAGES = [
+  {
+    eyebrow: 'Core beliefs',
+    heading: 'Six things we hold to.',
+    columns: 'sm:grid-cols-2 lg:grid-cols-3',
+    items: [
+      {
+        index: '01',
+        title: 'Think before you make',
+        body: 'Strategy isn’t a phase. It is the foundation of everything that follows.',
+      },
+      {
+        index: '02',
+        title: 'Depth creates distinction',
+        body: 'Great brands aren’t built through volume. They’re built through understanding.',
+      },
+      {
+        index: '03',
+        title: 'Purpose before popularity',
+        body: 'We don’t reject trends. We make sure strategy leads them.',
+      },
+      {
+        index: '04',
+        title: 'Partnership over projects',
+        body: 'Long-term partners. Never short-term vendors.',
+      },
+      {
+        index: '05',
+        title: 'Stay curious',
+        body: 'Curiosity expands perspective. Perspective improves the work.',
+      },
+      {
+        index: '06',
+        title: 'Clarity creates confidence',
+        body: 'When a brand knows who it is, every decision becomes easier.',
+      },
+    ],
+  },
+  {
+    eyebrow: 'How we think',
+    heading: 'Before process, perspective.',
+    lede: 'Four questions sit beneath every engagement.',
+    columns: 'sm:grid-cols-2 lg:grid-cols-4',
+    items: QUESTIONS.map((q) => ({ index: q.index, title: q.title, body: q.body })),
+  },
+  {
+    eyebrow: 'Our process',
+    heading: 'How an engagement unfolds.',
+    columns: 'sm:grid-cols-2 lg:grid-cols-5',
+    items: [
+      {
+        index: '01',
+        title: 'Immersion',
+        body: 'We learn the business before we touch the brand.',
+      },
+      {
+        index: '02',
+        title: 'Strategy',
+        body: 'Positioning, narrative and the theory itself.',
+      },
+      { index: '03', title: 'Identity', body: 'The theory made visible.' },
+      {
+        index: '04',
+        title: 'Experience',
+        body: 'Digital, print and everywhere between.',
+      },
+      {
+        index: '05',
+        title: 'Stewardship',
+        body: 'Systems, guidelines and long-term partnership.',
+      },
+    ],
+  },
+]
+
 export type Media = { type: 'video' | 'image'; src: string; poster?: string }
 
 export type CaseStudy = {
@@ -138,6 +244,12 @@ const reel = (name: string): Media => ({
 const still = (name: string): Media => ({
   type: 'image',
   src: `/images/skin-world/${name}.webp`,
+})
+
+const riccis = (name: string): Media => ({
+  type: 'video',
+  src: `/video/riccis/${name}.mp4`,
+  poster: `/video/riccis/${name}.jpg`,
 })
 
 /**
@@ -183,6 +295,24 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     index: '03',
+    client: 'Caffe Riccis',
+    category: 'Client',
+    sector: 'Food & Beverage',
+    theory: 'Sell the making, not the menu.',
+    body: 'An espresso bar in a category where every feed looks the same — the finished cup, lit and styled. The theory: what actually separates one cafe from the next is visible in the making. The work leads with hands, steam and the people behind the counter, so the room is sold before the drink is.',
+    // Craft first, then the room, then the people — the order the theory argues
+    // for. The Tiramisu reel's stock map and aerial cutaways are left out.
+    media: [
+      riccis('espresso-martini'),
+      riccis('coffee-cup'),
+      riccis('evening'),
+      riccis('island'),
+      riccis('manager-away'),
+    ],
+    live: 'https://www.instagram.com/caffericcis',
+  },
+  {
+    index: '04',
     client: 'Selected Work',
     category: 'Archive',
     sector: 'Automotive · Luxury Beauty · Lifestyle',

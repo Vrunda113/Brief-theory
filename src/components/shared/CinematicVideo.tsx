@@ -25,11 +25,18 @@ export function CinematicVideo({
     const el = ref.current
     if (!el) return
 
+    // The observer stays connected after the source is attached, so clips that
+    // have scrolled out of frame stop decoding instead of running unseen — a
+    // page with three case cards holds a dozen of them.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true)
-          observer.disconnect()
+          void el.play().catch(() => {
+            /* autoplay can be refused; the poster still shows */
+          })
+        } else {
+          el.pause()
         }
       },
       { rootMargin },

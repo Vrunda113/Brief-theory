@@ -14,8 +14,18 @@ import path from 'node:path'
 
 const run = promisify(execFile)
 
-const SOURCE_DIR = 'D:/Reels -20260803T112555Z-1-001/Reels'
-const OUT_DIR = 'public/video/cafe-pulp'
+const SETS = [
+  {
+    source: 'D:/Reels -20260803T112555Z-1-001/Reels',
+    out: 'public/video/cafe-pulp',
+    clips: 'CAFE_PULP',
+  },
+  {
+    source: 'source-videos/riccis',
+    out: 'public/video/riccis',
+    clips: 'RICCIS',
+  },
+]
 
 const FFMPEG_CANDIDATES = [
   process.env.FFMPEG_PATH,
@@ -28,7 +38,7 @@ const FFMPEG_CANDIDATES = [
  * crop  = ffmpeg crop expression, for sources that arrive letterboxed.
  * width = output width; landscape crops need more pixels than 9:16 portraits.
  */
-const CLIPS = [
+const CAFE_PULP = [
   { file: 'Pulp Kitchen Reel.mp4', name: 'kitchen', start: 6, duration: 9 },
   { file: 'evening reel final.mp4', name: 'evening', start: 3, duration: 8 },
   {
@@ -45,6 +55,18 @@ const CLIPS = [
   { file: 'trend 1.mp4', name: 'trend-1', start: 2, duration: 8 },
 ]
 
+const RICCIS = [
+  { file: 'ESPRESSO MARTINI.mp4', name: 'espresso-martini', start: 5, duration: 9 },
+  { file: 'Coffee cup rotating .mp4', name: 'coffee-cup', start: 0.6, duration: 5.8 },
+  { file: 'Evening At Ricci Final.mp4', name: 'evening', start: 5, duration: 8 },
+  { file: 'Island Reel Final.mp4', name: 'island', start: 44, duration: 9 },
+  { file: 'When manager is away .mp4', name: 'manager-away', start: 3.5, duration: 8 },
+  { file: 'Matcha.mp4', name: 'matcha', start: 13, duration: 8 },
+  { file: 'Tiramisu.mp4', name: 'tiramisu', start: 2, duration: 7 },
+]
+
+const CLIP_SETS = { CAFE_PULP, RICCIS }
+
 async function resolveFfmpeg() {
   for (const candidate of FFMPEG_CANDIDATES) {
     try {
@@ -57,8 +79,8 @@ async function resolveFfmpeg() {
   throw new Error(`No ffmpeg found. Tried:\n  ${FFMPEG_CANDIDATES.join('\n  ')}`)
 }
 
-async function transcode(ffmpeg, clip) {
-  const input = path.join(SOURCE_DIR, clip.file)
+async function transcode(ffmpeg, clip, sourceDir, outDir) {
+  const input = path.join(sourceDir, clip.file)
   try {
     await access(input)
   } catch {
@@ -66,8 +88,8 @@ async function transcode(ffmpeg, clip) {
     return
   }
 
-  const mp4 = path.join(OUT_DIR, `${clip.name}.mp4`)
-  const poster = path.join(OUT_DIR, `${clip.name}.jpg`)
+  const mp4 = path.join(outDir, `${clip.name}.mp4`)
+  const poster = path.join(outDir, `${clip.name}.jpg`)
 
   // 720px wide keeps a 9:16 frame sharp on mobile without shipping full 1080p.
   const width = clip.width ?? 720
@@ -105,10 +127,19 @@ async function transcode(ffmpeg, clip) {
 }
 
 const ffmpeg = await resolveFfmpeg()
-await mkdir(OUT_DIR, { recursive: true })
+console.log(`ffmpeg: ${ffmpeg}\n`)
 
-console.log(`ffmpeg: ${ffmpeg}\ntranscoding ${CLIPS.length} clips -> ${OUT_DIR}\n`)
-for (const clip of CLIPS) {
-  await transcode(ffmpeg, clip)
+// Limit to one set with: node scripts/transcode-reels.mjs RICCIS
+const only = process.argv[2]
+
+for (const set of SETS) {
+  if (only && set.clips !== only) continue
+  const clips = CLIP_SETS[set.clips]
+  await mkdir(set.out, { recursive: true })
+  console.log(`${set.clips}: ${clips.length} clips -> ${set.out}`)
+  for (const clip of clips) {
+    await transcode(ffmpeg, clip, set.source, set.out)
+  }
+  console.log('')
 }
-console.log('\ndone')
+console.log('done')

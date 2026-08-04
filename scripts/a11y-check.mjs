@@ -67,17 +67,18 @@ try {
 
   const probe = await send('Runtime.evaluate', {
     expression: `(() => {
-      const overlayGone = !document.body.textContent.includes('We need more customers')
-        || getComputedStyle(document.querySelector('[class*="z-\\\\[100\\\\]"]') ?? document.body).display === 'none';
-      const hidden = [...document.querySelectorAll('[data-belief], [data-question]')]
+      // Probe the overlay itself. Sniffing for its copy is unreliable now that
+      // "We need more customers" is also permanent text in the case logic.
+      const overlayGone = !document.querySelector('[data-cold-open]');
+      const hidden = [...document.querySelectorAll('[data-step], [data-stage]')]
         .filter(el => {
           const s = getComputedStyle(el);
           return s.visibility === 'hidden' || parseFloat(s.opacity) < 0.05;
         }).length;
       return JSON.stringify({
         scrollHeight: document.body.scrollHeight,
-        beliefs: document.querySelectorAll('[data-belief]').length,
-        questions: document.querySelectorAll('[data-question]').length,
+        steps: document.querySelectorAll('[data-step]').length,
+        stages: document.querySelectorAll('[data-stage]').length,
         hiddenPanels: hidden,
         heroVisible: !!document.querySelector('h1'),
         pinSpacers: document.querySelectorAll('.pin-spacer').length,

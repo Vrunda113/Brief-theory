@@ -49,9 +49,13 @@ export function ColdOpen({ onComplete }: ColdOpenProps) {
     <AnimatePresence>
       {phase !== 'done' && (
         <motion.div
+          data-cold-open
           className="fixed inset-0 z-[100] overflow-hidden bg-cream"
           exit={{ opacity: 0, filter: 'blur(14px)' }}
-          transition={{ duration: 0.85, ease: EASE }}
+          // The reduced-motion CSS rule collapses transitions, but Framer
+          // animates in JS and ignores it — so the exit has to be zeroed here
+          // or the overlay still blurs away for most of a second.
+          transition={{ duration: prefersReducedMotion() ? 0 : 0.85, ease: EASE }}
         >
           {/* Window light drifting across the paper. */}
           <motion.div

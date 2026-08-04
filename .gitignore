@@ -25,3 +25,6 @@ dist-ssr
 
 # Raw client exports — optimised into public/ by scripts/optimise-stills.mjs
 source-images/
+
+# Raw client reels — transcoded into public/ by scripts/transcode-reels.mjs
+source-videos/
