@@ -1,14 +1,18 @@
-/**
- * Reports the left edge and width of every section's headline container, so
- * "does the page line up" is answered with numbers rather than by eye.
- */
+/** Navigates straight to a section by id/selector and screenshots it. */
 import { spawn } from 'node:child_process'
+import { writeFile, mkdir } from 'node:fs/promises'
+import path from 'node:path'
 
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
 const URL = process.env.SHOT_URL ?? 'http://localhost:5173/'
-const PORT = 9338
+const OUT =
+  'C:/Users/vrund/AppData/Local/Temp/claude/D--DeepFack-main/4e5e8675-6bf1-4504-94c3-282edbb43007/scratchpad/anchor'
+const PORT = 9351
 const W = Number(process.env.VW ?? 1600)
 const H = Number(process.env.VH ?? 900)
+const SEL = process.env.SECTION ?? '#method'
+const EXTRA = Number(process.env.EXTRA ?? 0)
+const NAME = process.env.NAME ?? 'shot'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -58,25 +62,29 @@ try {
     })
 
   await send('Page.enable')
+  if (process.env.REDUCED === '1') {
+    await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] })
+  }
   await send('Runtime.enable')
   await send('Page.navigate', { url: URL })
-  await sleep(9000)
+  await sleep(10000)
 
-  const expr = `(() => {
-    const out = []
-    const nav = document.querySelector('nav')
-    const links = nav ? nav.querySelectorAll('a') : []
-    if (links.length) out.push({ what: 'nav right', right: Math.round(links[links.length - 1].getBoundingClientRect().right) })
-    const h2 = document.querySelector('#top h2')
-    if (h2) out.push({ what: 'heading', right: Math.round(h2.getBoundingClientRect().right) })
-    document.querySelectorAll('#top ol li > div > p:last-child').forEach((el, i) =>
-      out.push({ what: 'line ' + (i + 1), right: Math.round(el.getBoundingClientRect().right) }))
-    out.push({ what: 'viewport', right: window.innerWidth })
-    return JSON.stringify(out, null, 1)
-  })()`
+  const target = await send('Runtime.evaluate', {
+    expression: `document.querySelector('${SEL}').getBoundingClientRect().top + window.scrollY`,
+    returnByValue: true,
+  })
+  const y = target.result.value
+  for (let s = 1; s <= 30; s++) {
+    await send('Runtime.evaluate', { expression: `window.scrollTo(0, ${y} * ${s} / 30 + ${EXTRA} * ${s} / 30)` })
+    await sleep(90)
+  }
+  await sleep(1500)
 
-  const r = await send('Runtime.evaluate', { expression: expr, returnByValue: true })
-  console.log(r.result.value)
+  await mkdir(OUT, { recursive: true })
+  const { data } = await send('Page.captureScreenshot', { format: 'png' })
+  const file = path.join(OUT, `${NAME}.png`)
+  await writeFile(file, Buffer.from(data, 'base64'))
+  console.log('saved', file)
 } finally {
   ws?.close()
   chrome.kill()

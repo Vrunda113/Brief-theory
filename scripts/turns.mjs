@@ -96,16 +96,20 @@ try {
   await sleep(1200)
 
   for (const [i, p] of marks.entries()) {
-    await send('Runtime.evaluate', {
-      expression: `(() => {
-        const sec = document.querySelector('${SECTION}')
-        const sp = sec.closest('.pin-spacer') || sec
-        const span = sp.offsetHeight - window.innerHeight
-        window.scrollTo(0, sp.offsetTop + span * ${p})
-        return sp.offsetTop + span * ${p}
-      })()`,
-    })
-    await sleep(Number(process.env.WAIT ?? 2200))
+    if (process.env.CLOCK === '1') {
+      await sleep(p * 1000 - (i === 0 ? 0 : marks[i - 1] * 1000))
+    } else {
+      await send('Runtime.evaluate', {
+        expression: `(() => {
+          const sec = document.querySelector('${SECTION}')
+          const sp = sec.closest('.pin-spacer') || sec
+          const span = sp.offsetHeight - window.innerHeight
+          window.scrollTo(0, sp.offsetTop + span * ${p})
+          return sp.offsetTop + span * ${p}
+        })()`,
+      })
+      await sleep(Number(process.env.WAIT ?? 2200))
+    }
 
     const { data } = await send('Page.captureScreenshot', { format: 'png' })
     const name = `${String(i + 1).padStart(2, '0')}_p${String(p).replace('.', '-')}.png`

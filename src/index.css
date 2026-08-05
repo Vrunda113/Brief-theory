@@ -78,7 +78,129 @@ html.lenis body {
   overflow: hidden;
 }
 
+/* Cards away from the apex sit back; the live one comes forward. */
+.arch-card {
+  opacity: 0.55;
+  transition: opacity 600ms ease, filter 600ms ease;
+  filter: saturate(0.75);
+}
+
+.arch-card.is-live {
+  opacity: 1;
+  filter: saturate(1);
+}
+
+/* The sector name is replaced outright, so it is keyed and re-enters rather
+   than cross-fading against itself. */
+@keyframes industry-swap {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.industry-swap {
+  display: inline-block;
+  animation: industry-swap 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ---------------------------------------------------------------- pointer */
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 9999px;
+  /* Inverts whatever is behind it, so one pointer works on navy and on cream. */
+  mix-blend-mode: difference;
+  opacity: 0;
+  transition: opacity 250ms ease, width 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 320ms cubic-bezier(0.22, 1, 0.36, 1), border-color 320ms ease;
+}
+
+.cursor-dot {
+  width: 7px;
+  height: 7px;
+  background: #fff;
+}
+
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+}
+
+.cursor-on .cursor-dot,
+.cursor-on .cursor-ring {
+  opacity: 1;
+}
+
+/* Over anything clickable the ring opens and the dot recedes into it. */
+.cursor-wide .cursor-ring {
+  width: 62px;
+  height: 62px;
+  border-color: rgba(255, 255, 255, 0.95);
+}
+
+.cursor-wide .cursor-dot {
+  width: 4px;
+  height: 4px;
+}
+
+/* The drawn pointer replaces the system one — but never over a field, where
+   the I-beam is carrying real information about what the control does. */
+.has-cursor,
+.has-cursor * {
+  cursor: none;
+}
+
+.has-cursor input,
+.has-cursor textarea,
+.has-cursor select {
+  cursor: auto;
+}
+
+/* ------------------------------------------------- brief-to-theory sequence */
+
+.seq-step {
+  transition: opacity 300ms ease;
+}
+
+/* Hovering one step sets the rest back, so the highlight is a comparison
+   rather than a lone colour change. */
+.seq:hover .seq-step {
+  opacity: 0.42;
+}
+
+.seq .seq-step:hover {
+  opacity: 1;
+}
+
+.seq-dot,
+.seq-tag,
+.seq-line {
+  transition: color 300ms ease, border-color 300ms ease, background-color 300ms ease;
+}
+
+.seq-step:hover .seq-dot {
+  border-color: var(--cream);
+  background-color: rgba(246, 240, 233, 0.14);
+  color: var(--cream);
+}
+
+.seq-step:hover .seq-tag {
+  color: var(--slate-pale);
+}
+
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -86,48 +208,5 @@ html.lenis body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-
-  /* The pinned sequences stack their panels absolutely and reveal one at a
-     time. With the scroll animation gone, that would render every panel on
-     top of the others — so lay them out in normal flow instead. */
-  [data-sequence] {
-    height: auto !important;
-    min-height: 0 !important;
-    overflow: visible !important;
-  }
-
-  [data-sequence-track] {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 5rem !important;
-    min-height: 0 !important;
-  }
-
-
-  [data-rail] {
-    display: none !important;
-  }
-
-  /* The leaves stack in normal flow instead of turning. */
-  [data-page] {
-    transform: none !important;
-    backface-visibility: visible !important;
-  }
-
-  [data-page] > [data-shade],
-  [data-page] > [data-lift] {
-    display: none !important;
-  }
-
-  [data-sequence-track] > [data-step],
-  [data-sequence-track] > [data-stage],
-  [data-sequence-track] > [data-question],
-  [data-sequence-track] > [data-belief] {
-    position: relative !important;
-    inset: auto !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    filter: none !important;
   }
 }

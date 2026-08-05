@@ -8,9 +8,6 @@ export const BRAND = {
   linkedin: 'www.linkedin.com/company/brief-theory',
   linkedinUrl: 'https://www.linkedin.com/company/brief-theory',
   location: 'Surat, India',
-  founder: 'Khushali Bochiwal',
-  founderRole: 'Founder & Creative Director',
-  founderQuote: 'Clarity is a competitive advantage. It can be designed.',
 }
 
 export const NAV_LINKS = [
@@ -57,11 +54,24 @@ export const QUESTIONS = [
   },
 ]
 
-export const QUESTION_INTRO = {
-  eyebrow: '04 — The problem',
-  headline: 'Most brands don’t fail from a lack of creativity.',
-  emphasis: 'They fail from a lack of clarity.',
-  body: 'Trends move faster than judgement. Assumptions replace understanding. And a brand built on noise is rebuilt every eighteen months.',
+/**
+ * Beat 1 — the opening letter, section 01 of the brand profile. Prose, not a
+ * headline: the paragraphs are separate so the measure can be set for reading
+ * rather than for display.
+ *
+ * The profile's closing line reads "This document is not a portfolio" — on a
+ * page rather than a bound document, "This" carries it without the noun.
+ */
+export const LETTER = {
+  eyebrow: '01 — A letter',
+  heading: 'Why we exist.',
+  lede: 'Every brand we admire began the same way: someone chose to think before they made.',
+  body: [
+    'The industry inverted this. Output became the measure. Speed became the strategy. Briefs became formalities read once, answered with noise.',
+    'Brief Theory began with a quieter conviction: that inside every brief is a theory of the business. Why it should win. Whom it should matter to. What it should never say.',
+    'Our work is to find that theory and to build everything else upon it.',
+  ],
+  close: 'This is not a portfolio. It is a way of thinking, set in type.',
 }
 
 /** Beat 4 — the five disciplines where strategy becomes tangible. */
@@ -349,3 +359,97 @@ export const PERSPECTIVE_TITLES = [
 
 /** Marginal letters for the chapter-09 timeline: brief, question, insight, theory, result. */
 export const CASE_LOGIC_LETTERS = ['B', 'Q', 'I', 'T', 'R']
+
+/**
+ * The sectors the practice works across. Each carries its own card face and its
+ * own backdrop film, so the opening screen changes stock as the arch turns.
+ * Swap the two paths here and the whole section follows — nothing else
+ * references the files.
+ *
+ * Both sets are stand-ins pulled from existing client work. Replace them with
+ * the industry set when it lands: one portrait still and one landscape film per
+ * sector, plus a poster frame for the film.
+ */
+export const INDUSTRIES = [
+  {
+    index: '01',
+    name: 'Luxury',
+    image: '/images/skin-world/womens-day-static.webp',
+    video: '/video/riccis/evening.mp4',
+    poster: '/video/riccis/evening.jpg',
+  },
+  {
+    index: '02',
+    name: 'Fashion',
+    image: '/images/skin-world/lip-filler-story.webp',
+    video: '/video/riccis/espresso-martini.mp4',
+    poster: '/video/riccis/espresso-martini.jpg',
+  },
+  {
+    index: '03',
+    name: 'Hospitality',
+    image: '/video/riccis/evening.jpg',
+    video: '/video/riccis/island.mp4',
+    poster: '/video/riccis/island.jpg',
+  },
+  {
+    index: '04',
+    name: 'Food & Beverage',
+    image: '/video/cafe-pulp/sushi.jpg',
+    video: '/video/cafe-pulp/sushi.mp4',
+    poster: '/video/cafe-pulp/sushi.jpg',
+  },
+  {
+    index: '05',
+    name: 'Lifestyle',
+    image: '/video/cafe-pulp/evening.jpg',
+    video: '/video/cafe-pulp/evening.mp4',
+    poster: '/video/cafe-pulp/evening.jpg',
+  },
+  {
+    index: '06',
+    name: 'Real Estate',
+    image: '/video/riccis/island.jpg',
+    video: '/video/riccis/manager-away.mp4',
+    poster: '/video/riccis/manager-away.jpg',
+  },
+  {
+    index: '07',
+    name: 'Healthcare',
+    image: '/images/skin-world/benefits-of-vitamin-c.webp',
+    video: '/video/riccis/matcha.mp4',
+    poster: '/video/riccis/matcha.jpg',
+  },
+  {
+    index: '08',
+    name: 'Professional Services',
+    image: '/video/riccis/coffee-cup.jpg',
+    video: '/video/riccis/coffee-cup.mp4',
+    poster: '/video/riccis/coffee-cup.jpg',
+  },
+  {
+    index: '09',
+    name: 'Startups',
+    image: '/video/cafe-pulp/kitchen.jpg',
+    video: '/video/cafe-pulp/kitchen.mp4',
+    poster: '/video/cafe-pulp/kitchen.jpg',
+  },
+]
+
+/**
+ * Section 14 of the brand profile. The PDF's line break drops the dash in
+ * "into practice — an agency"; restored here, since on a page the sentence has
+ * to hold on its own rather than across a column break.
+ */
+export const FOUNDER = {
+  eyebrow: '14 — The founder',
+  name: 'Khushali Bochiwal',
+  role: 'Founder & Creative Director',
+  quote: 'Clarity is a competitive advantage. It can be designed.',
+  body: [
+    'A strategist first and a designer second, on principle. Years spent inside branding, digital and marketing taught one durable lesson: the brands that endure decide who they are before deciding how they look.',
+    'Brief Theory was founded to put that belief into practice — an agency where thinking is the product, and design is its proof.',
+  ],
+  portrait: '/images/founder/khushali.webp',
+  portraitSmall: '/images/founder/khushali-600.webp',
+}

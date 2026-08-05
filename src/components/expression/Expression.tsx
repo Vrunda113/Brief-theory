@@ -10,13 +10,13 @@ export function Expression() {
   return (
     <section
       id="expression"
-      className="relative z-20 bg-navy px-6 pb-24 pt-16 md:px-10 md:pb-32 md:pt-20"
+      className="relative z-20 bg-cream px-6 pb-24 pt-16 md:px-10 md:pb-32 md:pt-20"
     >
       <div className="mx-auto max-w-6xl">
-        {/* The rule and the chapter number are the whole boundary here: the
-            section above is navy too, so without them the work simply runs on
-            from the argument that precedes it. */}
-        <div className="h-px w-full bg-cream/15" />
+        {/* The section above (the prologue) is navy, so the colour change is
+            already the boundary; the rule and number just carry the same
+            chapter-marking convention as the rest of the page. */}
+        <div className="h-px w-full bg-navy/15" />
 
         <FadeIn y={20}>
           <p className="mb-4 mt-14 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-brand sm:text-xs md:mt-20">
@@ -26,7 +26,7 @@ export function Expression() {
 
         <FadeIn y={30} delay={0.05}>
           <h2
-            className="headline-gradient mb-11 font-black uppercase leading-none tracking-tight md:mb-11"
+            className="headline-gradient-ink mb-11 font-black uppercase leading-none tracking-tight md:mb-11"
             style={{ fontSize: 'clamp(2.1rem, 8.5vw, 6.5rem)' }}
           >
             Selected work

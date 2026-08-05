@@ -76,9 +76,8 @@ try {
 
     const expr = `(() => {
       const out = []
-      for (const page of document.querySelectorAll('[data-page]')) {
-        // The padded column inside the leaf, and the content it holds.
-        const col = page.firstElementChild.matches('span') ? page.children[1] : page.firstElementChild
+      for (const page of document.querySelectorAll('[data-sheet]')) {
+        const col = page.querySelector('[data-col]')
         const inner = col.firstElementChild
         const folio = page.querySelector('h2') ? page.querySelector('h2').textContent.trim().slice(0, 22) : '?'
         // Content bottom relative to the padded column's bottom edge.

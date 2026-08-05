@@ -16,15 +16,9 @@ const W = Number(process.env.VW ?? 1440)
 const H = Number(process.env.VH ?? 900)
 
 const BEATS = [
-  { at: 0.000, label: 'cold open' },
-  { at: 0.001, label: 'hero' },
-  { at: 0.070, label: 'prologue' },
-  { at: 0.118, label: 'work seam' },
-  { at: 0.470, label: '06 core beliefs' },
-  { at: 0.635, label: '07 tangible' },
-  { at: 0.775, label: '08 how we think' },
-  { at: 0.900, label: '09 in practice' },
-  { at: 0.985, label: 'invitation' },
+  { at: 0.35, label: 'expression to method seam' },
+  { at: 0.45, label: 'method 06' },
+  { at: 0.62, label: 'past method into invitation' },
 ]
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
