@@ -20,14 +20,14 @@
 
 html,
 body {
-  background: var(--navy);
+  background: var(--cream);
   font-family: 'Kanit', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* The cold open opens on cream. Painting #root cream before React mounts stops
-   a frame of navy flashing through on first load. */
+/* Painted before React mounts so no frame of a different ground flashes
+   through on first load. */
 #root {
   background: var(--cream);
   font-family: 'Kanit', sans-serif;

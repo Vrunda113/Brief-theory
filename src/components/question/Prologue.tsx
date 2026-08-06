@@ -9,10 +9,10 @@ import { FadeIn } from '../shared/FadeIn'
  */
 export function Prologue() {
   return (
-    <section id="letter" className="relative px-6 py-24 md:px-10 md:py-40">
+    <section id="letter" className="relative bg-navy px-6 py-24 md:px-10 md:py-40">
       <div className="mx-auto max-w-3xl">
         <FadeIn y={20}>
-          <p className="mb-7 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-brand sm:text-xs">
+          <p className="mb-7 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-steel sm:text-xs">
             {LETTER.eyebrow}
           </p>
         </FadeIn>
@@ -35,7 +35,7 @@ export function Prologue() {
         <div className="mt-7 space-y-5 sm:mt-9 sm:space-y-6">
           {LETTER.body.map((para, i) => (
             <FadeIn key={para.slice(0, 24)} y={20} delay={0.16 + i * 0.06}>
-              <p className="text-sm font-light leading-relaxed text-slate-steel/75 sm:text-base">
+              <p className="text-sm font-light leading-relaxed text-slate-steel/85 sm:text-base">
                 {para}
               </p>
             </FadeIn>
@@ -43,8 +43,8 @@ export function Prologue() {
         </div>
 
         <FadeIn y={20} delay={0.4}>
-          <div className="mt-10 border-t border-slate-steel/20 pt-6 sm:mt-12 sm:pt-7">
-            <p className="font-light italic leading-relaxed text-slate-steel/70 sm:text-lg">
+          <div className="mt-10 border-t border-slate-steel/25 pt-6 sm:mt-12 sm:pt-7">
+            <p className="font-light italic leading-relaxed text-slate-steel/85 sm:text-lg">
               {LETTER.close}
             </p>
           </div>

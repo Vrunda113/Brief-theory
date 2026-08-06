@@ -4,8 +4,8 @@ import { gsap, prefersReducedMotion, ScrollTrigger } from '../../lib/motion'
 
 /**
  * Chapter 06 of the brand profile, presented as a single sheet: sticky at the
- * top of the viewport with a rounded fore-edge and a thrown shadow, so it
- * still reads as a page rising over the section above it. The label, display
+ * top of the viewport with a rounded fore-edge and a thrown shadow, so it still
+ * reads as a page rising over the section above it. The label, display
  * and belief items cascade in as it arrives, on their own clock rather than
  * tied to the scrub — a stagger driven by scroll position smears into nothing.
  *
@@ -53,9 +53,9 @@ export function Chapters() {
   return (
     <section id="method" ref={root} className="relative bg-navy">
       {/* ------------------------------------------------ 06 · Core beliefs */}
-      <Sheet tone="dark" folio="06">
-        <Label tone="dark">06 — Core beliefs</Label>
-        <Display tone="dark">{beliefs.heading}</Display>
+      <Sheet folio="06">
+        <Label>06 — Core beliefs</Label>
+        <Display>{beliefs.heading}</Display>
 
         {/* Two columns even on a phone: six stacked beliefs run past one
             screen, and the sheet clips at the viewport. */}
@@ -63,7 +63,7 @@ export function Chapters() {
           <div className="grid grid-cols-2 gap-x-5 gap-y-[clamp(1.25rem,3.5vh,2.5rem)] sm:gap-x-10 lg:grid-cols-3">
             {beliefs.items.map((item) => (
               <div key={item.index} data-reveal>
-                <p className="font-serif text-base text-slate-steel/70 sm:text-lg">
+                <p className="font-serif text-base text-slate-steel/80 sm:text-lg">
                   {item.index}
                 </p>
                 <h3
@@ -72,7 +72,7 @@ export function Chapters() {
                 >
                   {item.title}
                 </h3>
-                <p className="max-w-[34ch] text-[0.72rem] font-light leading-relaxed text-slate-pale/65 sm:text-[0.85rem]">
+                <p className="max-w-[34ch] text-[0.72rem] font-light leading-relaxed text-slate-pale/80 sm:text-[0.85rem]">
                   {item.body}
                 </p>
               </div>
@@ -88,21 +88,13 @@ export function Chapters() {
  * The sheet itself. Sticky, so it holds the viewport and its rounded fore-edge
  * reads as a page arriving over whatever section precedes it.
  */
-function Sheet({
-  tone,
-  folio,
-  children,
-}: {
-  tone: 'dark' | 'light'
-  folio: string
-  children: ReactNode
-}) {
+function Sheet({ folio, children }: { folio: string; children: ReactNode }) {
   return (
     <article
       data-sheet
-      className={`sticky top-0 h-svh overflow-hidden rounded-t-[36px] shadow-[0_-28px_56px_rgba(11,34,71,0.4)] md:rounded-t-[52px] ${
-        tone === 'dark' ? 'bg-navy-deep' : 'bg-cream'
-      }`}
+      // Navy rising over the cream section above it, so the fore-edge reads on
+      // the colour change and the shadow only has to seat it.
+      className="sticky top-0 h-svh overflow-hidden rounded-t-[36px] bg-navy-deep shadow-[0_-28px_56px_-12px_rgba(11,34,71,0.45)] md:rounded-t-[52px]"
     >
       <div className="h-full">
         {/* Folio numeral, cropped off the fore-edge the way a printed one
@@ -110,9 +102,7 @@ function Sheet({
             remainder. */}
         <span
           aria-hidden="true"
-          className={`pointer-events-none absolute -bottom-[0.16em] -right-[0.05em] select-none font-serif leading-none ${
-            tone === 'dark' ? 'text-cream/[0.045]' : 'text-navy/[0.05]'
-          }`}
+          className="pointer-events-none absolute -bottom-[0.16em] -right-[0.05em] select-none font-serif leading-none text-cream/[0.05]"
           style={{ fontSize: 'clamp(13rem, 28vw, 27rem)' }}
         >
           {folio}
@@ -140,13 +130,11 @@ function Body({ children }: { children: ReactNode }) {
   )
 }
 
-function Display({ tone, children }: { tone: 'dark' | 'light'; children: ReactNode }) {
+function Display({ children }: { children: ReactNode }) {
   return (
     <h2
       data-reveal
-      className={`font-serif font-medium leading-[1.05] tracking-[-0.01em] ${
-        tone === 'dark' ? 'text-cream' : 'text-navy'
-      }`}
+      className="font-serif font-medium leading-[1.05] tracking-[-0.01em] text-cream"
       style={{
         // The vh term matters: the sheet is one screen, so on a short laptop
         // the display has to give room back to the content.
@@ -158,13 +146,11 @@ function Display({ tone, children }: { tone: 'dark' | 'light'; children: ReactNo
   )
 }
 
-function Label({ tone, children }: { tone: 'dark' | 'light'; children: ReactNode }) {
+function Label({ children }: { children: ReactNode }) {
   return (
     <p
       data-reveal
-      className={`mb-[clamp(0.85rem,2.5vh,1.6rem)] text-[0.62rem] font-light uppercase tracking-[0.38em] sm:text-[0.7rem] ${
-        tone === 'dark' ? 'text-slate-steel/80' : 'text-navy/50'
-      }`}
+      className="mb-[clamp(0.85rem,2.5vh,1.6rem)] text-[0.62rem] font-light uppercase tracking-[0.38em] text-slate-steel/90 sm:text-[0.7rem]"
     >
       {children}
     </p>

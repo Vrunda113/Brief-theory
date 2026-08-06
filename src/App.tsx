@@ -15,7 +15,7 @@ export default function App() {
   const handleComplete = useCallback(() => setReady(true), [])
 
   return (
-    <main className="relative bg-navy" style={{ overflowX: 'clip' }}>
+    <main className="relative bg-cream" style={{ overflowX: 'clip' }}>
       <Cursor />
       <ColdOpen onComplete={handleComplete} />
       <Industries ready={ready} />

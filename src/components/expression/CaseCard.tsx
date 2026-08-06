@@ -37,13 +37,14 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
         <header className="mb-7 flex flex-wrap items-start justify-between gap-5 md:mb-9">
           <div className="flex items-start gap-5 md:gap-8">
             <p
+              aria-hidden="true"
               className="font-black leading-none text-cream/15"
               style={{ fontSize: 'clamp(2rem, 5vw, 4.25rem)' }}
             >
               {study.index}
             </p>
             <div className="pt-1 md:pt-3">
-              <p className="mb-2 text-[0.6rem] font-light uppercase tracking-[0.3em] text-slate-brand sm:text-[0.7rem]">
+              <p className="mb-2 text-[0.6rem] font-light uppercase tracking-[0.3em] text-slate-steel sm:text-[0.7rem]">
                 {study.category} · {study.sector}
               </p>
               <h3
@@ -62,7 +63,7 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
 
         <div className="mb-7 grid gap-6 md:mb-9 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:gap-7">
           <div>
-            <p className="mb-2 text-[0.6rem] font-light uppercase tracking-[0.3em] text-slate-brand sm:text-[0.7rem]">
+            <p className="mb-2 text-[0.6rem] font-light uppercase tracking-[0.3em] text-slate-steel sm:text-[0.7rem]">
               The theory
             </p>
             <p
@@ -130,7 +131,7 @@ function PlaceholderStrip() {
           }`}
           style={{ height: 'clamp(140px, 17vw, 232px)' }}
         >
-          <span className="text-[0.55rem] font-light uppercase tracking-[0.25em] text-slate-brand/60">
+          <span className="text-[0.55rem] font-light uppercase tracking-[0.25em] text-slate-steel/80">
             Soon
           </span>
         </div>

@@ -233,9 +233,8 @@ export function Industries({ ready }: IndustriesProps) {
     >
       {/* The film, full bleed, with enough wash over it that cream type holds. */}
       <Backdrop active={active} />
-      {/* Type sits on both sides now, so the wash has to be even across the
-          width rather than heavy at the left edge — with the foot darkened so
-          the arch reads against it. */}
+      {/* Type sits on both sides, so the wash is even across the width rather
+          than heavy at one edge, with the foot darkened so the arch reads. */}
       <div className="absolute inset-0 bg-navy/70" />
       <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/25 to-navy/45" />
 
@@ -249,7 +248,7 @@ export function Industries({ ready }: IndustriesProps) {
         }}
       >
         <motion.div {...rise(0.15)}>
-          <p className="mb-1.5 text-[0.58rem] font-light uppercase tracking-[0.34em] text-slate-brand sm:text-[0.66rem]">
+          <p className="mb-1.5 text-[0.58rem] font-light uppercase tracking-[0.34em] text-slate-steel sm:text-[0.66rem]">
             We work across
           </p>
           {/* Fixed height, so the button below never shifts as names of
@@ -274,7 +273,7 @@ export function Industries({ ready }: IndustriesProps) {
             Flushed to the right margin so it answers the sector block on the
             left rather than drifting toward the middle. */}
         <motion.div {...rise(0.45)} className="w-full max-w-2xl lg:w-fit lg:justify-self-end">
-          <p className="mb-3 text-[0.58rem] font-light uppercase tracking-[0.34em] text-slate-brand sm:text-[0.66rem]">
+          <p className="mb-3 text-[0.58rem] font-light uppercase tracking-[0.34em] text-slate-steel sm:text-[0.66rem]">
             {CASE_LOGIC.eyebrow}
           </p>
 
@@ -285,7 +284,7 @@ export function Industries({ ready }: IndustriesProps) {
             From brief to <em className="font-serif italic text-slate-pale">theory.</em>
           </h2>
 
-          <p className="mt-2 text-[0.78rem] font-light italic leading-relaxed text-slate-steel/80 sm:text-[0.88rem]">
+          <p className="mt-2 text-[0.78rem] font-light italic leading-relaxed text-slate-steel/85 sm:text-[0.88rem]">
             {CASE_LOGIC.lede}
           </p>
 
@@ -309,7 +308,7 @@ export function Industries({ ready }: IndustriesProps) {
                   {CASE_LOGIC_LETTERS[i]}
                 </span>
                 <div className="min-w-0 pt-0.5">
-                  <p className="seq-tag mb-0.5 text-[0.55rem] font-light uppercase tracking-[0.22em] text-slate-brand sm:text-[0.62rem]">
+                  <p className="seq-tag mb-0.5 text-[0.55rem] font-light uppercase tracking-[0.22em] text-slate-steel sm:text-[0.62rem]">
                     {step.label}
                   </p>
                   <p

@@ -19,7 +19,7 @@ export function Expression() {
         <div className="h-px w-full bg-navy/15" />
 
         <FadeIn y={20}>
-          <p className="mb-4 mt-14 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-brand sm:text-xs md:mt-20">
+          <p className="mb-4 mt-14 text-[0.65rem] font-light uppercase tracking-[0.45em] text-navy/70 sm:text-xs md:mt-20">
             05 — The expression
           </p>
         </FadeIn>

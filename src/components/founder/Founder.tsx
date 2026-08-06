@@ -39,12 +39,12 @@ export function Founder() {
     <section
       id="founder"
       ref={root}
-      className="relative bg-navy px-6 py-24 md:px-10 md:py-32"
+      className="relative bg-cream px-6 py-24 md:px-10 md:py-32"
     >
       <div className="mx-auto grid max-w-6xl items-center gap-12 md:gap-16 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:gap-20">
         {/* ------------------------------------------------------- portrait */}
         <div className="mx-auto w-full max-w-sm lg:mx-0 lg:max-w-none">
-          <div className="relative overflow-hidden rounded-t-[140px] rounded-b-2xl bg-navy-deep">
+          <div className="relative overflow-hidden rounded-t-[140px] rounded-b-2xl bg-cream">
             <motion.img
               src={FOUNDER.portrait}
               srcSet={`${FOUNDER.portraitSmall} 600w, ${FOUNDER.portrait} 1200w`}
@@ -68,7 +68,7 @@ export function Founder() {
             {!reduced && (
               <motion.div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 origin-bottom bg-navy"
+                className="pointer-events-none absolute inset-0 origin-bottom bg-cream"
                 initial={{ scaleY: 1 }}
                 whileInView={{ scaleY: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
@@ -77,21 +77,21 @@ export function Founder() {
             )}
 
             {/* Settles the foot of the picture into the ground it sits on. */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-navy/70 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-cream/80 to-transparent" />
           </div>
         </div>
 
         {/* ----------------------------------------------------------- copy */}
         <div>
           <FadeIn y={20}>
-            <p className="mb-6 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-brand sm:text-xs">
+            <p className="mb-6 text-[0.65rem] font-light uppercase tracking-[0.45em] text-navy/70 sm:text-xs">
               {FOUNDER.eyebrow}
             </p>
           </FadeIn>
 
           <FadeIn y={26} delay={0.08}>
             <h2
-              className="font-serif font-medium leading-[1.05] text-cream"
+              className="font-serif font-medium leading-[1.05] text-navy"
               style={{ fontSize: 'clamp(1.9rem, 4vw, 3.4rem)' }}
             >
               {FOUNDER.name}
@@ -99,15 +99,15 @@ export function Founder() {
           </FadeIn>
 
           <FadeIn y={18} delay={0.16}>
-            <p className="mt-3 text-[0.62rem] font-light uppercase tracking-[0.32em] text-slate-steel sm:text-[0.72rem]">
+            <p className="mt-3 text-[0.62rem] font-light uppercase tracking-[0.32em] text-navy/70 sm:text-[0.72rem]">
               {FOUNDER.role}
             </p>
           </FadeIn>
 
           <FadeIn y={22} delay={0.24}>
-            <blockquote className="mt-8 border-l border-slate-steel/30 pl-6 sm:mt-10 sm:pl-7">
+            <blockquote className="mt-8 border-l border-navy/20 pl-6 sm:mt-10 sm:pl-7">
               <p
-                className="font-serif italic leading-snug text-slate-pale"
+                className="font-serif italic leading-snug text-navy/85"
                 style={{ fontSize: 'clamp(1.1rem, 2vw, 1.6rem)' }}
               >
                 “{FOUNDER.quote}”
@@ -118,7 +118,7 @@ export function Founder() {
           <div className="mt-8 space-y-5 sm:mt-10">
             {FOUNDER.body.map((para, i) => (
               <FadeIn key={para.slice(0, 24)} y={20} delay={0.32 + i * 0.08}>
-                <p className="max-w-xl text-sm font-light leading-relaxed text-slate-steel/75 sm:text-base">
+                <p className="max-w-xl text-sm font-light leading-relaxed text-navy/72 sm:text-base">
                   {para}
                 </p>
               </FadeIn>

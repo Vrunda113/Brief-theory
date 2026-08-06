@@ -1,7 +1,4 @@
-/**
- * Samples the cold open at close intervals from page load, so the writing
- * animation can be checked frame by frame rather than guessed at.
- */
+/** Navigates straight to a section by id/selector and screenshots it. */
 import { spawn } from 'node:child_process'
 import { writeFile, mkdir } from 'node:fs/promises'
 import path from 'node:path'
@@ -9,9 +6,13 @@ import path from 'node:path'
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
 const URL = process.env.SHOT_URL ?? 'http://localhost:5173/'
 const OUT =
-  'C:/Users/vrund/AppData/Local/Temp/claude/D--DeepFack-main/4e5e8675-6bf1-4504-94c3-282edbb43007/scratchpad/coldopen'
-const PORT = 9338
-const AT_MS = [400, 700, 1000, 1300, 1600, 1900, 2200, 2500, 2900, 3400, 4200, 5200]
+  'C:/Users/vrund/AppData/Local/Temp/claude/D--DeepFack-main/4e5e8675-6bf1-4504-94c3-282edbb43007/scratchpad/anchor'
+const PORT = 9359
+const W = Number(process.env.VW ?? 1600)
+const H = Number(process.env.VH ?? 900)
+const SEL = process.env.SECTION ?? '#method'
+const EXTRA = Number(process.env.EXTRA ?? 0)
+const NAME = process.env.NAME ?? 'shot'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -22,7 +23,7 @@ const chrome = spawn(CHROME, [
   '--mute-audio',
   '--no-first-run',
   `--remote-debugging-port=${PORT}`,
-  '--window-size=1280,800',
+  `--window-size=${W},${H}`,
   'about:blank',
 ])
 
@@ -35,7 +36,7 @@ try {
       targets = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json()
       if (targets.some((t) => t.type === 'page')) break
     } catch {
-      /* not up yet */
+      /* not up */
     }
   }
   ws = new WebSocket(targets.find((t) => t.type === 'page').webSocketDebuggerUrl)
@@ -61,22 +62,29 @@ try {
     })
 
   await send('Page.enable')
-  await mkdir(OUT, { recursive: true })
-
-  // Reload so the once-only cold open replays, then sample against that clock.
-  await send('Page.navigate', { url: URL })
-  const t0 = Date.now()
-
-  for (const [i, at] of AT_MS.entries()) {
-    const wait = at - (Date.now() - t0)
-    if (wait > 0) await sleep(wait)
-    const { data } = await send('Page.captureScreenshot', { format: 'png' })
-    await writeFile(
-      path.join(OUT, `${String(i + 1).padStart(2, '0')}_${at}ms.png`),
-      Buffer.from(data, 'base64'),
-    )
-    console.log(`t=${at}ms`)
+  if (process.env.REDUCED === '1') {
+    await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] })
   }
+  await send('Runtime.enable')
+  await send('Page.navigate', { url: URL })
+  await sleep(Number(process.env.WAIT ?? 10000))
+
+  const target = await send('Runtime.evaluate', {
+    expression: `document.querySelector('${SEL}').getBoundingClientRect().top + window.scrollY`,
+    returnByValue: true,
+  })
+  const y = target.result.value
+  for (let s = 1; s <= 30; s++) {
+    await send('Runtime.evaluate', { expression: `window.scrollTo(0, ${y} * ${s} / 30 + ${EXTRA} * ${s} / 30)` })
+    await sleep(90)
+  }
+  await sleep(1500)
+
+  await mkdir(OUT, { recursive: true })
+  const { data } = await send('Page.captureScreenshot', { format: 'png' })
+  const file = path.join(OUT, `${NAME}.png`)
+  await writeFile(file, Buffer.from(data, 'base64'))
+  console.log('saved', file)
 } finally {
   ws?.close()
   chrome.kill()

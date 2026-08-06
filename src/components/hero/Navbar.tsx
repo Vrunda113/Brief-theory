@@ -11,7 +11,7 @@ export function Navbar() {
       className="relative z-30 flex items-center justify-between px-6 pt-6 md:px-10 md:pt-8"
     >
       <a href="#top" className="shrink-0 transition-opacity duration-200 hover:opacity-80">
-        {/* Over film the mark carries its own cream plate. */}
+        {/* Over film washed into navy, the mark carries its own cream plate. */}
         <Wordmark className="h-12 sm:h-14 md:h-16" />
       </a>
 
