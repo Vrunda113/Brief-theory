@@ -1,0 +1,17 @@
+diff --git a/src/App.tsx b/src/App.tsx
+index add1926..b4c1da9 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -22,9 +22,9 @@ export default function App() {
+       <ColdOpen onComplete={handleComplete} />
+       <Industries ready={ready} />
+       <Prologue />
+-      <Chapters />
+-      <Services />
+       <Theory />
++      <Services />
++      <Chapters />
+       <Expression />
+       <Founder />
+       <Invitation />
+

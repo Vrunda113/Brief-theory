@@ -5,6 +5,7 @@ import { Cursor } from './components/shared/Cursor'
 import { Industries } from './components/industries/Industries'
 import { Prologue } from './components/question/Prologue'
 import { Services } from './components/services/Services'
+import { Theory } from './components/theory/Theory'
 import { Expression } from './components/expression/Expression'
 import { Chapters } from './components/chapters/Chapters'
 import { Founder } from './components/founder/Founder'
@@ -21,6 +22,7 @@ export default function App() {
       <ColdOpen onComplete={handleComplete} />
       <Industries ready={ready} />
       <Prologue />
+      <Theory />
       <Services />
       <Chapters />
       <Expression />

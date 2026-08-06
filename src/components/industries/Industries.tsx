@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { CASE_LOGIC, CASE_LOGIC_LETTERS, HERO, INDUSTRIES } from '../../config/copy'
+import { HERO, INDUSTRIES } from '../../config/copy'
 import { EASE, gsap, prefersReducedMotion } from '../../lib/motion'
 import { ContactButton } from '../shared/Buttons'
 import { Navbar } from '../hero/Navbar'
@@ -240,7 +240,8 @@ export function Industries({ ready }: IndustriesProps) {
 
       <Navbar />
 
-      {/* Sector on the left, the argument on the right. */}
+      {/* The active sector holds the opening argument; the theory sequence now
+          has its own section later in the story. */}
       <div
         className="relative z-10 grid flex-1 items-center gap-x-16 gap-y-12 px-6 pt-6 md:px-10 lg:grid-cols-2"
         style={{
@@ -267,61 +268,6 @@ export function Industries({ ready }: IndustriesProps) {
           </div>
         </motion.div>
 
-        {/* Section 09 of the profile: one engagement reduced to its logic. It
-            sits here rather than later in the page because it is the shortest
-            complete demonstration of the practice — the argument, on arrival.
-            Flushed to the right margin so it answers the sector block on the
-            left rather than drifting toward the middle. */}
-        <motion.div {...rise(0.45)} className="w-full max-w-2xl lg:w-fit lg:justify-self-end">
-          <p className="mb-3 text-[0.58rem] font-light uppercase tracking-[0.34em] text-slate-steel sm:text-[0.66rem]">
-            {CASE_LOGIC.eyebrow}
-          </p>
-
-          <h2
-            className="font-serif font-medium leading-[1.1] text-cream"
-            style={{ fontSize: 'clamp(1.5rem, 2.8vw, 2.5rem)' }}
-          >
-            From brief to <em className="font-serif italic text-slate-pale">theory.</em>
-          </h2>
-
-          <p className="mt-2 text-[0.78rem] font-light italic leading-relaxed text-slate-steel/85 sm:text-[0.88rem]">
-            {CASE_LOGIC.lede}
-          </p>
-
-          <ol className="seq mt-6 sm:mt-7">
-            {CASE_LOGIC.steps.map((step, i) => (
-              <li
-                key={step.index}
-                className="seq-step relative flex gap-4 pb-[clamp(0.7rem,1.8vh,1.15rem)] sm:gap-5"
-              >
-                {/* Thread down the margin, stopping at the last letter. */}
-                {i < CASE_LOGIC.steps.length - 1 && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute bottom-0 left-[0.86rem] top-[1.75rem] w-px bg-slate-steel/25"
-                  />
-                )}
-                <span
-                  data-cursor-grow
-                  className="seq-dot relative z-10 flex h-[1.72rem] w-[1.72rem] flex-none items-center justify-center rounded-full border border-slate-steel/45 font-serif text-[0.72rem] text-slate-pale"
-                >
-                  {CASE_LOGIC_LETTERS[i]}
-                </span>
-                <div className="min-w-0 pt-0.5">
-                  <p className="seq-tag mb-0.5 text-[0.55rem] font-light uppercase tracking-[0.22em] text-slate-steel sm:text-[0.62rem]">
-                    {step.label}
-                  </p>
-                  <p
-                    className="seq-line font-serif italic leading-snug text-cream"
-                    style={{ fontSize: 'clamp(0.9rem, 1.25vw, 1.1rem)' }}
-                  >
-                    {step.line}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </motion.div>
       </div>
 
       {/*
