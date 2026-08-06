@@ -1,0 +1,169 @@
+diff --git a/src/App.tsx b/src/App.tsx
+index 6c38610..48c7431 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -4,6 +4,7 @@ import { ColdOpen } from './components/cold-open/ColdOpen'
+ import { Cursor } from './components/shared/Cursor'
+ import { Industries } from './components/industries/Industries'
+ import { Prologue } from './components/question/Prologue'
++import { Services } from './components/services/Services'
+ import { Expression } from './components/expression/Expression'
+ import { Chapters } from './components/chapters/Chapters'
+ import { Founder } from './components/founder/Founder'
+@@ -20,6 +21,7 @@ export default function App() {
+       <ColdOpen onComplete={handleComplete} />
+       <Industries ready={ready} />
+       <Prologue />
++      <Services />
+       <Expression />
+       <Chapters />
+       <Founder />
+diff --git a/src/components/services/Services.tsx b/src/components/services/Services.tsx
+new file mode 100644
+index 0000000..e1067a5
+--- /dev/null
++++ b/src/components/services/Services.tsx
+@@ -0,0 +1,130 @@
++import {
++  Bot,
++  Compass,
++  Monitor,
++  PenTool,
++  Play,
++  TrendingUp,
++  type LucideIcon,
++} from 'lucide-react'
++import { PRACTICE } from '../../config/copy'
++import { FadeIn } from '../shared/FadeIn'
++
++const PILLAR_ICONS: Record<string, LucideIcon> = {
++  Strategy: Compass,
++  Identity: PenTool,
++  Digital: Monitor,
++  'AI Systems': Bot,
++  Growth: TrendingUp,
++}
++
++/**
++ * The bridge between the thinking and the work: a full-bleed film frame,
++ * followed by the five disciplines from the brand profile.
++ *
++ * The film frame is deliberately a placeholder for now. Keeping it as its
++ * own block means it can later become a <video> without changing the section
++ * rhythm or the service grid below it.
++ */
++export function Services() {
++  return (
++    <section id="services" className="relative z-20 bg-cream">
++      <VideoPlaceholder />
++
++      <div className="px-6 py-24 md:px-10 md:py-32 lg:py-40">
++        <div className="mx-auto max-w-6xl">
++          <FadeIn y={20}>
++            <p className="mb-5 text-[0.65rem] font-light uppercase tracking-[0.45em] text-navy/70 sm:text-xs">
++              04 — Where strategy becomes tangible
++            </p>
++          </FadeIn>
++
++          <FadeIn y={28} delay={0.05}>
++            <h2
++              className="max-w-5xl font-light leading-[1.06] tracking-tight text-navy"
++              style={{ fontSize: 'clamp(2rem, 5vw, 4.8rem)' }}
++            >
++              We don’t create deliverables.{' '}
++              <span className="italic">We build brand systems.</span>
++            </h2>
++          </FadeIn>
++
++          <div className="mt-16 border-t border-navy/20 md:mt-24">
++            {PRACTICE.pillars.map((pillar, index) => {
++              const Icon = PILLAR_ICONS[pillar.name]
++
++              return (
++                <FadeIn key={pillar.name} y={24} delay={index * 0.035}>
++                  <article className="grid gap-7 border-b border-navy/20 py-9 sm:py-11 md:grid-cols-[minmax(250px,0.72fr)_1fr] md:gap-12 lg:grid-cols-[minmax(300px,0.8fr)_1fr] lg:gap-20">
++                    <header className="flex items-start gap-5">
++                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-navy/25 text-navy sm:h-14 sm:w-14">
++                        <Icon aria-hidden="true" strokeWidth={1.35} className="h-5 w-5 sm:h-6 sm:w-6" />
++                      </div>
++
++                      <div className="pt-1">
++                        <p className="mb-1 text-[0.58rem] font-light tracking-[0.3em] text-navy/45">
++                          {pillar.index}
++                        </p>
++                        <h3
++                          className="font-medium leading-none text-navy"
++                          style={{ fontSize: 'clamp(1.55rem, 3vw, 2.8rem)' }}
++                        >
++                          {pillar.name}
++                        </h3>
++                      </div>
++                    </header>
++
++                    <ul className="grid content-start gap-x-8 gap-y-0 sm:grid-cols-2">
++                      {pillar.items.map((item) => (
++                        <li
++                          key={item}
++                          className="flex items-center gap-3 border-b border-navy/10 py-3.5 text-sm font-light text-navy/75 last:border-b-0 sm:text-base"
++                        >
++                          <span aria-hidden="true" className="h-1 w-1 shrink-0 rounded-full bg-navy/45" />
++                          {item}
++                        </li>
++                      ))}
++                    </ul>
++                  </article>
++                </FadeIn>
++              )
++            })}
++          </div>
++        </div>
++      </div>
++    </section>
++  )
++}
++
++function VideoPlaceholder() {
++  return (
++    <div
++      aria-label="Brand film placeholder"
++      className="relative flex w-full items-center justify-center overflow-hidden bg-navy-deep"
++      style={{ height: 'clamp(260px, 56.25vw, 820px)' }}
++    >
++      <div
++        aria-hidden="true"
++        className="absolute inset-0 opacity-70"
++        style={{
++          background:
++            'radial-gradient(circle at 50% 48%, rgba(108,130,162,0.28) 0%, rgba(15,47,94,0) 44%), linear-gradient(135deg, rgba(216,227,240,0.04), transparent 55%)',
++        }}
++      />
++
++      <FadeIn y={14} className="relative flex flex-col items-center text-center">
++        <span className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-cream/35 text-cream sm:h-20 sm:w-20">
++          <Play aria-hidden="true" strokeWidth={1.25} className="ml-1 h-5 w-5 sm:h-6 sm:w-6" />
++        </span>
++        <p className="text-[0.6rem] font-light uppercase tracking-[0.42em] text-slate-pale/70 sm:text-xs">
++          Brand film
++        </p>
++        <p className="mt-2 text-xs font-light text-cream/35 sm:text-sm">Video coming soon</p>
++      </FadeIn>
++
++      <p className="absolute bottom-5 left-6 text-[0.55rem] font-light uppercase tracking-[0.3em] text-cream/25 md:bottom-8 md:left-10">
++        Brief Theory
++      </p>
++    </div>
++  )
++}
+diff --git a/src/config/copy.ts b/src/config/copy.ts
+index f9ae7b2..72d405b 100644
+--- a/src/config/copy.ts
++++ b/src/config/copy.ts
+@@ -118,6 +118,7 @@ export const PRACTICE = {
+         'Content strategy',
+         'Social media',
+         'Creative production',
++        'Content systems',
+         'Performance marketing',
+       ],
+     },
+

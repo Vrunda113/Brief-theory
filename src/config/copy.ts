@@ -12,6 +12,7 @@ export const BRAND = {
 
 export const NAV_LINKS = [
   { label: 'Work', href: '#expression' },
+  { label: 'Services', href: '#services' },
   { label: 'Method', href: '#method' },
   { label: 'Contact', href: '#invitation' },
 ]
@@ -118,6 +119,7 @@ export const PRACTICE = {
         'Content strategy',
         'Social media',
         'Creative production',
+        'Content systems',
         'Performance marketing',
       ],
     },

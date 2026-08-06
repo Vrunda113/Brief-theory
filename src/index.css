@@ -199,6 +199,43 @@ html.lenis body {
   color: var(--slate-pale);
 }
 
+/* ----------------------------------------------------------- service rows */
+
+/* Service details stay out of the visual hierarchy until a row is explored.
+   Focus mirrors hover so keyboard and touch users are not locked out. */
+.service-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 300ms ease;
+}
+
+.service-row {
+  transition: background-color 350ms ease;
+}
+
+.service-row:hover,
+.service-row:focus,
+.service-row:focus-within {
+  background-color: rgba(22, 48, 92, 0.035);
+}
+
+.service-row:hover .service-reveal,
+.service-row:focus .service-reveal,
+.service-row:focus-within .service-reveal {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.service-row:hover .service-icon,
+.service-row:focus .service-icon,
+.service-row:focus-within .service-icon {
+  background-color: var(--navy);
+  border-color: var(--navy);
+  color: var(--cream);
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   *,

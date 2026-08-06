@@ -53,13 +53,13 @@ export function Chapters() {
 
   return (
     <section id="method" ref={root} className="relative bg-navy">
-      {/* ------------------------------------------------ 06 · Core beliefs */}
-      <Sheet folio="06">
+      {/* ------------------------------------------------ 05 · Core beliefs */}
+      <Sheet folio="05">
         <div className="flex min-h-0 flex-1 flex-col">
           <div className="grid md:grid-cols-[clamp(8.5rem,14vw,11rem)_minmax(0,1fr)] md:gap-[clamp(2.5rem,5vw,5rem)] lg:grid-cols-[clamp(9.5rem,15vw,12rem)_minmax(0,1fr)]">
             <div className="hidden md:block" aria-hidden="true" />
             <div>
-              <Label>06 — Core beliefs</Label>
+              <Label>05 — Core beliefs</Label>
               <Display>{beliefs.heading}</Display>
             </div>
           </div>
