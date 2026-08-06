@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, type ReactNode } from 'react'
 import { METHOD_STAGES } from '../../config/copy'
 import { gsap, prefersReducedMotion, ScrollTrigger } from '../../lib/motion'
+import { CinematicVideo } from '../shared/CinematicVideo'
 
 /**
  * Chapter 06 of the brand profile, presented as a single sheet: sticky at the
@@ -54,33 +55,61 @@ export function Chapters() {
     <section id="method" ref={root} className="relative bg-navy">
       {/* ------------------------------------------------ 06 · Core beliefs */}
       <Sheet folio="06">
-        <Label>06 — Core beliefs</Label>
-        <Display>{beliefs.heading}</Display>
-
-        {/* Two columns even on a phone: six stacked beliefs run past one
-            screen, and the sheet clips at the viewport. */}
-        <Body>
-          <div className="grid grid-cols-2 gap-x-5 gap-y-[clamp(1.25rem,3.5vh,2.5rem)] sm:gap-x-10 lg:grid-cols-3">
-            {beliefs.items.map((item) => (
-              <div key={item.index} data-reveal>
-                <p className="font-serif text-base text-slate-steel/80 sm:text-lg">
-                  {item.index}
-                </p>
-                <h3
-                  className="mb-1.5 mt-1.5 font-serif font-medium italic leading-snug text-cream"
-                  style={{ fontSize: 'clamp(0.92rem, 1.55vw, 1.4rem)' }}
-                >
-                  {item.title}
-                </h3>
-                <p className="max-w-[34ch] text-[0.72rem] font-light leading-relaxed text-slate-pale/80 sm:text-[0.85rem]">
-                  {item.body}
-                </p>
-              </div>
-            ))}
+        <div className="grid min-h-0 flex-1 md:grid-cols-[clamp(8.5rem,14vw,11rem)_minmax(0,1fr)] md:gap-[clamp(2.5rem,5vw,5rem)] lg:grid-cols-[clamp(9.5rem,15vw,12rem)_minmax(0,1fr)]">
+          <div className="hidden items-center justify-center md:flex" data-reveal>
+            <PhoneFilm />
           </div>
-        </Body>
+
+          <div className="flex min-h-0 flex-col">
+            <Label>06 — Core beliefs</Label>
+            <Display>{beliefs.heading}</Display>
+
+            {/* Two columns even on a phone: six stacked beliefs run past one
+                screen, and the sheet clips at the viewport. */}
+            <Body>
+              <div className="grid grid-cols-2 gap-x-5 gap-y-[clamp(1.25rem,3.5vh,2.5rem)] sm:gap-x-10 lg:grid-cols-3">
+                {beliefs.items.map((item) => (
+                  <div key={item.index} data-reveal>
+                    <p className="font-serif text-base text-slate-steel/80 sm:text-lg">
+                      {item.index}
+                    </p>
+                    <h3
+                      className="mb-1.5 mt-1.5 font-serif font-medium italic leading-snug text-cream"
+                      style={{ fontSize: 'clamp(0.92rem, 1.55vw, 1.4rem)' }}
+                    >
+                      {item.title}
+                    </h3>
+                    <p className="max-w-[34ch] text-[0.72rem] font-light leading-relaxed text-slate-pale/80 sm:text-[0.85rem]">
+                      {item.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </Body>
+          </div>
+        </div>
       </Sheet>
     </section>
+  )
+}
+
+/** A deliberately quiet phone mockup: supporting texture, never the headline. */
+function PhoneFilm() {
+  return (
+    <div className="relative w-full max-w-[11rem] rounded-[2.05rem] border border-cream/15 bg-[#071733] p-[5px] shadow-[0_18px_45px_rgba(0,0,0,0.28)] lg:max-w-[12rem]">
+      <div className="relative aspect-[9/16] overflow-hidden rounded-[1.72rem] bg-black">
+        <CinematicVideo
+          src="/video/cafe-pulp/strawberry-matcha.mp4"
+          poster="/video/cafe-pulp/strawberry-matcha.jpg"
+          className="h-full w-full object-cover"
+          rootMargin="250px"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-2 h-3.5 w-12 -translate-x-1/2 rounded-full bg-[#071733]/95 shadow-sm"
+        />
+      </div>
+    </div>
   )
 }
 
