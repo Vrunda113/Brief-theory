@@ -9,7 +9,13 @@ export default {
           deep: '#0E2F5B',
           mid: '#304B6F',
         },
-        cream: '#F6EFE8',
+        cream: {
+          // A ladder, not one flat colour. With every section on cream, the
+          // only thing left to separate them is a tonal step — small enough to
+          // read as one family, large enough to see the seam.
+          DEFAULT: '#F6EFE8',
+          dim: '#EDE4D8',
+        },
         slate: {
           brand: '#6B81A0',
           steel: '#A7B8CE',

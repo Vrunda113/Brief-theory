@@ -9,7 +9,7 @@ import { FadeIn } from '../shared/FadeIn'
  */
 export function Prologue() {
   return (
-    <section id="letter" className="relative border-t border-navy/15 bg-cream px-6 py-20 md:px-10 md:py-28 lg:py-32">
+    <section id="letter" className="relative border-t border-navy/15 bg-cream-dim px-6 py-20 md:px-10 md:py-28 lg:py-32">
       <div className="mx-auto max-w-6xl">
         <FadeIn y={20}>
           <p className="mb-8 text-[0.65rem] font-light uppercase tracking-[0.42em] text-navy/70 sm:text-xs">

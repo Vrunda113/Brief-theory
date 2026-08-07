@@ -10,7 +10,7 @@ export function Expression() {
   return (
     <section
       id="expression"
-      className="relative z-20 scroll-mt-4 border-t border-navy/15 bg-cream px-6 pb-24 pt-16 md:px-10 md:pb-32 md:pt-20"
+      className="relative z-20 scroll-mt-4 border-t border-navy/15 bg-cream-dim px-6 pb-24 pt-16 md:px-10 md:pb-32 md:pt-20"
     >
       <div className="mx-auto max-w-6xl">
         <FadeIn y={20}>

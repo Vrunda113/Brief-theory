@@ -5,9 +5,9 @@ import { EASE } from '../../lib/motion'
 import { FadeIn } from '../shared/FadeIn'
 
 /**
- * One quote at a time, advancing on its own clock. Navy, so it separates the
- * two cream sections it sits between — the work above and the invitation
- * below — without needing a rule to do the job.
+ * One quote at a time, advancing on its own clock. Set on the deeper cream so
+ * it steps away from the sections either side of it — the whole page is one
+ * family now, so separation comes from tone rather than from contrast.
  *
  * No hover-pause: the page settled that question for the industries arch, and
  * the answer was to let auto-motion run. Only leaving the viewport stops it,
@@ -43,18 +43,18 @@ export function Testimonials() {
     <section
       id="testimonials"
       ref={root}
-      className="relative z-20 scroll-mt-4 border-t border-cream/15 bg-navy px-6 py-20 md:px-10 md:py-24 lg:py-28"
+      className="relative z-20 scroll-mt-4 border-t border-navy/15 bg-cream-dim px-6 py-20 md:px-10 md:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-4xl">
         <FadeIn y={20}>
-          <p className="mb-5 text-center text-[0.65rem] font-light uppercase tracking-[0.42em] text-slate-steel sm:text-xs">
+          <p className="mb-5 text-center text-[0.65rem] font-light uppercase tracking-[0.42em] text-navy/70 sm:text-xs">
             07 — Client voices
           </p>
         </FadeIn>
 
         <FadeIn y={28} delay={0.05}>
           <h2
-            className="mb-12 text-center font-serif font-medium leading-[1.04] text-cream md:mb-16"
+            className="mb-12 text-center font-serif font-medium leading-[1.04] text-navy md:mb-16"
             style={{ fontSize: 'clamp(1.9rem, 3.4vw, 3rem)' }}
           >
             What they’re saying.
@@ -101,7 +101,7 @@ export function Testimonials() {
                 >
                   <span
                     className={`block h-1.5 rounded-full transition-all duration-500 ${
-                      i === active ? 'w-6 bg-cream' : 'w-1.5 bg-cream/30'
+                      i === active ? 'w-6 bg-navy' : 'w-1.5 bg-navy/25'
                     }`}
                   />
                 </button>
@@ -118,12 +118,12 @@ function Quote({ quote, role, sector }: { quote: string; role: string; sector: s
   return (
     <>
       <p
-        className="mx-auto max-w-2xl font-serif italic leading-snug text-cream"
+        className="mx-auto max-w-2xl font-serif italic leading-snug text-navy"
         style={{ fontSize: 'clamp(1.15rem, 2.2vw, 1.55rem)' }}
       >
         “{quote}”
       </p>
-      <p className="mt-6 text-[0.62rem] font-light uppercase tracking-[0.28em] text-slate-steel sm:text-[0.7rem]">
+      <p className="mt-6 text-[0.62rem] font-light uppercase tracking-[0.28em] text-navy/70 sm:text-[0.7rem]">
         {role} · {sector}
       </p>
     </>

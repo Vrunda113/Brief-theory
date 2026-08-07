@@ -23,7 +23,7 @@ export function Services() {
   return (
     <section
       id="services"
-      className="relative z-20 scroll-mt-4 border-t border-navy/15 bg-cream px-6 py-20 md:px-10 md:py-24 lg:py-28"
+      className="relative z-20 scroll-mt-4 border-t border-navy/15 bg-cream-dim px-6 py-20 md:px-10 md:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-6xl">
         <header className="mb-12 md:mb-16">

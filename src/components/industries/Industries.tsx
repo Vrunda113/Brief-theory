@@ -93,7 +93,7 @@ function Backdrop({ active }: { active: number }) {
   }, [])
 
   return (
-    <div ref={box} className="absolute inset-0 bg-navy">
+    <div ref={box} className="absolute inset-0 bg-cream">
       {(['a', 'b'] as const).map((slot) => {
         const i = layers[slot]
         if (i < 0) return null
@@ -229,14 +229,14 @@ export function Industries({ ready }: IndustriesProps) {
     <section
       id="top"
       ref={root}
-      className="relative flex min-h-svh flex-col overflow-hidden bg-navy"
+      className="relative flex min-h-svh flex-col overflow-hidden bg-cream"
     >
       {/* The film, full bleed, with enough wash over it that cream type holds. */}
       <Backdrop active={active} />
       {/* Type sits on both sides, so the wash is even across the width rather
           than heavy at one edge, with the foot darkened so the arch reads. */}
-      <div className="absolute inset-0 bg-navy/70" />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/25 to-navy/45" />
+      <div className="absolute inset-0 bg-cream/82" />
+      <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/40 to-cream/60" />
 
       <Navbar />
 
@@ -249,13 +249,13 @@ export function Industries({ ready }: IndustriesProps) {
         }}
       >
         <motion.div {...rise(0.15)}>
-          <p className="mb-1.5 text-[0.58rem] font-light uppercase tracking-[0.34em] text-slate-steel sm:text-[0.66rem]">
+          <p className="mb-1.5 text-[0.58rem] font-light uppercase tracking-[0.34em] text-navy/70 sm:text-[0.66rem]">
             We work across
           </p>
           {/* Fixed height, so the button below never shifts as names of
               different lengths cycle through. */}
           <p
-            className="flex h-[1.3em] items-center font-serif italic leading-none text-cream"
+            className="flex h-[1.3em] items-center font-serif italic leading-none text-navy"
             style={{ fontSize: 'clamp(1.6rem, 4vw, 3.1rem)' }}
           >
             <span key={active} className="industry-swap">
@@ -264,7 +264,7 @@ export function Industries({ ready }: IndustriesProps) {
           </p>
 
           <div className="mt-7 sm:mt-8">
-            <ContactButton>{HERO.cta}</ContactButton>
+            <ContactButton on="cream">{HERO.cta}</ContactButton>
           </div>
         </motion.div>
 

@@ -6,7 +6,7 @@ import { Wordmark } from '../shared/Wordmark'
 
 export function Invitation() {
   return (
-    <section id="invitation" className="relative scroll-mt-4 border-t border-navy/20 bg-cream pt-20 md:pt-24">
+    <section id="invitation" className="relative scroll-mt-4 border-t border-navy/15 bg-cream pt-20 md:pt-24">
       <div className="mx-auto max-w-6xl px-6 pb-20 md:px-10 md:pb-24">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-20">
           <div>
@@ -96,7 +96,7 @@ export function Invitation() {
           A full-bleed band rather than a block inside the gutter — the page
           closes on the brand's own ground, and the colour change is the only
           boundary it needs. */}
-      <div className="bg-navy px-6 py-24 text-center md:px-10 md:py-32">
+      <div className="border-t border-navy/12 bg-cream-dim px-6 py-24 text-center md:px-10 md:py-32">
         <div className="mx-auto max-w-4xl">
           {INVITATION.closing.map((line, i) => (
             <AnimatedText
@@ -105,7 +105,7 @@ export function Invitation() {
               dim={0.12}
               offset={['start 0.95', 'end 0.75']}
               className={`font-light italic leading-tight ${
-                i === 0 ? 'text-slate-steel' : 'text-cream'
+                i === 0 ? 'text-navy/70' : 'text-navy'
               }`}
               style={{ fontSize: 'clamp(1.3rem, 3.4vw, 2.6rem)' }}
             />
@@ -114,9 +114,9 @@ export function Invitation() {
           <FadeIn y={20} delay={0.2}>
             <div className="mt-7 flex justify-center">
               {/* Back on navy, so the mark carries its own cream plate. */}
-              <Wordmark className="h-16 md:h-20" />
+              <Wordmark bare className="h-14 md:h-16" />
             </div>
-            <p className="mt-8 text-[0.6rem] font-light uppercase tracking-[0.3em] text-slate-steel">
+            <p className="mt-8 text-[0.6rem] font-light uppercase tracking-[0.3em] text-navy/70">
               {BRAND.tagline}
             </p>
           </FadeIn>
