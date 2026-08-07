@@ -78,21 +78,24 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
           </p>
         </div>
 
-        {study.media.length > 0 ? (
-          <MediaStrip study={study} />
-        ) : (
-          <PlaceholderStrip />
-        )}
+        <MediaStrip study={study} />
       </motion.article>
     </div>
   )
 }
 
-/** Reels play at their native 9:16 — the format the work was made for. */
+/**
+ * Reels play at their native 9:16 — the format the work was made for.
+ *
+ * The strip is five columns, so it takes the first five whatever the set
+ * holds: a sixth would drop to a row of its own and read as an accident.
+ */
+const STRIP = 5
+
 function MediaStrip({ study }: { study: CaseStudy }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-      {study.media.map((item, i) => (
+      {study.media.slice(0, STRIP).map((item, i) => (
         <div
           key={item.src}
           className={`relative overflow-hidden rounded-2xl bg-navy sm:rounded-3xl ${
@@ -114,26 +117,6 @@ function MediaStrip({ study }: { study: CaseStudy }) {
               className="h-full w-full object-cover"
             />
           )}
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function PlaceholderStrip() {
-  return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div
-          key={i}
-          className={`flex items-center justify-center rounded-2xl border border-dashed border-cream/15 bg-cream/[0.03] sm:rounded-3xl ${
-            i > 2 ? 'hidden md:flex' : ''
-          }`}
-          style={{ height: 'clamp(140px, 17vw, 232px)' }}
-        >
-          <span className="text-[0.55rem] font-light uppercase tracking-[0.25em] text-slate-steel/80">
-            Soon
-          </span>
         </div>
       ))}
     </div>

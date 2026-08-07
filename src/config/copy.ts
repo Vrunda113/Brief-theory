@@ -14,6 +14,7 @@ export const NAV_LINKS = [
   { label: 'Work', href: '#expression' },
   { label: 'Services', href: '#services' },
   { label: 'Method', href: '#method' },
+  { label: 'Testimonials', href: '#testimonials' },
   { label: 'Contact', href: '#invitation' },
 ]
 
@@ -131,7 +132,7 @@ export const PRACTICE = {
  * the held frame. The theory step is the turn the whole sequence builds to.
  */
 export const CASE_LOGIC = {
-  eyebrow: 'Thinking in practice',
+  eyebrow: '02 — Thinking in practice',
   heading: 'From brief to theory.',
   lede: 'One engagement, reduced to its logic.',
   steps: [
@@ -242,7 +243,6 @@ export type CaseStudy = {
   body: string
   media: Media[]
   live?: string
-  placeholder?: boolean
 }
 
 const reel = (name: string): Media => ({
@@ -261,6 +261,9 @@ const riccis = (name: string): Media => ({
   src: `/video/riccis/${name}.mp4`,
   poster: `/video/riccis/${name}.jpg`,
 })
+
+const munchies = (n: string): Media => ({ type: 'image', src: `/images/super-munchies/${n}.webp` })
+const huft = (n: string): Media => ({ type: 'image', src: `/images/huft-work/${n}.webp` })
 
 /**
  * Clean plates with no burned-in captions — the only clips that work as
@@ -323,18 +326,36 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     index: '04',
-    client: 'Selected Work',
-    category: 'Archive',
-    sector: 'Automotive · Luxury Beauty · Lifestyle',
-    theory: 'Experience precedes the name.',
-    body: 'Work led by our founder in the years before Brief Theory — Škoda, Nykaa Luxe, and ambitious businesses across multiple industries. The practice existed long before the brand did.',
-    media: [],
-    placeholder: true,
+    client: 'HUFT',
+    category: 'Client',
+    // PLACEHOLDER COPY — the imagery is real, the words are not. `theory` and
+    // `body` describe strategy that was never briefed here; replace both with
+    // the actual engagement before this is published.
+    sector: 'Pet Care & Lifestyle',
+    theory: 'Sell the bond, not the product.',
+    body: 'Placeholder copy. The work shown is real; this description is not, and needs replacing with the actual theory and engagement notes before launch.',
+    media: [huft('01'), huft('02'), huft('03'), huft('04'), huft('05')],
+  },
+  {
+    index: '05',
+    client: 'Super Munchies',
+    category: 'Client',
+    // PLACEHOLDER COPY — see above.
+    sector: 'Food & Beverage',
+    theory: 'Make the craving the argument.',
+    body: 'Placeholder copy. The work shown is real; this description is not, and needs replacing with the actual theory and engagement notes before launch.',
+    media: [
+      munchies('01'),
+      munchies('02'),
+      munchies('03'),
+      munchies('04'),
+      munchies('05'),
+    ],
   },
 ]
 
 export const INVITATION = {
-  eyebrow: 'An invitation',
+  eyebrow: '08 — An invitation',
   headline: 'Let’s build something thoughtful.',
   body: 'If you’re launching, repositioning, or ready for clarity — send us the brief.',
   cta: 'Start the conversation',
@@ -444,7 +465,7 @@ export const INDUSTRIES = [
  * to hold on its own rather than across a column break.
  */
 export const FOUNDER = {
-  eyebrow: '14 — The founder',
+  eyebrow: '06 — The founder',
   name: 'Khushali Bochiwal',
   role: 'Founder & Creative Director',
   quote: 'Clarity is a competitive advantage. It can be designed.',
@@ -455,3 +476,30 @@ export const FOUNDER = {
   portrait: '/images/founder/khushali.webp',
   portraitSmall: '/images/founder/khushali-600.webp',
 }
+
+/**
+ * Placeholder testimonials — not from the brand profile. Attributed by role and
+ * sector rather than an invented name: signing a fabricated quote to a named
+ * person at a real business would read as a genuine endorsement once live.
+ * Replace with real client words before launch.
+ */
+export const TESTIMONIALS = [
+  {
+    quote:
+      'Brief Theory didn’t just redesign how we look — they redesigned how we think about the business. Every decision has a reason behind it now.',
+    role: 'Founder',
+    sector: 'Food & Beverage',
+  },
+  {
+    quote:
+      'They asked harder questions than any agency before them. The strategy came before a single mockup, and it shows in every piece of work since.',
+    role: 'Co-Founder',
+    sector: 'Healthcare & Aesthetics',
+  },
+  {
+    quote:
+      'What stood out wasn’t the visuals. It was that they understood our category better than we did, and built the brand around that.',
+    role: 'Owner',
+    sector: 'Home & Interiors',
+  },
+]

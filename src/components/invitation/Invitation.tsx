@@ -6,52 +6,57 @@ import { Wordmark } from '../shared/Wordmark'
 
 export function Invitation() {
   return (
-    <section id="invitation" className="relative bg-cream pt-28 md:pt-40">
-      <div className="mx-auto max-w-5xl px-6 pb-20 md:px-10 md:pb-28">
-        <FadeIn y={20}>
-          <p className="mb-6 text-[0.65rem] font-light uppercase tracking-[0.45em] text-navy/70 sm:text-xs">
-            {INVITATION.eyebrow}
-          </p>
-        </FadeIn>
+    <section id="invitation" className="relative scroll-mt-4 border-t border-navy/20 bg-cream pt-20 md:pt-24">
+      <div className="mx-auto max-w-6xl px-6 pb-20 md:px-10 md:pb-24">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-20">
+          <div>
+            <FadeIn y={20}>
+              <p className="mb-5 text-[0.65rem] font-light uppercase tracking-[0.42em] text-navy/70 sm:text-xs">
+                {INVITATION.eyebrow}
+              </p>
+            </FadeIn>
 
-        <FadeIn y={30} delay={0.05}>
-          <h2
-            className="mb-8 font-black uppercase leading-[0.95] tracking-tight text-navy"
-            style={{ fontSize: 'clamp(1.8rem, 6vw, 4.75rem)' }}
-          >
-            {INVITATION.headline}
-          </h2>
-        </FadeIn>
+            <FadeIn y={26} delay={0.05}>
+              <h2
+                className="max-w-2xl font-black uppercase leading-[0.98] tracking-tight text-navy"
+                style={{ fontSize: 'clamp(2rem, 4.1vw, 3.7rem)' }}
+              >
+                {INVITATION.headline}
+              </h2>
+            </FadeIn>
 
-        <FadeIn y={20} delay={0.12}>
-          <p className="mb-9 max-w-xl font-light leading-relaxed text-navy/72 sm:text-lg">
-            {INVITATION.body}
-          </p>
-        </FadeIn>
+            <FadeIn y={18} delay={0.1}>
+              <p className="mt-6 max-w-xl font-light leading-relaxed text-navy/72 sm:text-base">
+                {INVITATION.body}
+              </p>
+            </FadeIn>
 
-        <FadeIn y={20} delay={0.2}>
-          <ContactButton href={`mailto:${BRAND.email}`} on="cream">{INVITATION.cta}</ContactButton>
-        </FadeIn>
+            <FadeIn y={18} delay={0.16}>
+              <div className="mt-7">
+                <ContactButton href={`mailto:${BRAND.email}`} on="cream">{INVITATION.cta}</ContactButton>
+              </div>
+            </FadeIn>
+          </div>
 
-        <div className="mt-7 grid gap-7 border-t border-navy/12 pt-12 sm:grid-cols-2 md:mt-18">
-          <FadeIn y={20}>
-            <p className="mb-5 text-[0.6rem] font-light uppercase tracking-[0.3em] text-navy/70">
-              Who we work with
-            </p>
-            <ul className="space-y-2">
-              {INVITATION.audience.map((line) => (
-                <li key={line} className="text-sm font-light text-navy/72 sm:text-base">
-                  {line}
-                </li>
-              ))}
-            </ul>
-          </FadeIn>
+          <div className="grid gap-9 border-t border-navy/15 pt-7 sm:grid-cols-2 lg:grid-cols-1 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-1">
+            <FadeIn y={18}>
+              <p className="mb-4 text-[0.6rem] font-light uppercase tracking-[0.3em] text-navy/70">
+                Who we work with
+              </p>
+              <ul className="space-y-2">
+                {INVITATION.audience.map((line) => (
+                  <li key={line} className="text-sm font-light text-navy/72 sm:text-base">
+                    {line}
+                  </li>
+                ))}
+              </ul>
+            </FadeIn>
 
-          <FadeIn y={20} delay={0.1} className="sm:justify-self-end sm:text-right">
-            <p className="mb-5 text-[0.6rem] font-light uppercase tracking-[0.3em] text-navy/70">
-              Reach us
-            </p>
-            <ul className="space-y-2 text-sm font-light sm:text-base">
+            <FadeIn y={18} delay={0.08}>
+              <p className="mb-4 text-[0.6rem] font-light uppercase tracking-[0.3em] text-navy/70">
+                Reach us
+              </p>
+              <ul className="space-y-2 text-sm font-light sm:text-base">
               <li>
                 <a
                   href={`mailto:${BRAND.email}`}
@@ -81,8 +86,9 @@ export function Invitation() {
                 </a>
               </li>
               <li className="text-navy/70">{BRAND.location}</li>
-            </ul>
-          </FadeIn>
+              </ul>
+            </FadeIn>
+          </div>
         </div>
       </div>
 

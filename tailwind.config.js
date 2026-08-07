@@ -5,15 +5,15 @@ export default {
     extend: {
       colors: {
         navy: {
-          DEFAULT: '#16305C',
-          deep: '#0F2F5E',
-          mid: '#2E4A75',
+          DEFAULT: '#042E69',
+          deep: '#0E2F5B',
+          mid: '#304B6F',
         },
-        cream: '#F6F0E9',
+        cream: '#F6EFE8',
         slate: {
-          brand: '#6C82A2',
-          steel: '#A5B8D0',
-          pale: '#D8E3F0',
+          brand: '#6B81A0',
+          steel: '#A7B8CE',
+          pale: '#DAE6F3',
         },
       },
       fontFamily: {

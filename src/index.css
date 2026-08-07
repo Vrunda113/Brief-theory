@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --navy: #16305c;
-  --navy-deep: #0f2f5e;
-  --navy-mid: #2e4a75;
-  --cream: #f6f0e9;
-  --slate-brand: #6c82a2;
-  --slate-steel: #a5b8d0;
-  --slate-pale: #d8e3f0;
+  --navy: #042e69;
+  --navy-deep: #0e2f5b;
+  --navy-mid: #304b6f;
+  --cream: #f6efe8;
+  --slate-brand: #6b81a0;
+  --slate-steel: #a7b8ce;
+  --slate-pale: #dae6f3;
 }
 
 * {
@@ -218,7 +218,7 @@ html.lenis body {
 .service-row:hover,
 .service-row:focus,
 .service-row:focus-within {
-  background-color: rgba(22, 48, 92, 0.035);
+  background-color: rgba(4, 46, 105, 0.055);
 }
 
 .service-row:hover .service-reveal,

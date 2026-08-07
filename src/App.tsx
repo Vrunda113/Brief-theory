@@ -9,6 +9,7 @@ import { Theory } from './components/theory/Theory'
 import { Expression } from './components/expression/Expression'
 import { Chapters } from './components/chapters/Chapters'
 import { Founder } from './components/founder/Founder'
+import { Testimonials } from './components/testimonials/Testimonials'
 import { Invitation } from './components/invitation/Invitation'
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
       <Chapters />
       <Expression />
       <Founder />
+      <Testimonials />
       <Invitation />
     </main>
   )

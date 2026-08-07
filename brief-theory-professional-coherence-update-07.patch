@@ -1,0 +1,409 @@
+diff --git a/src/index.css b/src/index.css
+index 16bf1d0..ca5fc04 100644
+--- a/src/index.css
++++ b/src/index.css
+@@ -3,13 +3,13 @@
+ @tailwind utilities;
+ 
+ :root {
+-  --navy: #16305c;
+-  --navy-deep: #0f2f5e;
+-  --navy-mid: #2e4a75;
+-  --cream: #f6f0e9;
+-  --slate-brand: #6c82a2;
+-  --slate-steel: #a5b8d0;
+-  --slate-pale: #d8e3f0;
++  --navy: #042e69;
++  --navy-deep: #0e2f5b;
++  --navy-mid: #304b6f;
++  --cream: #f6efe8;
++  --slate-brand: #6b81a0;
++  --slate-steel: #a7b8ce;
++  --slate-pale: #dae6f3;
+ }
+ 
+ * {
+diff --git a/tailwind.config.js b/tailwind.config.js
+index e824f47..06206cd 100644
+--- a/tailwind.config.js
++++ b/tailwind.config.js
+@@ -5,15 +5,15 @@ export default {
+     extend: {
+       colors: {
+         navy: {
+-          DEFAULT: '#16305C',
+-          deep: '#0F2F5E',
+-          mid: '#2E4A75',
++          DEFAULT: '#042E69',
++          deep: '#0E2F5B',
++          mid: '#304B6F',
+         },
+-        cream: '#F6F0E9',
++        cream: '#F6EFE8',
+         slate: {
+-          brand: '#6C82A2',
+-          steel: '#A5B8D0',
+-          pale: '#D8E3F0',
++          brand: '#6B81A0',
++          steel: '#A7B8CE',
++          pale: '#DAE6F3',
+         },
+       },
+       fontFamily: {
+diff --git a/src/lib/useSmoothScroll.ts b/src/lib/useSmoothScroll.ts
+index 64ae3c4..204b99e 100644
+--- a/src/lib/useSmoothScroll.ts
++++ b/src/lib/useSmoothScroll.ts
+@@ -15,6 +15,7 @@ export function useSmoothScroll() {
+       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+       smoothWheel: true,
+       touchMultiplier: 1.6,
++      anchors: true,
+     })
+ 
+     lenis.on('scroll', ScrollTrigger.update)
+diff --git a/src/components/question/Prologue.tsx b/src/components/question/Prologue.tsx
+index d685c96..ccf78dd 100644
+--- a/src/components/question/Prologue.tsx
++++ b/src/components/question/Prologue.tsx
+@@ -9,46 +9,52 @@ import { FadeIn } from '../shared/FadeIn'
+  */
+ export function Prologue() {
+   return (
+-    <section id="letter" className="relative bg-navy px-6 py-24 md:px-10 md:py-40">
+-      <div className="mx-auto max-w-3xl">
++    <section id="letter" className="relative bg-navy px-6 py-20 md:px-10 md:py-28 lg:py-32">
++      <div className="mx-auto max-w-6xl">
+         <FadeIn y={20}>
+-          <p className="mb-7 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-steel sm:text-xs">
++          <p className="mb-8 text-[0.65rem] font-light uppercase tracking-[0.42em] text-slate-steel sm:text-xs">
+             {LETTER.eyebrow}
+           </p>
+         </FadeIn>
+ 
+-        <AnimatedText
+-          text={LETTER.heading}
+-          className="font-light leading-[1.08] text-cream"
+-          style={{ fontSize: 'clamp(2.1rem, 6vw, 4.4rem)' }}
+-        />
++        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.15fr)] lg:gap-20">
++          <div>
++            <AnimatedText
++              text={LETTER.heading}
++              className="font-light leading-[1.06] text-cream"
++              style={{ fontSize: 'clamp(2.2rem, 4.2vw, 3.8rem)' }}
++            />
+ 
+-        <FadeIn y={22} delay={0.1}>
+-          <p
+-            className="mt-9 font-light leading-[1.5] text-slate-pale"
+-            style={{ fontSize: 'clamp(1.05rem, 2.1vw, 1.55rem)' }}
+-          >
+-            {LETTER.lede}
+-          </p>
+-        </FadeIn>
+-
+-        <div className="mt-7 space-y-5 sm:mt-9 sm:space-y-6">
+-          {LETTER.body.map((para, i) => (
+-            <FadeIn key={para.slice(0, 24)} y={20} delay={0.16 + i * 0.06}>
+-              <p className="text-sm font-light leading-relaxed text-slate-steel/85 sm:text-base">
+-                {para}
++            <FadeIn y={22} delay={0.1}>
++              <p
++                className="mt-7 max-w-md font-light leading-[1.5] text-slate-pale"
++                style={{ fontSize: 'clamp(1rem, 1.55vw, 1.3rem)' }}
++              >
++                {LETTER.lede}
+               </p>
+             </FadeIn>
+-          ))}
+-        </div>
++          </div>
+ 
+-        <FadeIn y={20} delay={0.4}>
+-          <div className="mt-10 border-t border-slate-steel/25 pt-6 sm:mt-12 sm:pt-7">
+-            <p className="font-light italic leading-relaxed text-slate-steel/85 sm:text-lg">
+-              {LETTER.close}
+-            </p>
++          <div>
++            <div className="space-y-5">
++              {LETTER.body.map((para, i) => (
++                <FadeIn key={para.slice(0, 24)} y={20} delay={0.14 + i * 0.06}>
++                  <p className="max-w-2xl text-sm font-light leading-relaxed text-slate-steel/85 sm:text-base">
++                    {para}
++                  </p>
++                </FadeIn>
++              ))}
++            </div>
++
++            <FadeIn y={20} delay={0.36}>
++              <div className="mt-8 border-t border-slate-steel/25 pt-6">
++                <p className="font-light italic leading-relaxed text-slate-steel/85 sm:text-base">
++                  {LETTER.close}
++                </p>
++              </div>
++            </FadeIn>
+           </div>
+-        </FadeIn>
++        </div>
+       </div>
+     </section>
+   )
+diff --git a/src/components/theory/Theory.tsx b/src/components/theory/Theory.tsx
+index 01620ea..e82ea6a 100644
+--- a/src/components/theory/Theory.tsx
++++ b/src/components/theory/Theory.tsx
+@@ -4,8 +4,8 @@ import { FadeIn } from '../shared/FadeIn'
+ /** One engagement reduced to its logic, now given room to stand on its own. */
+ export function Theory() {
+   return (
+-    <section id="theory" className="relative z-20 bg-navy-deep px-6 py-24 md:px-10 md:py-32 lg:py-36">
+-      <div className="mx-auto grid max-w-[1480px] gap-16 lg:grid-cols-[minmax(0,0.85fr)_minmax(440px,1fr)] lg:gap-24">
++    <section id="theory" className="relative z-20 bg-navy-deep px-6 py-20 md:px-10 md:py-24 lg:py-28">
++      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(440px,1.2fr)] lg:items-start lg:gap-20">
+         <div>
+           <FadeIn y={20}>
+             <p className="mb-5 text-[0.65rem] font-light uppercase tracking-[0.42em] text-slate-steel sm:text-xs">
+@@ -16,14 +16,14 @@ export function Theory() {
+           <FadeIn y={28} delay={0.05}>
+             <h2
+               className="max-w-3xl font-serif font-medium leading-[1.02] text-cream"
+-              style={{ fontSize: 'clamp(2.6rem, 6.5vw, 6.2rem)' }}
++              style={{ fontSize: 'clamp(2.3rem, 4.5vw, 4.2rem)' }}
+             >
+               From brief to <em className="font-serif italic text-slate-pale">theory.</em>
+             </h2>
+           </FadeIn>
+ 
+           <FadeIn y={18} delay={0.1}>
+-            <p className="mt-6 max-w-md text-sm font-light leading-relaxed text-slate-steel/85 sm:text-base">
++            <p className="mt-5 max-w-sm text-sm font-light leading-relaxed text-slate-steel/85 sm:text-base">
+               {CASE_LOGIC.lede}
+             </p>
+           </FadeIn>
+@@ -32,7 +32,7 @@ export function Theory() {
+         <ol className="border-t border-cream/20">
+           {CASE_LOGIC.steps.map((step, index) => (
+             <FadeIn key={step.index} as="li" y={20} delay={0.06 + index * 0.055}>
+-              <div className="group grid grid-cols-[2.5rem_1fr] gap-4 border-b border-cream/20 py-6 sm:grid-cols-[3.25rem_8rem_1fr] sm:items-center sm:gap-6 md:py-7">
++              <div className="group grid grid-cols-[2.5rem_1fr] gap-4 border-b border-cream/20 py-4 sm:grid-cols-[3.25rem_7.5rem_1fr] sm:items-center sm:gap-5 md:py-5">
+                 <span
+                   data-cursor-grow
+                   className={`flex h-9 w-9 items-center justify-center rounded-full border font-serif text-xs transition-colors duration-300 ${
+diff --git a/src/components/services/Services.tsx b/src/components/services/Services.tsx
+index 6d63e1c..9ca3d6c 100644
+--- a/src/components/services/Services.tsx
++++ b/src/components/services/Services.tsx
+@@ -21,12 +21,9 @@ const PILLAR_ICONS: Record<string, LucideIcon> = {
+ /** One Services destination: statement, film, then the five disciplines. */
+ export function Services() {
+   return (
+-    <section
+-      id="services"
+-      className="relative z-20 scroll-mt-4 bg-cream px-6 py-20 md:px-10 md:py-24 lg:py-28"
+-    >
+-      <div className="mx-auto max-w-[1480px]">
+-        <header className="mb-10 md:mb-12 lg:mb-14">
++    <section id="services" className="relative z-20 scroll-mt-4 bg-cream">
++      <div className="mx-auto max-w-7xl px-6 pb-10 pt-20 md:px-10 md:pb-12 md:pt-24">
++        <header>
+           <FadeIn y={20}>
+             <p className="mb-5 text-[0.65rem] font-light uppercase tracking-[0.45em] text-navy/70 sm:text-xs">
+               Services
+@@ -35,18 +32,26 @@ export function Services() {
+ 
+           <FadeIn y={28} delay={0.05}>
+             <h2
+-              className="max-w-6xl font-light leading-[1.06] tracking-tight text-navy"
+-              style={{ fontSize: 'clamp(2rem, 5vw, 4.8rem)' }}
++              className="max-w-4xl font-light leading-[1.08] tracking-tight text-navy"
++              style={{ fontSize: 'clamp(2rem, 3.8vw, 3.65rem)' }}
+             >
+               We don’t create deliverables.{' '}
+               <span className="italic">We build brand systems.</span>
+             </h2>
+           </FadeIn>
++
++          <FadeIn y={18} delay={0.1}>
++            <p className="mt-5 text-[0.62rem] font-light uppercase tracking-[0.22em] text-navy/55 sm:text-xs">
++              {PRACTICE.pillars.map((pillar) => pillar.name).join(' · ')}
++            </p>
++          </FadeIn>
+         </header>
++      </div>
+ 
+-        <VideoPlaceholder />
++      <VideoPlaceholder />
+ 
+-        <div className="mt-10 border-t border-navy/20 md:mt-12 lg:mt-14">
++      <div className="mx-auto max-w-7xl px-6 pb-20 pt-10 md:px-10 md:pb-24 md:pt-12">
++        <div className="border-t border-navy/20">
+           {PRACTICE.pillars.map((pillar, index) => {
+             const Icon = PILLAR_ICONS[pillar.name]
+ 
+@@ -68,7 +73,7 @@ export function Services() {
+ 
+                     <h3
+                       className="font-medium leading-none text-navy"
+-                      style={{ fontSize: 'clamp(1.5rem, 3.5vw, 3.35rem)' }}
++                      style={{ fontSize: 'clamp(1.45rem, 2.8vw, 2.65rem)' }}
+                     >
+                       {pillar.name}
+                     </h3>
+@@ -103,14 +108,14 @@ function VideoPlaceholder() {
+   return (
+     <div
+       aria-label="Brand film placeholder"
+-      className="relative flex h-[50vh] min-h-[280px] w-full items-center justify-center overflow-hidden rounded-[24px] bg-navy-deep sm:rounded-[30px] lg:rounded-[36px]"
++      className="relative flex h-[42vh] min-h-[280px] max-h-[520px] w-full items-center justify-center overflow-hidden bg-navy-deep"
+     >
+       <div
+         aria-hidden="true"
+         className="absolute inset-0 opacity-70"
+         style={{
+           background:
+-            'radial-gradient(circle at 50% 48%, rgba(108,130,162,0.28) 0%, rgba(15,47,94,0) 44%), linear-gradient(135deg, rgba(216,227,240,0.04), transparent 55%)',
++            'radial-gradient(circle at 50% 48%, rgba(107,129,160,0.28) 0%, rgba(14,47,91,0) 44%), linear-gradient(135deg, rgba(218,230,243,0.04), transparent 55%)',
+         }}
+       />
+ 
+diff --git a/src/components/expression/Expression.tsx b/src/components/expression/Expression.tsx
+index fd3a461..00e2d95 100644
+--- a/src/components/expression/Expression.tsx
++++ b/src/components/expression/Expression.tsx
+@@ -10,7 +10,7 @@ export function Expression() {
+   return (
+     <section
+       id="expression"
+-      className="relative z-20 bg-cream px-6 pb-24 pt-16 md:px-10 md:pb-32 md:pt-20"
++      className="relative z-20 scroll-mt-4 bg-cream px-6 pb-24 pt-16 md:px-10 md:pb-32 md:pt-20"
+     >
+       <div className="mx-auto max-w-6xl">
+         {/* The section above (the prologue) is navy, so the colour change is
+@@ -26,8 +26,8 @@ export function Expression() {
+ 
+         <FadeIn y={30} delay={0.05}>
+           <h2
+-            className="headline-gradient-ink mb-11 font-black uppercase leading-none tracking-tight md:mb-11"
+-            style={{ fontSize: 'clamp(2.1rem, 8.5vw, 6.5rem)' }}
++            className="headline-gradient-ink mb-10 font-black uppercase leading-none tracking-tight"
++            style={{ fontSize: 'clamp(2.15rem, 5.5vw, 4.75rem)' }}
+           >
+             Selected work
+           </h2>
+diff --git a/src/components/invitation/Invitation.tsx b/src/components/invitation/Invitation.tsx
+index 4ad8edc..e4eb55f 100644
+--- a/src/components/invitation/Invitation.tsx
++++ b/src/components/invitation/Invitation.tsx
+@@ -6,52 +6,57 @@ import { Wordmark } from '../shared/Wordmark'
+ 
+ export function Invitation() {
+   return (
+-    <section id="invitation" className="relative bg-cream pt-28 md:pt-40">
+-      <div className="mx-auto max-w-5xl px-6 pb-20 md:px-10 md:pb-28">
+-        <FadeIn y={20}>
+-          <p className="mb-6 text-[0.65rem] font-light uppercase tracking-[0.45em] text-navy/70 sm:text-xs">
+-            {INVITATION.eyebrow}
+-          </p>
+-        </FadeIn>
++    <section id="invitation" className="relative scroll-mt-4 bg-cream pt-20 md:pt-24">
++      <div className="mx-auto max-w-6xl px-6 pb-20 md:px-10 md:pb-24">
++        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-20">
++          <div>
++            <FadeIn y={20}>
++              <p className="mb-5 text-[0.65rem] font-light uppercase tracking-[0.42em] text-navy/70 sm:text-xs">
++                {INVITATION.eyebrow}
++              </p>
++            </FadeIn>
+ 
+-        <FadeIn y={30} delay={0.05}>
+-          <h2
+-            className="mb-8 font-black uppercase leading-[0.95] tracking-tight text-navy"
+-            style={{ fontSize: 'clamp(1.8rem, 6vw, 4.75rem)' }}
+-          >
+-            {INVITATION.headline}
+-          </h2>
+-        </FadeIn>
++            <FadeIn y={26} delay={0.05}>
++              <h2
++                className="max-w-2xl font-black uppercase leading-[0.98] tracking-tight text-navy"
++                style={{ fontSize: 'clamp(2rem, 4.1vw, 3.7rem)' }}
++              >
++                {INVITATION.headline}
++              </h2>
++            </FadeIn>
+ 
+-        <FadeIn y={20} delay={0.12}>
+-          <p className="mb-9 max-w-xl font-light leading-relaxed text-navy/72 sm:text-lg">
+-            {INVITATION.body}
+-          </p>
+-        </FadeIn>
++            <FadeIn y={18} delay={0.1}>
++              <p className="mt-6 max-w-xl font-light leading-relaxed text-navy/72 sm:text-base">
++                {INVITATION.body}
++              </p>
++            </FadeIn>
+ 
+-        <FadeIn y={20} delay={0.2}>
+-          <ContactButton href={`mailto:${BRAND.email}`} on="cream">{INVITATION.cta}</ContactButton>
+-        </FadeIn>
++            <FadeIn y={18} delay={0.16}>
++              <div className="mt-7">
++                <ContactButton href={`mailto:${BRAND.email}`} on="cream">{INVITATION.cta}</ContactButton>
++              </div>
++            </FadeIn>
++          </div>
+ 
+-        <div className="mt-7 grid gap-7 border-t border-navy/12 pt-12 sm:grid-cols-2 md:mt-18">
+-          <FadeIn y={20}>
+-            <p className="mb-5 text-[0.6rem] font-light uppercase tracking-[0.3em] text-navy/70">
+-              Who we work with
+-            </p>
+-            <ul className="space-y-2">
+-              {INVITATION.audience.map((line) => (
+-                <li key={line} className="text-sm font-light text-navy/72 sm:text-base">
+-                  {line}
+-                </li>
+-              ))}
+-            </ul>
+-          </FadeIn>
++          <div className="grid gap-9 border-t border-navy/15 pt-7 sm:grid-cols-2 lg:grid-cols-1 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-1">
++            <FadeIn y={18}>
++              <p className="mb-4 text-[0.6rem] font-light uppercase tracking-[0.3em] text-navy/70">
++                Who we work with
++              </p>
++              <ul className="space-y-2">
++                {INVITATION.audience.map((line) => (
++                  <li key={line} className="text-sm font-light text-navy/72 sm:text-base">
++                    {line}
++                  </li>
++                ))}
++              </ul>
++            </FadeIn>
+ 
+-          <FadeIn y={20} delay={0.1} className="sm:justify-self-end sm:text-right">
+-            <p className="mb-5 text-[0.6rem] font-light uppercase tracking-[0.3em] text-navy/70">
+-              Reach us
+-            </p>
+-            <ul className="space-y-2 text-sm font-light sm:text-base">
++            <FadeIn y={18} delay={0.08}>
++              <p className="mb-4 text-[0.6rem] font-light uppercase tracking-[0.3em] text-navy/70">
++                Reach us
++              </p>
++              <ul className="space-y-2 text-sm font-light sm:text-base">
+               <li>
+                 <a
+                   href={`mailto:${BRAND.email}`}
+@@ -81,8 +86,9 @@ export function Invitation() {
+                 </a>
+               </li>
+               <li className="text-navy/70">{BRAND.location}</li>
+-            </ul>
+-          </FadeIn>
++              </ul>
++            </FadeIn>
++          </div>
+         </div>
+       </div>
+ 
+

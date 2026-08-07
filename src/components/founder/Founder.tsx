@@ -39,7 +39,7 @@ export function Founder() {
     <section
       id="founder"
       ref={root}
-      className="relative bg-cream px-6 py-24 md:px-10 md:py-32"
+      className="relative border-t border-navy/20 bg-cream px-6 py-24 md:px-10 md:py-32"
     >
       <div className="mx-auto grid max-w-6xl items-center gap-12 md:gap-16 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:gap-20">
         {/* ------------------------------------------------------- portrait */}

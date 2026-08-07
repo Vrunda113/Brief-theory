@@ -9,46 +9,52 @@ import { FadeIn } from '../shared/FadeIn'
  */
 export function Prologue() {
   return (
-    <section id="letter" className="relative bg-navy px-6 py-24 md:px-10 md:py-40">
-      <div className="mx-auto max-w-3xl">
+    <section id="letter" className="relative border-t border-navy/15 bg-cream px-6 py-20 md:px-10 md:py-28 lg:py-32">
+      <div className="mx-auto max-w-6xl">
         <FadeIn y={20}>
-          <p className="mb-7 text-[0.65rem] font-light uppercase tracking-[0.45em] text-slate-steel sm:text-xs">
+          <p className="mb-8 text-[0.65rem] font-light uppercase tracking-[0.42em] text-navy/70 sm:text-xs">
             {LETTER.eyebrow}
           </p>
         </FadeIn>
 
-        <AnimatedText
-          text={LETTER.heading}
-          className="font-light leading-[1.08] text-cream"
-          style={{ fontSize: 'clamp(2.1rem, 6vw, 4.4rem)' }}
-        />
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.15fr)] lg:gap-20">
+          <div>
+            <AnimatedText
+              text={LETTER.heading}
+              className="font-light leading-[1.06] text-navy"
+              style={{ fontSize: 'clamp(2.2rem, 4.2vw, 3.8rem)' }}
+            />
 
-        <FadeIn y={22} delay={0.1}>
-          <p
-            className="mt-9 font-light leading-[1.5] text-slate-pale"
-            style={{ fontSize: 'clamp(1.05rem, 2.1vw, 1.55rem)' }}
-          >
-            {LETTER.lede}
-          </p>
-        </FadeIn>
-
-        <div className="mt-7 space-y-5 sm:mt-9 sm:space-y-6">
-          {LETTER.body.map((para, i) => (
-            <FadeIn key={para.slice(0, 24)} y={20} delay={0.16 + i * 0.06}>
-              <p className="text-sm font-light leading-relaxed text-slate-steel/85 sm:text-base">
-                {para}
+            <FadeIn y={22} delay={0.1}>
+              <p
+                className="mt-7 max-w-md font-light leading-[1.5] text-navy/80"
+                style={{ fontSize: 'clamp(1rem, 1.55vw, 1.3rem)' }}
+              >
+                {LETTER.lede}
               </p>
             </FadeIn>
-          ))}
-        </div>
-
-        <FadeIn y={20} delay={0.4}>
-          <div className="mt-10 border-t border-slate-steel/25 pt-6 sm:mt-12 sm:pt-7">
-            <p className="font-light italic leading-relaxed text-slate-steel/85 sm:text-lg">
-              {LETTER.close}
-            </p>
           </div>
-        </FadeIn>
+
+          <div>
+            <div className="space-y-5">
+              {LETTER.body.map((para, i) => (
+                <FadeIn key={para.slice(0, 24)} y={20} delay={0.14 + i * 0.06}>
+                  <p className="max-w-2xl text-sm font-light leading-relaxed text-navy/72 sm:text-base">
+                    {para}
+                  </p>
+                </FadeIn>
+              ))}
+            </div>
+
+            <FadeIn y={20} delay={0.36}>
+              <div className="mt-8 border-t border-navy/15 pt-6">
+                <p className="font-light italic leading-relaxed text-navy/72 sm:text-base">
+                  {LETTER.close}
+                </p>
+              </div>
+            </FadeIn>
+          </div>
+        </div>
       </div>
     </section>
   )
