@@ -13,7 +13,7 @@ export default {
           // A ladder, not one flat colour. With every section on cream, the
           // only thing left to separate them is a tonal step — small enough to
           // read as one family, large enough to see the seam.
-          DEFAULT: '#F6EFE8',
+          DEFAULT: '#F6F0E9',
           dim: '#EDE4D8',
         },
         slate: {

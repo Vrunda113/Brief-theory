@@ -56,21 +56,17 @@ export function Chapters() {
       {/* ------------------------------------------------ 04 · Core beliefs */}
       <Sheet folio="04">
         <div className="flex min-h-0 flex-1 flex-col">
-          <div className="grid md:grid-cols-[clamp(8.5rem,14vw,11rem)_minmax(0,1fr)] md:gap-[clamp(2.5rem,5vw,5rem)] lg:grid-cols-[clamp(9.5rem,15vw,12rem)_minmax(0,1fr)]">
-            <div className="hidden md:block" aria-hidden="true" />
+          <div className="grid md:grid-cols-[minmax(0,1fr)_clamp(8.5rem,14vw,11rem)] md:gap-[clamp(2.5rem,5vw,5rem)] lg:grid-cols-[minmax(0,1fr)_clamp(9.5rem,15vw,12rem)]">
             <div>
               <Label>04 — Core beliefs</Label>
               <Display>{beliefs.heading}</Display>
             </div>
+            <div className="hidden md:block" aria-hidden="true" />
           </div>
 
           {/* The film and the first belief now share the same top edge. */}
           <Body>
-            <div className="grid md:grid-cols-[clamp(8.5rem,14vw,11rem)_minmax(0,1fr)] md:gap-[clamp(2.5rem,5vw,5rem)] lg:grid-cols-[clamp(9.5rem,15vw,12rem)_minmax(0,1fr)]">
-              <div className="hidden justify-center md:flex" data-reveal>
-                <PhoneFilm />
-              </div>
-
+            <div className="grid md:grid-cols-[minmax(0,1fr)_clamp(8.5rem,14vw,11rem)] md:gap-[clamp(2.5rem,5vw,5rem)] lg:grid-cols-[minmax(0,1fr)_clamp(9.5rem,15vw,12rem)]">
               <div className="grid grid-cols-2 gap-x-5 gap-y-[clamp(1.25rem,3.5vh,2.5rem)] sm:gap-x-10 lg:grid-cols-3">
                 {beliefs.items.map((item) => (
                   <div key={item.index} data-reveal>
@@ -88,6 +84,10 @@ export function Chapters() {
                     </p>
                   </div>
                 ))}
+              </div>
+
+              <div className="hidden justify-center md:flex" data-reveal>
+                <PhoneFilm />
               </div>
             </div>
           </Body>

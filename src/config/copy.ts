@@ -328,22 +328,18 @@ export const CASE_STUDIES: CaseStudy[] = [
     index: '04',
     client: 'HUFT',
     category: 'Client',
-    // PLACEHOLDER COPY — the imagery is real, the words are not. `theory` and
-    // `body` describe strategy that was never briefed here; replace both with
-    // the actual engagement before this is published.
     sector: 'Pet Care & Lifestyle',
-    theory: 'Sell the bond, not the product.',
-    body: 'Placeholder copy. The work shown is real; this description is not, and needs replacing with the actual theory and engagement notes before launch.',
+    theory: 'Paid media built around the full pet-parent journey.',
+    body: 'The work mapped HUFT’s funnel from discovery to return visits, shaping campaigns for store awareness, website traffic, app installs, LinkedIn education and remarketing. Competitor, audience and channel analysis informed distinct objectives across Instagram, Facebook and LinkedIn, creating a connected plan for pet parents and the wider pet-care community.',
     media: [huft('01'), huft('02'), huft('03'), huft('04'), huft('05')],
   },
   {
     index: '05',
     client: 'Super Munchies',
     category: 'Client',
-    // PLACEHOLDER COPY — see above.
     sector: 'Food & Beverage',
-    theory: 'Make the craving the argument.',
-    body: 'Placeholder copy. The work shown is real; this description is not, and needs replacing with the actual theory and engagement notes before launch.',
+    theory: 'Turning social performance into a clearer content system.',
+    body: 'Across India, the UK and Germany, the December 2024 work paired organic social content with audience and post-level analysis. India closed the month at 3,519 followers, 3,720 reach and 12,839 impressions, while the learnings around context, timing and audience behaviour shaped the next phase across content, paid media, website optimisation and influencer marketing.',
     media: [
       munchies('01'),
       munchies('02'),

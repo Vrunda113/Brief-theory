@@ -4,6 +4,7 @@ import { ColdOpen } from './components/cold-open/ColdOpen'
 import { Cursor } from './components/shared/Cursor'
 import { Industries } from './components/industries/Industries'
 import { Prologue } from './components/question/Prologue'
+import { CaseStudiesFeature } from './components/case-studies/CaseStudiesFeature'
 import { Services } from './components/services/Services'
 import { Theory } from './components/theory/Theory'
 import { Expression } from './components/expression/Expression'
@@ -23,6 +24,7 @@ export default function App() {
       <ColdOpen onComplete={handleComplete} />
       <Industries ready={ready} />
       <Prologue />
+      <CaseStudiesFeature />
       <Theory />
       <Services />
       <Chapters />
