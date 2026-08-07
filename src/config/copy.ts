@@ -264,6 +264,7 @@ const riccis = (name: string): Media => ({
 
 const munchies = (n: string): Media => ({ type: 'image', src: `/images/super-munchies/${n}.webp` })
 const huft = (n: string): Media => ({ type: 'image', src: `/images/huft-work/${n}.webp` })
+const mason = (n: string): Media => ({ type: 'image', src: `/images/mason-home/${n}.webp` })
 
 /**
  * Clean plates with no burned-in captions — the only clips that work as
@@ -347,6 +348,15 @@ export const CASE_STUDIES: CaseStudy[] = [
       munchies('04'),
       munchies('05'),
     ],
+  },
+  {
+    index: '06',
+    client: 'Mason Home',
+    category: 'Client',
+    sector: 'Home Décor & Lifestyle',
+    theory: 'Make the home a signature, not a showroom.',
+    body: 'For Mumbai-based Mason Home, #YourSignatureSpace turns modern luxury décor into an expression of individuality. The next growth phase brings that idea across a three-month media plan spanning Meta, Google and YouTube, supported by website and SEO optimisation designed to make Mason Home a trusted destination for considered, high-quality interiors.',
+    media: [mason('01'), mason('02'), mason('03')],
   },
 ]
 

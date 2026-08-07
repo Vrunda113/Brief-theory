@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import {
-  AnimatePresence,
   motion,
   useMotionValueEvent,
   useScroll,
@@ -10,7 +9,34 @@ import {
 import { CASE_STUDIES, type CaseStudy, type Media } from '../../config/copy'
 import { FadeIn } from '../shared/FadeIn'
 
-const CASE_ORDER = ['Super Munchies', 'HUFT']
+/**
+ * The cards run on a horizontal track rather than a vertical stack.
+ *
+ * Stacking was the wrong instrument here: Selected Work already stacks sticky
+ * cards that overlap and recede, so this read as a second helping of the same
+ * idea. A track also answers the other problem directly — a card is either on
+ * screen or off it, never half-visible behind the one in front.
+ *
+ * Each card owns an equal slot of the scroll: the track travels during the
+ * lead-in to a slot, then holds still for the rest of it.
+ */
+const LEAD_IN = 0.16
+
+const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v)
+
+/**
+ * How far the track has travelled, in card widths — 0 to N-1. It moves only
+ * during each lead-in and rests in between, so every card gets a dwell.
+ */
+function trackOffset(p: number, total: number) {
+  let offset = 0
+  for (let i = 1; i < total; i += 1) {
+    offset += clamp01((p - (i / total - LEAD_IN)) / LEAD_IN)
+  }
+  return offset
+}
+
+const CASE_ORDER = ['Super Munchies', 'HUFT', 'Mason Home']
 const FEATURED_CASES = CASE_ORDER.map((client) => CASE_STUDIES.find((study) => study.client === client)).filter(
   (study): study is CaseStudy => Boolean(study),
 )
@@ -48,6 +74,19 @@ const CASE_DETAILS: Record<string, CaseDetail> = {
       { value: 'Conversion', label: 'App + remarketing' },
     ],
   },
+  'Mason Home': {
+    period: '#YourSignatureSpace',
+    media: [
+      { type: 'image', src: '/images/mason-home/01.webp' },
+      { type: 'image', src: '/images/mason-home/02.webp' },
+      { type: 'image', src: '/images/mason-home/03.webp' },
+    ],
+    metrics: [
+      { value: '297K', label: 'Instagram' },
+      { value: '14K', label: 'Facebook' },
+      { value: '806', label: 'YouTube' },
+    ],
+  },
 }
 
 export function CaseStudiesFeature() {
@@ -58,36 +97,26 @@ export function CaseStudiesFeature() {
     offset: ['start start', 'end end'],
   })
 
+  /*
+   * No spring here. Lenis already smooths the scroll for the whole page, so a
+   * spring on top of it smooths a smoothed value — the transform lags the
+   * scroll and never catches up before the section ends.
+   */
   useMotionValueEvent(scrollYProgress, 'change', (value) => {
-    setActiveIndex((current) => {
-      if (current === 0 && value > 0.56) return 1
-      if (current === 1 && value < 0.44) return 0
-      return current
-    })
+    const nextIndex = Math.min(FEATURED_CASES.length - 1, Math.floor(value * FEATURED_CASES.length))
+    setActiveIndex((current) => (current === nextIndex ? current : nextIndex))
   })
 
   return (
     <section
       id="case-studies"
       ref={section}
-      className="relative border-y border-navy/15 bg-cream px-6 py-20 md:px-10 md:py-24 lg:h-[190svh] lg:py-0"
+      className="relative border-y border-navy/15 bg-cream px-6 py-20 md:px-10 md:py-24 lg:h-[300svh] lg:py-0"
     >
       <div className="mx-auto max-w-7xl lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:justify-center">
         <SectionHead activeIndex={activeIndex} />
 
-        <div className="hidden lg:block">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={FEATURED_CASES[activeIndex].client}
-              initial={{ opacity: 0, y: 18, scale: 0.995 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -14, scale: 0.995 }}
-              transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <CaseStudySpread study={FEATURED_CASES[activeIndex]} scrollProgress={scrollYProgress} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        <CaseTrack scrollProgress={scrollYProgress} />
 
         <div className="space-y-14 lg:hidden">
           {FEATURED_CASES.map((study) => (
@@ -102,9 +131,9 @@ export function CaseStudiesFeature() {
 function SectionHead({ activeIndex }: { activeIndex: number }) {
   return (
     <FadeIn y={18}>
-      <div className="mb-9 flex items-end justify-between gap-6 border-b border-navy/20 pb-7 lg:mb-8">
+      <div className="mb-9 flex items-end justify-between gap-6 border-b border-navy/20 pb-7 lg:mb-5 lg:pb-5">
         <div>
-          <p className="mb-4 text-[0.62rem] font-light uppercase tracking-[0.42em] text-navy/65 sm:text-[0.7rem]">
+          <p className="mb-4 text-[0.62rem] font-light uppercase tracking-[0.42em] text-navy/70 sm:text-[0.7rem] lg:mb-2">
             Case studies
           </p>
           <h2
@@ -115,15 +144,67 @@ function SectionHead({ activeIndex }: { activeIndex: number }) {
           </h2>
         </div>
         <div className="hidden text-right md:block">
-          <p className="text-sm font-light leading-relaxed text-navy/60">
+          <p className="text-sm font-light leading-relaxed text-navy/72">
             Real briefs. Clear decisions. Work built from a point of view.
           </p>
-          <p className="mt-3 text-[0.58rem] font-light uppercase tracking-[0.28em] text-navy/45">
+          <p className="mt-3 text-[0.58rem] font-light uppercase tracking-[0.28em] text-navy/70">
             0{activeIndex + 1} / 0{FEATURED_CASES.length}
           </p>
         </div>
       </div>
     </FadeIn>
+  )
+}
+
+/**
+ * The track. The stage clips, and the flex row is exactly the stage's width
+ * with each card `w-full shrink-0` inside it — so translating by 100% moves
+ * precisely one card, and every other card is genuinely off-stage rather than
+ * sitting behind the visible one.
+ */
+function CaseTrack({ scrollProgress }: { scrollProgress: MotionValue<number> }) {
+  const total = FEATURED_CASES.length
+  const x = useTransform(scrollProgress, (p) => `${-trackOffset(p, total) * 100}%`)
+
+  return (
+    <div className="relative hidden overflow-hidden lg:block lg:h-[min(560px,62svh)] lg:min-h-[480px]">
+      <motion.div style={{ x }} className="flex h-full w-full will-change-transform">
+        {FEATURED_CASES.map((study, index) => (
+          <CaseSlide
+            key={study.client}
+            study={study}
+            index={index}
+            total={total}
+            scrollProgress={scrollProgress}
+          />
+        ))}
+      </motion.div>
+    </div>
+  )
+}
+
+function CaseSlide({
+  study,
+  index,
+  total,
+  scrollProgress,
+}: {
+  study: CaseStudy
+  index: number
+  total: number
+  scrollProgress: MotionValue<number>
+}) {
+  // Progress through this card's own time on stage, so its images drift with
+  // it rather than tracking the whole section and arriving mid-drift.
+  const enterFrom = index / total - LEAD_IN
+  const local = useTransform(scrollProgress, (p) =>
+    clamp01((p - enterFrom) / ((index + 1) / total - enterFrom)),
+  )
+
+  return (
+    <div className="h-full w-full shrink-0">
+      <CaseStudySpread study={study} scrollProgress={local} />
+    </div>
   )
 }
 
@@ -138,7 +219,7 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
   const hero = detail.media[2]
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(190px,0.32fr)_minmax(0,1fr)] lg:gap-7">
+    <div className="grid gap-5 lg:h-full lg:grid-cols-[minmax(190px,0.32fr)_minmax(0,1fr)] lg:gap-7">
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-1 lg:grid-rows-2 lg:gap-5">
         {[first, second].map((media, index) => (
           <motion.div
@@ -155,7 +236,7 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
         ))}
       </div>
 
-      <article className="grid min-h-[460px] overflow-hidden rounded-[1.75rem] border border-navy/10 bg-[#fffdf9] shadow-[0_18px_50px_rgba(4,46,105,0.09)] md:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] lg:min-h-[520px]">
+      <article className="grid min-h-[460px] overflow-hidden rounded-[1.75rem] border border-navy/10 bg-[#fffdf9] shadow-[0_18px_50px_rgba(4,46,105,0.09)] md:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] lg:h-full lg:min-h-0">
         <div className="relative min-h-[280px] overflow-hidden md:min-h-0">
           <motion.img
             style={{ y: heroY }}
@@ -165,23 +246,23 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
           />
         </div>
 
-        <div className="flex flex-col justify-between p-7 sm:p-9 lg:p-10">
+        <div className="flex min-h-0 flex-col justify-between p-7 sm:p-9 lg:p-8 xl:p-9">
           <div>
-            <p className="mb-5 text-[0.58rem] font-light uppercase tracking-[0.32em] text-navy/55">
+            <p className="mb-5 text-[0.58rem] font-light uppercase tracking-[0.32em] text-navy/70 lg:mb-3">
               {study.index} · {study.sector} · {detail.period}
             </p>
-            <h3 className="font-serif text-3xl font-medium leading-tight text-navy sm:text-4xl">
+            <h3 className="font-serif text-3xl font-medium leading-tight text-navy sm:text-4xl lg:text-3xl xl:text-4xl">
               {study.client}
             </h3>
-            <p className="mt-5 font-serif text-xl italic leading-snug text-navy/85 sm:text-2xl">
+            <p className="mt-5 font-serif text-xl italic leading-snug text-navy/85 sm:text-2xl lg:mt-4 lg:text-[1.35rem] xl:text-2xl">
               {study.theory}
             </p>
-            <p className="mt-6 text-sm font-light leading-relaxed text-navy/68 sm:text-[0.95rem]">
+            <p className="mt-6 text-sm font-light leading-relaxed text-navy/75 sm:text-[0.95rem] lg:mt-4 lg:text-[0.86rem] lg:leading-[1.65] xl:text-[0.92rem]">
               {study.body}
             </p>
           </div>
 
-          <dl className="mt-8 grid grid-cols-3 border-t border-navy/15 pt-6">
+          <dl className="mt-8 grid grid-cols-3 border-t border-navy/15 pt-6 lg:mt-5 lg:pt-4">
             {detail.metrics.map((metric, index) => (
               <Metric key={metric.label} value={metric.value} label={metric.label} bordered={index === 1} />
             ))}
@@ -196,7 +277,7 @@ function Metric({ value, label, bordered = false }: { value: string; label: stri
   return (
     <div className={bordered ? 'border-x border-navy/15 px-4' : 'px-2 first:pl-0 last:pr-0'}>
       <dt className="font-serif text-lg text-navy sm:text-xl">{value}</dt>
-      <dd className="mt-1 text-[0.52rem] font-light uppercase tracking-[0.18em] text-navy/50 sm:text-[0.58rem]">
+      <dd className="mt-1 text-[0.52rem] font-light uppercase tracking-[0.18em] text-navy/70 sm:text-[0.58rem]">
         {label}
       </dd>
     </div>

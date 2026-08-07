@@ -1,0 +1,180 @@
+diff --git a/src/components/case-studies/CaseStudiesFeature.tsx b/src/components/case-studies/CaseStudiesFeature.tsx
+index af334a2..cb810ef 100644
+--- a/src/components/case-studies/CaseStudiesFeature.tsx
++++ b/src/components/case-studies/CaseStudiesFeature.tsx
+@@ -1,9 +1,9 @@
+ import { useRef, useState } from 'react'
+ import {
+-  AnimatePresence,
+   motion,
+   useMotionValueEvent,
+   useScroll,
++  useSpring,
+   useTransform,
+   type MotionValue,
+ } from 'framer-motion'
+@@ -70,43 +70,40 @@ export function CaseStudiesFeature() {
+     target: section,
+     offset: ['start start', 'end end'],
+   })
++  const smoothScrollProgress = useSpring(scrollYProgress, {
++    stiffness: 95,
++    damping: 30,
++    mass: 0.35,
++  })
+ 
+   useMotionValueEvent(scrollYProgress, 'change', (value) => {
+-    setActiveIndex((current) => {
+-      if (current === 0 && value > 0.36) return 1
+-      if (current === 1 && value > 0.69) return 2
+-      if (current === 2 && value < 0.63) return 1
+-      if (current === 1 && value < 0.30) return 0
+-      return current
+-    })
++    const nextIndex = Math.min(FEATURED_CASES.length - 1, Math.floor(value * (FEATURED_CASES.length - 1) + 0.5))
++    setActiveIndex((current) => (current === nextIndex ? current : nextIndex))
+   })
+ 
+   return (
+     <section
+       id="case-studies"
+       ref={section}
+-      className="relative border-y border-navy/15 bg-cream px-6 py-20 md:px-10 md:py-24 lg:h-[280svh] lg:py-0"
++      className="relative border-y border-navy/15 bg-cream px-6 py-20 md:px-10 md:py-24 lg:h-[300svh] lg:py-0"
+     >
+       <div className="mx-auto max-w-7xl lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:justify-center">
+         <SectionHead activeIndex={activeIndex} />
+ 
+-        <div className="hidden lg:block">
+-          <AnimatePresence mode="wait" initial={false}>
+-            <motion.div
+-              key={FEATURED_CASES[activeIndex].client}
+-              initial={{ opacity: 0, y: 18, scale: 0.995 }}
+-              animate={{ opacity: 1, y: 0, scale: 1 }}
+-              exit={{ opacity: 0, y: -14, scale: 0.995 }}
+-              transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+-            >
+-              <CaseStudySpread study={FEATURED_CASES[activeIndex]} scrollProgress={scrollYProgress} />
+-            </motion.div>
+-          </AnimatePresence>
++        <div className="relative hidden lg:block lg:h-[min(560px,62svh)] lg:min-h-[480px]">
++          {FEATURED_CASES.map((study, index) => (
++            <StackedCaseLayer
++              key={study.client}
++              study={study}
++              index={index}
++              scrollProgress={smoothScrollProgress}
++            />
++          ))}
+         </div>
+ 
+         <div className="space-y-14 lg:hidden">
+           {FEATURED_CASES.map((study) => (
+-            <CaseStudySpread key={study.client} study={study} scrollProgress={scrollYProgress} />
++            <CaseStudySpread key={study.client} study={study} scrollProgress={smoothScrollProgress} />
+           ))}
+         </div>
+       </div>
+@@ -117,9 +114,9 @@ export function CaseStudiesFeature() {
+ function SectionHead({ activeIndex }: { activeIndex: number }) {
+   return (
+     <FadeIn y={18}>
+-      <div className="mb-9 flex items-end justify-between gap-6 border-b border-navy/20 pb-7 lg:mb-8">
++      <div className="mb-9 flex items-end justify-between gap-6 border-b border-navy/20 pb-7 lg:mb-5 lg:pb-5">
+         <div>
+-          <p className="mb-4 text-[0.62rem] font-light uppercase tracking-[0.42em] text-navy/65 sm:text-[0.7rem]">
++          <p className="mb-4 text-[0.62rem] font-light uppercase tracking-[0.42em] text-navy/65 sm:text-[0.7rem] lg:mb-2">
+             Case studies
+           </p>
+           <h2
+@@ -142,6 +139,42 @@ function SectionHead({ activeIndex }: { activeIndex: number }) {
+   )
+ }
+ 
++function StackedCaseLayer({
++  study,
++  index,
++  scrollProgress,
++}: {
++  study: CaseStudy
++  index: number
++  scrollProgress: MotionValue<number>
++}) {
++  const lastIndex = FEATURED_CASES.length - 1
++  const transitionStart = index === 0 ? 0 : (index - 1) / lastIndex
++  const transitionEnd = index === 0 ? 0 : index / lastIndex
++  const nextStart = index === lastIndex ? 1 : index / lastIndex
++  const nextEnd = index === lastIndex ? 1 : (index + 1) / lastIndex
++
++  const y = useTransform(
++    scrollProgress,
++    index === 0 ? [0, 1] : [0, transitionStart, transitionEnd, 1],
++    index === 0 ? ['0%', '0%'] : ['104%', '104%', '0%', '0%'],
++  )
++  const scale = useTransform(
++    scrollProgress,
++    index === lastIndex ? [0, 1] : [0, nextStart, nextEnd, 1],
++    index === lastIndex ? [1, 1] : [1, 1, 0.985, 0.985],
++  )
++
++  return (
++    <motion.div
++      style={{ y, scale, zIndex: index + 1 }}
++      className="absolute inset-0 origin-top bg-cream will-change-transform"
++    >
++      <CaseStudySpread study={study} scrollProgress={scrollProgress} />
++    </motion.div>
++  )
++}
++
+ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollProgress: MotionValue<number> }) {
+   const firstY = useTransform(scrollProgress, [0, 1], [-16, 16])
+   const secondY = useTransform(scrollProgress, [0, 1], [16, -16])
+@@ -153,7 +186,7 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
+   const hero = detail.media[2]
+ 
+   return (
+-    <div className="grid gap-5 lg:grid-cols-[minmax(190px,0.32fr)_minmax(0,1fr)] lg:gap-7">
++    <div className="grid gap-5 lg:h-full lg:grid-cols-[minmax(190px,0.32fr)_minmax(0,1fr)] lg:gap-7">
+       <div className="grid grid-cols-2 gap-4 lg:grid-cols-1 lg:grid-rows-2 lg:gap-5">
+         {[first, second].map((media, index) => (
+           <motion.div
+@@ -170,7 +203,7 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
+         ))}
+       </div>
+ 
+-      <article className="grid min-h-[460px] overflow-hidden rounded-[1.75rem] border border-navy/10 bg-[#fffdf9] shadow-[0_18px_50px_rgba(4,46,105,0.09)] md:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] lg:min-h-[520px]">
++      <article className="grid min-h-[460px] overflow-hidden rounded-[1.75rem] border border-navy/10 bg-[#fffdf9] shadow-[0_18px_50px_rgba(4,46,105,0.09)] md:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] lg:h-full lg:min-h-0">
+         <div className="relative min-h-[280px] overflow-hidden md:min-h-0">
+           <motion.img
+             style={{ y: heroY }}
+@@ -180,23 +213,23 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
+           />
+         </div>
+ 
+-        <div className="flex flex-col justify-between p-7 sm:p-9 lg:p-10">
++        <div className="flex min-h-0 flex-col justify-between p-7 sm:p-9 lg:p-8 xl:p-9">
+           <div>
+-            <p className="mb-5 text-[0.58rem] font-light uppercase tracking-[0.32em] text-navy/55">
++            <p className="mb-5 text-[0.58rem] font-light uppercase tracking-[0.32em] text-navy/55 lg:mb-3">
+               {study.index} · {study.sector} · {detail.period}
+             </p>
+-            <h3 className="font-serif text-3xl font-medium leading-tight text-navy sm:text-4xl">
++            <h3 className="font-serif text-3xl font-medium leading-tight text-navy sm:text-4xl lg:text-3xl xl:text-4xl">
+               {study.client}
+             </h3>
+-            <p className="mt-5 font-serif text-xl italic leading-snug text-navy/85 sm:text-2xl">
++            <p className="mt-5 font-serif text-xl italic leading-snug text-navy/85 sm:text-2xl lg:mt-4 lg:text-[1.35rem] xl:text-2xl">
+               {study.theory}
+             </p>
+-            <p className="mt-6 text-sm font-light leading-relaxed text-navy/68 sm:text-[0.95rem]">
++            <p className="mt-6 text-sm font-light leading-relaxed text-navy/68 sm:text-[0.95rem] lg:mt-4 lg:text-[0.86rem] lg:leading-[1.65] xl:text-[0.92rem]">
+               {study.body}
+             </p>
+           </div>
+ 
+-          <dl className="mt-8 grid grid-cols-3 border-t border-navy/15 pt-6">
++          <dl className="mt-8 grid grid-cols-3 border-t border-navy/15 pt-6 lg:mt-5 lg:pt-4">
+             {detail.metrics.map((metric, index) => (
+               <Metric key={metric.label} value={metric.value} label={metric.label} bordered={index === 1} />
+             ))}
