@@ -1,0 +1,94 @@
+diff --git a/src/components/industries/Industries.tsx b/src/components/industries/Industries.tsx
+index b2c6571..01b9d65 100644
+--- a/src/components/industries/Industries.tsx
++++ b/src/components/industries/Industries.tsx
+@@ -23,9 +23,9 @@ import { Navbar } from '../hero/Navbar'
+  * what decides how tall the band must be to show a whole card. Widening the
+  * circle shrinks the drop without touching the spacing between cards.
+  */
+-const RADIUS = 5000
++const RADIUS = 4600
+ /** Degrees between adjacent cards — arc spacing is RADIUS x this in radians. */
+-const STEP = 2.8
++const STEP = 2.35
+ /** Seconds a card takes to travel one position. */
+ const TRAVEL = 0.85
+ /** Seconds a sector is held at the apex before the arch moves on. */
+@@ -33,15 +33,15 @@ const HOLD = 2
+ /** Copies of the set, enough to keep the visible arc filled through a loop. */
+ const COPIES = 3
+ /** Card face. Kept portrait so the arch reads as a row of stills. */
+-const CARD_W = 'clamp(140px, 12.8vw, 190px)'
+-const CARD_H = 'clamp(170px, 15vw, 222px)'
++const CARD_W = 'clamp(130px, 10.5vw, 175px)'
++const CARD_H = 'clamp(165px, 13vw, 215px)'
+ /**
+  * The band the arch lives in, sized to hold a whole card plus the drop of the
+  * outermost one — otherwise the foot of the section crops them. Measured in its
+  * own right rather than as a share of the viewport, so the section can grow
+  * when the columns stack without the arch drifting off the bottom edge.
+  */
+-const ARCH_BAND = 'clamp(250px, 32svh, 312px)'
++const ARCH_BAND = 'clamp(270px, 34svh, 320px)'
+ /** Lifts the arch clear of the very bottom, so the cards sit rather than hang. */
+ const ARCH_LIFT = 'clamp(0.75rem, 2.5vh, 1.75rem)'
+ 
+@@ -171,19 +171,18 @@ export function Industries({ ready }: IndustriesProps) {
+     const cards = gsap.utils.toArray<HTMLElement>('[data-arch-card]')
+     let currentStep = 0
+ 
+-    /*
+-     * Never show a half-card at the viewport edge. We keep one complete card
+-     * position in reserve for the card that is travelling out during a step,
+-     * then reveal the next edge card only once it has landed fully inside.
+-     * Wider screens get more neighbours; the active card always owns centre.
+-     */
++    /* A wide, complete arc: 7 cards on a normal desktop, all 9 when there is
++       genuinely room, and fewer only as the viewport narrows. */
+     const visibleNeighborCount = () => {
+       const viewport = window.innerWidth
+-      const cardWidth = Math.min(190, Math.max(140, viewport * 0.128))
+-      const spacing = RADIUS * Math.sin((STEP * Math.PI) / 180)
+-      const safeHalfWidth = viewport / 2 - cardWidth / 2 - 24
++      if (viewport >= 1800) return 4
++      if (viewport >= 1320) return 3
++      if (viewport >= 960) return 2
++      return 1
++    }
+ 
+-      return Math.max(0, Math.min(2, Math.floor(safeHalfWidth / spacing) - 1))
++    const setWindow = (center: number, neighbors: number) => {
++      cards.forEach((card, j) => card.classList.toggle('is-visible', Math.abs(j - center) <= neighbors))
+     }
+ 
+     /*
+@@ -195,17 +194,28 @@ export function Industries({ ready }: IndustriesProps) {
+       currentStep = k
+       const el = k + N
+       const neighbors = visibleNeighborCount()
++      setWindow(el, neighbors)
+       cards.forEach((card, j) => {
+-        card.classList.toggle('is-visible', Math.abs(j - el) <= neighbors)
+         card.classList.toggle('is-live', j === el)
+       })
+       setActive(k % N)
+     }
+     land(0)
+ 
++    /* The wheel always travels left. Fade only the outgoing far-left card
++       before it can cross the viewport boundary; the incoming right card is
++       revealed by land() after it is completely inside. */
++    const prepareStep = (k: number) => {
++      const currentCenter = N + k - 1
++      const neighbors = visibleNeighborCount()
++      const outgoing = currentCenter - neighbors
++      cards[outgoing]?.classList.remove('is-visible')
++    }
++
+     const steps = gsap.timeline({ repeat: -1, paused: true, onRepeat: () => land(0) })
+     for (let k = 1; k <= N; k++) {
+       steps
++        .call(() => prepareStep(k))
+         .to(wheel.current, { rotation: -k * STEP, duration: TRAVEL, ease: 'power2.inOut' })
+         .call(() => land(k))
+         .to({}, { duration: HOLD })

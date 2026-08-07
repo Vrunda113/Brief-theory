@@ -1,0 +1,179 @@
+diff --git a/src/components/industries/Industries.tsx b/src/components/industries/Industries.tsx
+index fd61b9c..b2c6571 100644
+--- a/src/components/industries/Industries.tsx
++++ b/src/components/industries/Industries.tsx
+@@ -169,6 +169,22 @@ export function Industries({ ready }: IndustriesProps) {
+     if (prefersReducedMotion() || !wheel.current) return
+ 
+     const cards = gsap.utils.toArray<HTMLElement>('[data-arch-card]')
++    let currentStep = 0
++
++    /*
++     * Never show a half-card at the viewport edge. We keep one complete card
++     * position in reserve for the card that is travelling out during a step,
++     * then reveal the next edge card only once it has landed fully inside.
++     * Wider screens get more neighbours; the active card always owns centre.
++     */
++    const visibleNeighborCount = () => {
++      const viewport = window.innerWidth
++      const cardWidth = Math.min(190, Math.max(140, viewport * 0.128))
++      const spacing = RADIUS * Math.sin((STEP * Math.PI) / 180)
++      const safeHalfWidth = viewport / 2 - cardWidth / 2 - 24
++
++      return Math.max(0, Math.min(2, Math.floor(safeHalfWidth / spacing) - 1))
++    }
+ 
+     /*
+      * A sector arriving at the apex has to land, not sweep past: the name and
+@@ -176,20 +192,28 @@ export function Industries({ ready }: IndustriesProps) {
+      * arch steps — one position, then a beat — rather than turning evenly.
+      */
+     const land = (k: number) => {
++      currentStep = k
+       const el = k + N
+-      cards.forEach((card, j) => card.classList.toggle('is-live', j === el))
++      const neighbors = visibleNeighborCount()
++      cards.forEach((card, j) => {
++        card.classList.toggle('is-visible', Math.abs(j - el) <= neighbors)
++        card.classList.toggle('is-live', j === el)
++      })
+       setActive(k % N)
+     }
+     land(0)
+ 
+-    const steps = gsap.timeline({ repeat: -1, paused: true })
++    const steps = gsap.timeline({ repeat: -1, paused: true, onRepeat: () => land(0) })
+     for (let k = 1; k <= N; k++) {
+       steps
+         .to(wheel.current, { rotation: -k * STEP, duration: TRAVEL, ease: 'power2.inOut' })
+-        .call(() => land(k % N))
++        .call(() => land(k))
+         .to({}, { duration: HOLD })
+     }
+ 
++    const handleResize = () => land(currentStep)
++    window.addEventListener('resize', handleResize)
++
+     sync.current = () => {
+       const { ready: r, visible } = gates.current
+       if (r && visible) steps.play()
+@@ -207,6 +231,7 @@ export function Industries({ ready }: IndustriesProps) {
+     if (el) observer.observe(el)
+ 
+     return () => {
++      window.removeEventListener('resize', handleResize)
+       observer.disconnect()
+       steps.kill()
+     }
+@@ -289,36 +314,50 @@ export function Industries({ ready }: IndustriesProps) {
+           ))}
+         </ul>
+       ) : (
+-        <motion.div
+-          aria-hidden="true"
+-          initial={{ opacity: 0 }}
+-          animate={ready ? { opacity: 1 } : {}}
+-          transition={{ delay: 0.9, duration: 1.1, ease: EASE }}
+-          className="pointer-events-none absolute inset-x-0 z-10 overflow-hidden"
+-          style={{ height: ARCH_BAND, bottom: ARCH_LIFT }}
+-        >
+-          <div className="absolute h-0 w-0" style={{ left: '50%', top: `${RADIUS}px` }}>
+-            <div
+-              ref={wheel}
+-              className="absolute h-0 w-0"
+-              style={{ transformOrigin: '0 0', willChange: 'transform' }}
+-            >
+-              {LOOP.map((item, i) => (
+-                <article
+-                  key={`${item.index}-${i}`}
+-                  data-arch-card
+-                  className={`arch-card absolute left-0 top-0 ${CARD_SHELL}`}
+-                  style={{
+-                    ...CARD_SIZE,
+-                    transform: `rotate(${FIRST_ANGLE + i * STEP}deg) translateY(-${RADIUS}px) translateX(-50%)`,
+-                  }}
+-                >
+-                  <CardFace item={item} />
+-                </article>
+-              ))}
++        <>
++          <ul className="relative z-10 mb-8 flex snap-x gap-4 overflow-x-auto px-6 pb-2 sm:hidden">
++            {INDUSTRIES.map((item) => (
++              <li
++                key={item.index}
++                className={`relative flex-none snap-center ${CARD_SHELL}`}
++                style={CARD_SIZE}
++              >
++                <CardFace item={item} />
++              </li>
++            ))}
++          </ul>
++
++          <motion.div
++            aria-hidden="true"
++            initial={{ opacity: 0 }}
++            animate={ready ? { opacity: 1 } : {}}
++            transition={{ delay: 0.9, duration: 1.1, ease: EASE }}
++            className="pointer-events-none absolute inset-x-0 z-10 hidden overflow-hidden sm:block"
++            style={{ height: ARCH_BAND, bottom: ARCH_LIFT }}
++          >
++            <div className="absolute h-0 w-0" style={{ left: '50%', top: `${RADIUS}px` }}>
++              <div
++                ref={wheel}
++                className="absolute h-0 w-0"
++                style={{ transformOrigin: '0 0', willChange: 'transform' }}
++              >
++                {LOOP.map((item, i) => (
++                  <article
++                    key={`${item.index}-${i}`}
++                    data-arch-card
++                    className={`arch-card absolute left-0 top-0 ${CARD_SHELL}`}
++                    style={{
++                      ...CARD_SIZE,
++                      transform: `rotate(${FIRST_ANGLE + i * STEP}deg) translateY(-${RADIUS}px) translateX(-50%)`,
++                    }}
++                  >
++                    <CardFace item={item} />
++                  </article>
++                ))}
++              </div>
+             </div>
+-          </div>
+-        </motion.div>
++          </motion.div>
++        </>
+       )}
+ 
+     </section>
+diff --git a/src/index.css b/src/index.css
+index 206fd3b..1ce644c 100644
+--- a/src/index.css
++++ b/src/index.css
+@@ -78,16 +78,24 @@ html.lenis body {
+   overflow: hidden;
+ }
+ 
+-/* Cards away from the apex sit back; the live one comes forward. */
++/*
++ * Arch cards are revealed only when their complete face fits in the viewport.
++ * This prevents the half-cards that used to hang off both screen edges.
++ */
+ .arch-card {
+-  opacity: 0.55;
+-  transition: opacity 600ms ease, filter 600ms ease;
++  opacity: 0;
++  transition: opacity 520ms ease, filter 600ms ease, box-shadow 600ms ease;
+   filter: saturate(0.75);
+ }
+ 
++.arch-card.is-visible {
++  opacity: 0.55;
++}
++
+ .arch-card.is-live {
+   opacity: 1;
+   filter: saturate(1);
++  box-shadow: 0 30px 72px -24px rgba(4, 46, 105, 0.48);
+ }
+ 
+ /* The sector name is replaced outright, so it is keyed and re-enters rather
