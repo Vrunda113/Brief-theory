@@ -42,17 +42,8 @@ const CARD_H = 'clamp(170px, 15vw, 222px)'
  * when the columns stack without the arch drifting off the bottom edge.
  */
 const ARCH_BAND = 'clamp(250px, 32svh, 312px)'
-/**
- * Vertical seat of the arch. Negative sinks it past the section's bottom edge,
- * so the cards ride lower and more of each face clears the band's top.
- */
-const ARCH_LIFT = '-1.25rem'
-/**
- * Clearance above the apex card inside the band. The apex card's top would
- * otherwise sit exactly on the band's clipping edge, and cards leaning through
- * the apex mid-travel raise a corner past it — visibly shaving their tops.
- */
-const ARCH_HEADROOM = 48
+/** Lifts the arch clear of the very bottom, so the cards sit rather than hang. */
+const ARCH_LIFT = 'clamp(0.75rem, 2.5vh, 1.75rem)'
 
 const N = INDUSTRIES.length
 /** The set starts one full turn to the left, so the middle copy holds the apex. */
@@ -133,11 +124,7 @@ function Backdrop({ active }: { active: number }) {
 function CardFace({ item }: { item: (typeof INDUSTRIES)[number] }) {
   return (
     <>
-      {/* Most faces are 9:16 stills in a squarer frame, so cover has to crop.
-          Cropped from the top it takes the artwork's own titles with it — and
-          the foot of the card is what the viewport hides anyway, so the crop
-          belongs entirely to the bottom. */}
-      <img src={item.image} alt="" loading="lazy" className="h-full w-full object-cover object-top" />
+      <img src={item.image} alt="" loading="lazy" className="h-full w-full object-cover" />
       {/* Wash runs from the top, and the caption sits with it: on the arch the
           foot of every card is cropped by the viewport, so anything anchored to
           the bottom edge is never seen. */}
@@ -258,9 +245,7 @@ export function Industries({ ready }: IndustriesProps) {
       <div
         className="relative z-10 grid flex-1 items-center gap-x-16 gap-y-12 px-6 pt-6 md:px-10 lg:grid-cols-2"
         style={{
-          paddingBottom: reduced
-            ? '2rem'
-            : `calc(${ARCH_BAND} + ${ARCH_HEADROOM}px + ${ARCH_LIFT} + 1rem)`,
+          paddingBottom: reduced ? '2rem' : `calc(${ARCH_BAND} + ${ARCH_LIFT} + 1rem)`,
         }}
       >
         <motion.div {...rise(0.15)}>
@@ -310,12 +295,9 @@ export function Industries({ ready }: IndustriesProps) {
           animate={ready ? { opacity: 1 } : {}}
           transition={{ delay: 0.9, duration: 1.1, ease: EASE }}
           className="pointer-events-none absolute inset-x-0 z-10 overflow-hidden"
-          style={{ height: `calc(${ARCH_BAND} + ${ARCH_HEADROOM}px)`, bottom: ARCH_LIFT }}
+          style={{ height: ARCH_BAND, bottom: ARCH_LIFT }}
         >
-          <div
-            className="absolute h-0 w-0"
-            style={{ left: '50%', top: `${RADIUS + ARCH_HEADROOM}px` }}
-          >
+          <div className="absolute h-0 w-0" style={{ left: '50%', top: `${RADIUS}px` }}>
             <div
               ref={wheel}
               className="absolute h-0 w-0"
