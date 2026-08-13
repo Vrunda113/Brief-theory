@@ -1,8 +1,14 @@
+import { memo } from 'react'
 import { NAV_LINKS } from '../../config/copy'
 import { FadeIn } from '../shared/FadeIn'
 import { Wordmark } from '../shared/Wordmark'
 
-export function Navbar() {
+/**
+ * Memoised, and it matters: this sits inside the opening section, which
+ * re-renders every time the sector deck turns over. Without it the bar and its
+ * entrance animation were being rebuilt on every card.
+ */
+export const Navbar = memo(function Navbar() {
   return (
     <FadeIn
       as="nav"
@@ -28,4 +34,4 @@ export function Navbar() {
       </div>
     </FadeIn>
   )
-}
+})

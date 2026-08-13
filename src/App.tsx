@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react'
 import { useSmoothScroll } from './lib/useSmoothScroll'
-import { ColdOpen } from './components/cold-open/ColdOpen'
 import { Cursor } from './components/shared/Cursor'
 import { Industries } from './components/industries/Industries'
 import { Prologue } from './components/question/Prologue'
@@ -21,8 +20,9 @@ export default function App() {
   return (
     <main className="relative bg-cream" style={{ overflowX: 'clip' }}>
       <Cursor />
-      <ColdOpen onComplete={handleComplete} />
-      <Industries ready={ready} />
+      {/* The cold open lives inside the opening section now — it settles into
+          it as the page's ground rather than lifting off it. */}
+      <Industries ready={ready} onColdOpenComplete={handleComplete} />
       <Prologue />
       <CaseStudiesFeature />
       <Theory />

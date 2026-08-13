@@ -7,6 +7,12 @@ type ButtonProps = {
   className?: string
   /** The ground the button sits on, not the button's own colour. */
   on?: 'navy' | 'cream'
+  /**
+   * Whether the button leans toward the pointer. Off where the button shares a
+   * screen with other moving parts and a third thing drifting about is one too
+   * many.
+   */
+  magnetic?: boolean
 }
 
 /**
@@ -19,6 +25,7 @@ export function ContactButton({
   href = '#invitation',
   className = '',
   on = 'navy',
+  magnetic = true,
 }: ButtonProps) {
   const fill =
     on === 'navy'
@@ -26,17 +33,23 @@ export function ContactButton({
       : 'bg-navy text-cream hover:shadow-[0_0_40px_-10px_rgba(22,48,92,0.55)]'
   const wipe = on === 'navy' ? 'bg-slate-pale' : 'bg-navy-mid'
 
+  const button = (
+    <a
+      href={href}
+      className={`group relative inline-block overflow-hidden rounded-full px-8 py-3 text-xs font-medium uppercase tracking-[0.2em] transition-shadow duration-300 sm:px-10 sm:py-3.5 sm:text-sm md:px-12 md:py-4 md:text-base ${fill} ${className}`}
+    >
+      <span className="relative z-10">{children}</span>
+      <span
+        className={`absolute inset-0 -translate-x-full transition-transform duration-500 ease-out group-hover:translate-x-0 ${wipe}`}
+      />
+    </a>
+  )
+
+  if (!magnetic) return button
+
   return (
     <Magnet padding={90} strength={4}>
-      <a
-        href={href}
-        className={`group relative inline-block overflow-hidden rounded-full px-8 py-3 text-xs font-medium uppercase tracking-[0.2em] transition-shadow duration-300 sm:px-10 sm:py-3.5 sm:text-sm md:px-12 md:py-4 md:text-base ${fill} ${className}`}
-      >
-        <span className="relative z-10">{children}</span>
-        <span
-          className={`absolute inset-0 -translate-x-full transition-transform duration-500 ease-out group-hover:translate-x-0 ${wipe}`}
-        />
-      </a>
+      {button}
     </Magnet>
   )
 }
