@@ -6,7 +6,8 @@ import {
   useTransform,
   type MotionValue,
 } from 'framer-motion'
-import { CASE_STUDIES, type CaseStudy, type Media } from '../../config/copy'
+import { CASE_STUDIES } from '../../config/caseStudies'
+import type { CaseStudy, Media } from '../../config/work'
 import { FadeIn } from '../shared/FadeIn'
 
 /**
@@ -36,10 +37,19 @@ function trackOffset(p: number, total: number) {
   return offset
 }
 
-const CASE_ORDER = ['Super Munchies', 'HUFT', 'Mason Home']
-const FEATURED_CASES = CASE_ORDER.map((client) => CASE_STUDIES.find((study) => study.client === client)).filter(
-  (study): study is CaseStudy => Boolean(study),
-)
+/**
+ * The studies, in the order the file lists them.
+ *
+ * This used to pick them out of the Selected Work array by matching client
+ * names against a hardcoded order, and that is exactly how the section came to
+ * render empty: the names were removed from that array, the lookup returned
+ * nothing, and the headings stood over a blank track with the counter reading
+ * 01 / 00. Nothing threw and nothing logged.
+ *
+ * Case Studies has its own file now, so there is no second list of names to
+ * fall out of step with. Reordering the section means reordering that file.
+ */
+const FEATURED_CASES = CASE_STUDIES
 
 type CaseDetail = {
   period: string
@@ -213,10 +223,17 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
   const secondY = useTransform(scrollProgress, [0, 1], [16, -16])
   const heroY = useTransform(scrollProgress, [0, 1], ['-2.5%', '2.5%'])
 
-  const detail = CASE_DETAILS[study.client]
-  const first = detail.media[0]
-  const second = detail.media[1]
-  const hero = detail.media[2]
+  /*
+   * The spread's own plates and figures are held per client. Where a study has
+   * no entry, its own media carries the spread instead — reading `.media[0]`
+   * straight off an undefined entry is what would throw the moment a fourth
+   * study was added to the file.
+   */
+  const detail = CASE_DETAILS[study.client] as CaseDetail | undefined
+  const plates = detail?.media?.length ? detail.media : study.media
+  const first = plates[0]
+  const second = plates[1] ?? plates[0]
+  const hero = plates[2] ?? plates[plates.length - 1]
 
   return (
     <div className="grid gap-5 lg:h-full lg:grid-cols-[minmax(190px,0.32fr)_minmax(0,1fr)] lg:gap-7">
@@ -249,7 +266,7 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
         <div className="flex min-h-0 flex-col justify-between p-7 sm:p-9 lg:p-8 xl:p-9">
           <div>
             <p className="mb-5 text-[0.58rem] font-light uppercase tracking-[0.32em] text-navy/70 lg:mb-3">
-              {study.index} · {study.sector} · {detail.period}
+              {[study.index, study.sector, detail?.period].filter(Boolean).join(' · ')}
             </p>
             <h3 className="font-serif text-3xl font-medium leading-tight text-navy sm:text-4xl lg:text-3xl xl:text-4xl">
               {study.client}
@@ -262,11 +279,15 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
             </p>
           </div>
 
-          <dl className="mt-8 grid grid-cols-3 border-t border-navy/15 pt-6 lg:mt-5 lg:pt-4">
-            {detail.metrics.map((metric, index) => (
-              <Metric key={metric.label} value={metric.value} label={metric.label} bordered={index === 1} />
-            ))}
-          </dl>
+          {/* Figures are reported, not decorative — shown only where real ones
+              are held for that client, never invented to fill the row. */}
+          {detail?.metrics?.length ? (
+            <dl className="mt-8 grid grid-cols-3 border-t border-navy/15 pt-6 lg:mt-5 lg:pt-4">
+              {detail.metrics.map((metric, index) => (
+                <Metric key={metric.label} value={metric.value} label={metric.label} bordered={index === 1} />
+              ))}
+            </dl>
+          ) : null}
         </div>
       </article>
     </div>

@@ -1,4 +1,4 @@
-import { CASE_STUDIES } from '../../config/copy'
+import { SELECTED_WORK } from '../../config/selectedWork'
 import { FadeIn } from '../shared/FadeIn'
 import { CaseCard } from './CaseCard'
 
@@ -29,12 +29,12 @@ export function Expression() {
         </FadeIn>
 
         <div className="flex flex-col gap-6 md:gap-8">
-          {CASE_STUDIES.map((study, i) => (
+          {SELECTED_WORK.map((study, i) => (
             <CaseCard
               key={study.index}
               study={study}
               index={i}
-              total={CASE_STUDIES.length}
+              total={SELECTED_WORK.length}
             />
           ))}
         </div>

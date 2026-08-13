@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import type { CaseStudy } from '../../config/copy'
+import type { CaseStudy } from '../../config/work'
 import { CinematicVideo } from '../shared/CinematicVideo'
 import { GhostButton } from '../shared/Buttons'
 

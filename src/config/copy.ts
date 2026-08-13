@@ -232,39 +232,16 @@ export const METHOD_STAGES = [
   },
 ]
 
-export type Media = { type: 'video' | 'image'; src: string; poster?: string }
-
-export type CaseStudy = {
-  index: string
-  client: string
-  category: string
-  sector: string
-  theory: string
-  body: string
-  media: Media[]
-  live?: string
-}
-
-const reel = (name: string): Media => ({
-  type: 'video',
-  src: `/video/cafe-pulp/${name}.mp4`,
-  poster: `/video/cafe-pulp/${name}.jpg`,
-})
-
-const still = (name: string): Media => ({
-  type: 'image',
-  src: `/images/skin-world/${name}.webp`,
-})
-
-const riccis = (name: string): Media => ({
-  type: 'video',
-  src: `/video/riccis/${name}.mp4`,
-  poster: `/video/riccis/${name}.jpg`,
-})
-
-const munchies = (n: string): Media => ({ type: 'image', src: `/images/super-munchies/${n}.webp` })
-const huft = (n: string): Media => ({ type: 'image', src: `/images/huft-work/${n}.webp` })
-const mason = (n: string): Media => ({ type: 'image', src: `/images/mason-home/${n}.webp` })
+/**
+ * The work itself lives in its own files. It used to sit here as a single
+ * array serving both sections, which is how Selected Work came to render the
+ * case studies as well — every entry added for one appeared in the other.
+ *
+ *   ./work          the shape, and where the files live
+ *   ./selectedWork  Selected Work — the stacked cards
+ *   ./caseStudies   Case Studies — the horizontal track
+ */
+import { reel } from './work'
 
 /**
  * Clean plates with no burned-in captions — the only clips that work as
@@ -276,56 +253,6 @@ export const BACKGROUND_PLATES = {
   portrait: reel('strawberry-matcha'),
 }
 
-/** Beat 5 — where thinking becomes visible. */
-export const CASE_STUDIES: CaseStudy[] = [
-  {
-    index: '01',
-    client: 'Cafe Pulp',
-    category: 'Client',
-    sector: 'Food & Beverage',
-    theory: 'Sell the pause, not the plate.',
-    body: 'A neighbourhood cafe competing on menu photos like everyone else. The theory: people don’t book a table for food, they book it for a moment away from the day. Every frame became an invitation to stop — asked as a question, never as an ad.',
-    media: [reel('evening'), reel('kitchen'), reel('sushi'), reel('trend-1'), reel('north-indian')],
-    live: 'https://www.instagram.com/cafepulp__',
-  },
-  {
-    index: '02',
-    client: 'Dr Sonam’s Skin World',
-    category: 'Client',
-    sector: 'Healthcare & Aesthetics',
-    theory: 'Position around expertise, not price.',
-    body: 'A dermatology practice in a category that shouts discounts. The theory: in medicine, trust outsells offers. The work leads with the doctor’s judgement — correcting myths, explaining mechanisms, showing the reasoning — so the practice is chosen for what it knows.',
-    // Ordered so the strip alternates in tone rather than running warm-on-warm.
-    // The discount promo in the source folder is deliberately left out: this
-    // card argues against competing on price.
-    media: [
-      still('myth-and-fact'),
-      still('benefits-of-vitamin-c'),
-      still('benefits-of-micro-needling-instagram-story'),
-      still('lip-filler-story'),
-      still('laser-hair-removal-instagram-story'),
-    ],
-    live: 'https://www.instagram.com/skin_world_thane',
-  },
-  {
-    index: '03',
-    client: 'Caffe Riccis',
-    category: 'Client',
-    sector: 'Food & Beverage',
-    theory: 'Sell the making, not the menu.',
-    body: 'An espresso bar in a category where every feed looks the same — the finished cup, lit and styled. The theory: what actually separates one cafe from the next is visible in the making. The work leads with hands, steam and the people behind the counter, so the room is sold before the drink is.',
-    // Craft first, then the room, then the people — the order the theory argues
-    // for. The Tiramisu reel's stock map and aerial cutaways are left out.
-    media: [
-      riccis('espresso-martini'),
-      riccis('coffee-cup'),
-      riccis('evening'),
-      riccis('island'),
-      riccis('manager-away'),
-    ],
-    live: 'https://www.instagram.com/caffericcis',
-  }
-]
 
 export const INVITATION = {
   eyebrow: '08 — An invitation',
