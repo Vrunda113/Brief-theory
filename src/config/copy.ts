@@ -324,8 +324,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       riccis('manager-away'),
     ],
     live: 'https://www.instagram.com/caffericcis',
-  },
-
+  }
 ]
 
 export const INVITATION = {
