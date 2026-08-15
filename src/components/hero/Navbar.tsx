@@ -225,7 +225,10 @@ export const Navbar = memo(function Navbar() {
   const [seated, setSeated] = useState(false)
   /** True when the section under the bar is a dark one. */
   const [onDark, setOnDark] = useState(false)
+  /** True while the bar is out of the way. */
+  const [hidden, setHidden] = useState(false)
   const bar = useRef<HTMLDivElement>(null)
+  const lastY = useRef(0)
 
   /*
    * The bar follows the page, so it has to work over both grounds. Rather than
@@ -246,7 +249,26 @@ export const Navbar = memo(function Navbar() {
       const el = bar.current
       if (!el) return
       const rect = el.getBoundingClientRect()
-      setSeated(window.scrollY > 12)
+      const y = window.scrollY
+      setSeated(y > 12)
+
+      /*
+       * Out of the way going down, back on the way up.
+       *
+       * A bar that simply sits there spends the whole page lying across
+       * whatever is being read — and because it is glass, the heading it
+       * covers is not hidden but smeared, which is worse. Reading is downward,
+       * so downward is when it should be gone; wanting to navigate is what
+       * sends you back up, and that is when it should return.
+       *
+       * The threshold matters: without one, the pixel of overscroll at the top
+       * of a trackpad flick reads as an upward move and the bar flickers.
+       */
+      const moved = y - lastY.current
+      if (Math.abs(moved) > 6) {
+        setHidden(moved > 0 && y > rect.height + 48)
+        lastY.current = y
+      }
 
       /*
        * Hit-tests the point just under the bar rather than scanning the
@@ -304,7 +326,10 @@ export const Navbar = memo(function Navbar() {
         as="header"
         delay={0}
         y={-20}
-        className="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-8 md:pt-6"
+        // Nothing here takes the pointer: the header spans the full width and
+        // would otherwise swallow clicks along the top of every section,
+        // including while it is hidden. The bar itself takes them back.
+        className="pointer-events-none fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-8 md:pt-6"
       >
         {/*
           A bar with its own ground, inset from the page edges rather than sat
@@ -319,8 +344,14 @@ export const Navbar = memo(function Navbar() {
         */}
         <div
           ref={bar}
-          className="flex items-center justify-between rounded-full py-2.5 pl-5 pr-5 backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-500 sm:py-3 sm:pl-6 sm:pr-7"
+          className="pointer-events-auto flex items-center justify-between rounded-full py-2.5 pl-5 pr-5 backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-500 sm:py-3 sm:pl-6 sm:pr-7"
           style={{
+            // The slide lives here rather than on the header, because the
+            // header's entrance animation writes its own transform and would
+            // overwrite this one the moment it ran.
+            transform: hidden && !open ? 'translateY(-150%)' : 'translateY(0)',
+            transition:
+              'transform 480ms cubic-bezier(0.22, 1, 0.36, 1), background-color 500ms ease, border-color 500ms ease, box-shadow 500ms ease',
             background: onDark ? 'rgba(10, 42, 94, 0.42)' : 'rgba(246, 240, 233, 0.62)',
             border: `1px solid ${onDark ? 'rgba(246,240,233,0.20)' : `${PALETTE.ink}14`}`,
             // Untethered at the top of the page and lifted once it is travelling
