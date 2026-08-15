@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { CASE_STUDIES } from '../../config/caseStudies'
-import { SELECTED_WORK } from '../../config/selectedWork'
 import { PALETTE } from '../../config/palette'
-import type { CaseStudy, Media } from '../../config/work'
 
 /**
  * The work, as two belts of cards travelling in opposite directions.
@@ -33,15 +30,29 @@ const TURN = 5
 const REST_TURN = -9
 const REST_PITCH = 2
 
-/** Videos carry a poster; stills are their own frame. */
-const frameOf = (media: Media) =>
-  media.type === 'video' ? (media.poster ?? media.src) : media.src
+/**
+ * The six cards.
+ *
+ * Their own set, held here rather than pulled from the case studies: the hero
+ * is art-directed, and the first frame of whatever happens to be the newest
+ * study is not the same thing as a picture chosen to open the site with.
+ *
+ * The files come from the supplied section-one set, re-encoded on the way in.
+ * As delivered they were 66 MB across six — a 6600px-wide PNG and one of
+ * 31 MB — against cards that render at 173 x 225. They are now 1200px on the
+ * long edge and 823 KB the set, which is still four times the density the
+ * cards can show.
+ */
+const CARDS = [
+  '/images/hero/picture0.jpg',
+  '/images/hero/espresso-martini.jpg',
+  '/images/hero/real-estate-2.jpg',
+  '/images/hero/picture12.jpg',
+  '/images/hero/matcha.jpg',
+  '/images/hero/picture1.jpg',
+] as const
 
 /**
- * Six cards, one per client — not six frames off the top of the pile, which
- * would take them all from the first two studies and show the same clients
- * twice.
- *
  * Dealt two apiece across three belts rather than three apiece across two. At
  * two columns the cards were 273px wide in a 640px window and only four were
  * ever on screen at once; narrower columns fit the whole set in the frame,
@@ -50,16 +61,26 @@ const frameOf = (media: Media) =>
 const COLUMNS = 3
 
 function buildColumns(): string[][] {
-  const studies: CaseStudy[] = [...CASE_STUDIES, ...SELECTED_WORK]
-  const frames = [...new Set(studies.map((s) => frameOf(s.media[0])))].slice(0, 6)
   const columns: string[][] = Array.from({ length: COLUMNS }, () => [])
-  frames.forEach((src, i) => columns[i % COLUMNS].push(src))
+  CARDS.forEach((src, i) => columns[i % COLUMNS].push(src))
   return columns
 }
 
-/** Each belt sits at its own depth, so the columns are a room and not a wall. */
-const DEPTH = [-120, 10, -60] as const
-const DIM = [0.78, 1, 0.86] as const
+/**
+ * The columns are coplanar, and depth is carried by tone alone.
+ *
+ * They used to sit at separate Z offsets, which looked right in principle and
+ * was wrong in practice: under perspective an element at z renders at
+ * P / (P - z) of its laid-out size, about the perspective origin. At P = 1400
+ * the three columns came out at 92%, 101% and 96% — so each was a different
+ * width and each was pulled a different distance toward the centre, leaving
+ * one gap noticeably wider than the other.
+ *
+ * The stage's own rotation still gives the field its perspective; that
+ * foreshortens continuously across the whole width, so the spacing reads as a
+ * view rather than as a mistake.
+ */
+const DIM = [0.8, 1, 0.88] as const
 
 function Belt({
   frames,
@@ -174,11 +195,7 @@ export function WorkField({ still }: { still: boolean }) {
         }}
       >
         {columns.map((frames, i) => (
-          <div
-            key={i}
-            className="flex flex-1"
-            style={{ transform: `translateZ(${DEPTH[i]}px)`, opacity: DIM[i] }}
-          >
+          <div key={i} className="flex flex-1" style={{ opacity: DIM[i] }}>
             <Belt
               frames={frames}
               seconds={SPEEDS[i]}

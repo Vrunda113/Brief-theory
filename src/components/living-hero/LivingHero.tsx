@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { BRAND, HERO } from '../../config/copy'
+import { BRAND, HERO, INDUSTRIES } from '../../config/copy'
 import { EASE } from '../../lib/motion'
 import { PALETTE } from '../../config/palette'
 import { Navbar } from '../hero/Navbar'
@@ -29,6 +29,9 @@ const rise = (delay: number, ready: boolean) => ({
   transition: { delay, duration: 0.85, ease: EASE },
 })
 
+/** Seconds each sector is held before the next takes its place. */
+const SECTOR_HOLD = 2.4
+
 export function LivingHero({
   ready,
   onColdOpenComplete,
@@ -38,6 +41,9 @@ export function LivingHero({
 }) {
   /** True when motion is turned down: everything renders, nothing moves. */
   const [still, setStill] = useState(false)
+  /** Which sector is named beneath the headline. */
+  const [sector, setSector] = useState(0)
+  const root = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const quiet = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -47,9 +53,36 @@ export function LivingHero({
     return () => quiet.removeEventListener('change', read)
   }, [])
 
+  /*
+   * The sector cycles only while the hero is on screen and motion is allowed.
+   * Off screen it is a timer re-rendering a line nobody is reading.
+   */
+  useEffect(() => {
+    if (still) return
+
+    let visible = true
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting
+      },
+      { threshold: 0.05 },
+    )
+    if (root.current) observer.observe(root.current)
+
+    const id = window.setInterval(() => {
+      if (visible) setSector((i) => (i + 1) % INDUSTRIES.length)
+    }, SECTOR_HOLD * 1000)
+
+    return () => {
+      observer.disconnect()
+      window.clearInterval(id)
+    }
+  }, [still])
+
   return (
     <section
       id="top"
+      ref={root}
       className="relative flex min-h-svh flex-col overflow-hidden"
       style={{ backgroundColor: PALETTE.paper }}
     >
@@ -78,13 +111,30 @@ export function LivingHero({
             finds its <em className="font-serif italic" style={{ color: PALETTE.steel }}>theory.</em>
           </motion.h1>
 
-          <motion.p
-            {...rise(0.24, ready)}
-            className="mt-8 max-w-[30rem] font-light leading-relaxed"
-            style={{ color: PALETTE.slate, fontSize: 'clamp(0.92rem, 1.15vw, 1.05rem)' }}
-          >
-            {HERO.intro}
-          </motion.p>
+          {/* The sectors the practice works across, named one at a time. */}
+          <motion.div {...rise(0.24, ready)} className="mt-9">
+            <p
+              className="mb-2 text-[0.55rem] font-light uppercase sm:text-[0.6rem]"
+              style={{ color: PALETTE.steel, letterSpacing: '0.32em' }}
+            >
+              We work across
+            </p>
+            {/*
+              Fixed height, so nothing below moves as the names change —
+              "Professional Services" is three times the width of "Luxury" and
+              would otherwise shunt the buttons down the page every few seconds.
+            */}
+            <p
+              className="flex h-[1.35em] items-center font-serif italic leading-none"
+              style={{ color: PALETTE.ink, fontSize: 'clamp(1.5rem, 2.6vw, 2.1rem)' }}
+            >
+              {/* Keyed on the sector, so the line is replaced and re-enters
+                  rather than cross-fading against itself. */}
+              <span key={sector} className={still ? undefined : 'industry-swap'}>
+                {INDUSTRIES[sector].name}
+              </span>
+            </p>
+          </motion.div>
 
           <motion.div {...rise(0.34, ready)} className="mt-10 flex items-center gap-8">
             <ContactButton on="cream" magnetic={false}>
