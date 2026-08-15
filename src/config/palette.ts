@@ -28,6 +28,15 @@ export const PALETTE = {
   frost: '#D9E6F5',
 } as const
 
+/**
+ * Paper grain — a turbulence tile, multiplied over a ground so it reads as
+ * stock rather than as a fill. Shared: the landing screen and the menu both
+ * need it, and two copies of a data URI this size drift the moment either is
+ * touched.
+ */
+export const GRAIN =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E\")"
+
 /** Glass surfaces, as ready-made colour stops. */
 export const GLASS = {
   /** A panel's fill — barely there, so what is behind it still reads. */

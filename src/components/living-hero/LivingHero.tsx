@@ -3,7 +3,6 @@ import { motion } from 'framer-motion'
 import { BRAND, HERO, INDUSTRIES } from '../../config/copy'
 import { EASE } from '../../lib/motion'
 import { PALETTE } from '../../config/palette'
-import { Navbar } from '../hero/Navbar'
 import { ColdOpen } from '../cold-open/ColdOpen'
 import { ContactButton } from '../shared/Buttons'
 import { WorkField } from './WorkField'
@@ -86,9 +85,9 @@ export function LivingHero({
       className="relative flex min-h-svh flex-col overflow-hidden"
       style={{ backgroundColor: PALETTE.paper }}
     >
-      <Navbar />
-
-      <div className="relative z-10 mx-auto grid w-full max-w-[88rem] flex-1 items-center gap-12 px-6 pb-16 pt-10 md:px-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,1fr)] lg:gap-16 lg:pb-20">
+      {/* The bar is fixed and lives outside this section now, so the hero opens
+          its own top clearance rather than having the navigation in flow. */}
+      <div className="relative z-10 mx-auto grid w-full max-w-[88rem] flex-1 items-center gap-12 px-6 pb-16 pt-28 md:px-10 md:pt-32 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,1fr)] lg:gap-16 lg:pb-20">
         {/* ------------------------------------------------------- the claim */}
         <div className="max-w-[38rem]">
           <motion.p

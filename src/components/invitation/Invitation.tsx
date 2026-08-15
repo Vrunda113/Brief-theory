@@ -1,4 +1,5 @@
 import { BRAND, INVITATION } from '../../config/copy'
+import { PALETTE } from '../../config/palette'
 import { AnimatedText } from '../shared/AnimatedText'
 import { FadeIn } from '../shared/FadeIn'
 import { ContactButton } from '../shared/Buttons'
@@ -96,7 +97,13 @@ export function Invitation() {
           A full-bleed band rather than a block inside the gutter — the page
           closes on the brand's own ground, and the colour change is the only
           boundary it needs. */}
-      <div className="border-t border-navy/12 bg-cream-dim px-6 py-24 text-center md:px-10 md:py-32">
+      <div
+        className="border-t px-6 py-24 text-center md:px-10 md:py-32"
+        // Border set here rather than as a utility: the class form fell back to
+        // the framework's default grey, which drew a light rule across the top
+        // of a navy band.
+        style={{ backgroundColor: PALETTE.ink, borderTopColor: `${PALETTE.paper}1F` }}
+      >
         <div className="mx-auto max-w-4xl">
           {INVITATION.closing.map((line, i) => (
             <AnimatedText
@@ -104,19 +111,30 @@ export function Invitation() {
               text={line}
               dim={0.12}
               offset={['start 0.95', 'end 0.75']}
-              className={`font-light italic leading-tight ${
-                i === 0 ? 'text-navy/70' : 'text-navy'
-              }`}
-              style={{ fontSize: 'clamp(1.3rem, 3.4vw, 2.6rem)' }}
+              // The first line sets it up and the second lands it, so the
+              // second is the brighter of the two — the emphasis has to survive
+              // the inversion, not just the colours.
+              className="font-light italic leading-tight"
+              style={{
+                fontSize: 'clamp(1.3rem, 3.4vw, 2.6rem)',
+                color: i === 0 ? PALETTE.mist : PALETTE.paper,
+              }}
             />
           ))}
 
           <FadeIn y={20} delay={0.2}>
             <div className="mt-7 flex justify-center">
-              {/* Back on navy, so the mark carries its own cream plate. */}
-              <Wordmark bare className="h-14 md:h-16" />
+              {/* On navy the mark carries its own cream plate rather than
+                  inverting to a cream glyph — same file either way. */}
+              <Wordmark className="h-14 md:h-16" />
             </div>
-            <p className="mt-8 text-[0.6rem] font-light uppercase tracking-[0.3em] text-navy/70">
+            <p
+              className="mt-8 text-[0.6rem] font-light uppercase tracking-[0.3em]"
+              // The paler blue, not the mid one: at this size and tracking the
+              // mid blue came out at 3.3:1 on the navy, which is under the
+              // readable floor for text this small.
+              style={{ color: PALETTE.mist }}
+            >
               {BRAND.tagline}
             </p>
           </FadeIn>

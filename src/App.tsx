@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useSmoothScroll } from './lib/useSmoothScroll'
 import { Cursor } from './components/shared/Cursor'
+import { Navbar } from './components/hero/Navbar'
 import { LivingHero } from './components/living-hero/LivingHero'
 import { Prologue } from './components/question/Prologue'
 import { CaseStudiesFeature } from './components/case-studies/CaseStudiesFeature'
@@ -20,8 +21,10 @@ export default function App() {
   return (
     <main className="relative bg-cream" style={{ overflowX: 'clip' }}>
       <Cursor />
-      {/* The landing screen writes the mark, then hands the centre to the hero,
-          which holds it crisp with the sculpture unfolding behind. */}
+      {/* Outside the hero and fixed, so the navigation travels the whole page
+          rather than scrolling away with the first screen. It reads the ground
+          beneath it and changes tone to suit. */}
+      <Navbar />
       <LivingHero ready={ready} onColdOpenComplete={handleComplete} />
       <Prologue />
       <CaseStudiesFeature />
