@@ -96,6 +96,47 @@ html.lenis body {
   animation: industry-swap 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* ------------------------------------------------------------- work field */
+
+/*
+ * The columns of work travel continuously. Each track holds its cards twice
+ * over and moves exactly one set's height, so the moment the first copy has
+ * left the frame the second is sitting precisely where it began — the loop has
+ * no seam because there is nothing to jump back to.
+ *
+ * Linear on purpose: any easing makes the belt visibly slow at the loop point,
+ * which is the one place it must not be noticeable.
+ */
+@keyframes work-scroll-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+@keyframes work-scroll-down {
+  from {
+    transform: translate3d(0, -50%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.work-track {
+  will-change: transform;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-track {
+    animation: none !important;
+  }
+}
+
 /* ---------------------------------------------------------------- pointer */
 
 .cursor-dot,

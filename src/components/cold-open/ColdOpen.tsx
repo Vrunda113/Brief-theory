@@ -14,11 +14,14 @@ const WRITE_STEP = 0.42
 const WRITE_DUR = 0.62
 
 /**
- * What the mark settles back to once the page takes over. Low enough that the
- * opening argument reads over it, high enough that it is plainly the logo and
- * not a smudge.
+ * What the mark settles back to once the page takes over.
+ *
+ * Zero, now that the hero holds a crisp centred mark of its own: left at a
+ * watermark there were two copies of the logo stacked on the same screen, the
+ * faint one showing through the sharp one. The written mark hands the centre
+ * over rather than lingering behind it.
  */
-const BACKDROP_OPACITY = 0.11
+const BACKDROP_OPACITY = 0
 
 /** How long the sheet takes to clear and the mark to fall back. */
 const SETTLE = 1.4

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useSmoothScroll } from './lib/useSmoothScroll'
 import { Cursor } from './components/shared/Cursor'
-import { Industries } from './components/industries/Industries'
+import { LivingHero } from './components/living-hero/LivingHero'
 import { Prologue } from './components/question/Prologue'
 import { CaseStudiesFeature } from './components/case-studies/CaseStudiesFeature'
 import { Services } from './components/services/Services'
@@ -20,9 +20,9 @@ export default function App() {
   return (
     <main className="relative bg-cream" style={{ overflowX: 'clip' }}>
       <Cursor />
-      {/* The cold open lives inside the opening section now — it settles into
-          it as the page's ground rather than lifting off it. */}
-      <Industries ready={ready} onColdOpenComplete={handleComplete} />
+      {/* The landing screen writes the mark, then hands the centre to the hero,
+          which holds it crisp with the sculpture unfolding behind. */}
+      <LivingHero ready={ready} onColdOpenComplete={handleComplete} />
       <Prologue />
       <CaseStudiesFeature />
       <Theory />
