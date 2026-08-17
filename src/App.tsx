@@ -28,7 +28,7 @@ export default function App() {
       <LivingHero ready={ready} onColdOpenComplete={handleComplete} />
       <Prologue />
       <CaseStudiesFeature />
-      {/*<Theory />*/}
+      <Theory />
       <Services />
       <Chapters />
       <Expression />
