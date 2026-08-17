@@ -5,7 +5,10 @@ import { Navbar } from './components/hero/Navbar'
 import { LivingHero } from './components/living-hero/LivingHero'
 import { Prologue } from './components/question/Prologue'
 import { CaseStudiesFeature } from './components/case-studies/CaseStudiesFeature'
-import { Services } from './components/services/Services'
+// Services is held out of the page for now — see below. The import goes with
+// it: the build runs `tsc -b` with unused locals treated as errors, so leaving
+// it here fails the deploy rather than merely warning.
+// import { Services } from './components/services/Services'
 import { Theory } from './components/theory/Theory'
 import { Expression } from './components/expression/Expression'
 import { Chapters } from './components/chapters/Chapters'
@@ -29,7 +32,7 @@ export default function App() {
       <Prologue />
       <CaseStudiesFeature />
       <Theory />
-      <Services />
+      {/* <Services /> — restore this line and its import together. */}
       <Chapters />
       <Expression />
       <Founder />

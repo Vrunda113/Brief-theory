@@ -244,7 +244,18 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
           <motion.div
             key={media.src}
             style={{ y: index === 0 ? firstY : secondY }}
-            className="relative min-h-[170px] overflow-hidden rounded-2xl border border-navy/10 bg-cream shadow-[0_14px_35px_rgba(4,46,105,0.08)] lg:min-h-0"
+            /*
+             * Square, because the plates are: these come from the campaign
+             * sets, which measure 900x900, 1400x1400 and 1305x1610 — a median
+             * ratio of 1.0. A fixed 170px floor made them squat on a phone and
+             * cost about half of each frame.
+             *
+             * Set as a class, not inline. Inline it outranks every breakpoint,
+             * so `lg:aspect-auto` could never take it back and the pair went on
+             * forcing itself square inside a column that is supposed to fill
+             * the row's height.
+             */
+            className="relative aspect-square overflow-hidden rounded-2xl border border-navy/10 bg-cream shadow-[0_14px_35px_rgba(4,46,105,0.08)] lg:aspect-auto lg:min-h-0"
           >
             {/* Deferred: this section sits several screens down, and fetched
                 eagerly its plates were competing with the hero for the first

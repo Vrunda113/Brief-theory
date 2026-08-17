@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { PALETTE } from '../../config/palette'
 
 /**
@@ -53,16 +53,21 @@ const CARDS = [
 ] as const
 
 /**
- * Dealt two apiece across three belts rather than three apiece across two. At
- * two columns the cards were 273px wide in a 640px window and only four were
- * ever on screen at once; narrower columns fit the whole set in the frame,
- * which is the point of having six.
+ * How many belts run, by width.
+ *
+ * Three on a wide screen: at two columns the cards were 273px in a 640px
+ * window and only four of the six were ever on screen. Two on a phone for the
+ * opposite reason — three would leave each card about 105px across, too small
+ * to read as work rather than as wallpaper.
+ *
+ * All six are dealt either way; two belts simply carry three apiece.
  */
-const COLUMNS = 3
+const WIDE_COLUMNS = 3
+const NARROW_COLUMNS = 2
 
-function buildColumns(): string[][] {
-  const columns: string[][] = Array.from({ length: COLUMNS }, () => [])
-  CARDS.forEach((src, i) => columns[i % COLUMNS].push(src))
+function buildColumns(count: number): string[][] {
+  const columns: string[][] = Array.from({ length: count }, () => [])
+  CARDS.forEach((src, i) => columns[i % count].push(src))
   return columns
 }
 
@@ -81,6 +86,10 @@ function buildColumns(): string[][] {
  * view rather than as a mistake.
  */
 const DIM = [0.8, 1, 0.88] as const
+
+/** Speeds and dimming are indexed by belt, so both must cover the widest case. */
+const beltSpeed = (i: number) => SPEEDS[i % SPEEDS.length]
+const beltDim = (i: number) => DIM[i % DIM.length]
 
 function Belt({
   frames,
@@ -143,9 +152,26 @@ function Belt({
 
 export function WorkField({ still }: { still: boolean }) {
   const stage = useRef<HTMLDivElement>(null)
-  const columns = useMemo(buildColumns, [])
+  const [wide, setWide] = useState(true)
+  const columns = useMemo(
+    () => buildColumns(wide ? WIDE_COLUMNS : NARROW_COLUMNS),
+    [wide],
+  )
   const want = useRef({ x: 0, y: 0 })
   const shown = useRef({ x: 0, y: 0 })
+
+  /*
+   * Belt count follows the width, and is re-read rather than sampled once: a
+   * window that happened to be narrow at load would otherwise keep two belts
+   * for the rest of the session no matter how wide it was pulled.
+   */
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 768px)')
+    const read = () => setWide(query.matches)
+    read()
+    query.addEventListener('change', read)
+    return () => query.removeEventListener('change', read)
+  }, [])
 
   /*
    * The parallax runs on a frame loop rather than through React state. The
@@ -195,13 +221,13 @@ export function WorkField({ still }: { still: boolean }) {
         }}
       >
         {columns.map((frames, i) => (
-          <div key={i} className="flex flex-1" style={{ opacity: DIM[i] }}>
+          <div key={i} className="flex flex-1" style={{ opacity: beltDim(i) }}>
             <Belt
               frames={frames}
-              seconds={SPEEDS[i]}
+              seconds={beltSpeed(i)}
               // Alternating, so no two neighbouring belts travel together.
               direction={i % 2 === 0 ? 'up' : 'down'}
-              offset={(SPEEDS[i] / COLUMNS) * i}
+              offset={(beltSpeed(i) / columns.length) * i}
             />
           </div>
         ))}

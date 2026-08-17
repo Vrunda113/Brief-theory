@@ -94,14 +94,28 @@ const STRIP = 5
 
 function MediaStrip({ study }: { study: CaseStudy }) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+    /*
+     * Two across on a phone and five from the medium width, with nothing in
+     * between. At three columns the strip showed three of five tiles, which
+     * left a row of two and a row of one — the odd tile read as a mistake
+     * rather than as an edit.
+     */
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
       {study.media.slice(0, STRIP).map((item, i) => (
         <div
           key={item.src}
-          className={`relative overflow-hidden rounded-2xl bg-navy sm:rounded-3xl ${
-            i > 2 ? 'hidden md:block' : ''
+          /*
+           * Shaped by ratio, not by a fixed height.
+           *
+           * The height used to be clamped, and on a phone it bottomed out at
+           * 140px inside a tile ~170px wide — a landscape box holding a 9:16
+           * reel, so `object-cover` threw away most of the frame and left a
+           * band across the middle. The footage is 720x1280; giving the tile
+           * that same ratio means nothing is cropped at any width.
+           */
+          className={`relative aspect-[9/16] overflow-hidden rounded-2xl bg-navy sm:rounded-3xl ${
+            i > 3 ? 'hidden md:block' : ''
           }`}
-          style={{ height: 'clamp(140px, 17vw, 232px)' }}
         >
           {item.type === 'video' ? (
             <CinematicVideo

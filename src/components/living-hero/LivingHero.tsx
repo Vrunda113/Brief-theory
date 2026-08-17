@@ -87,7 +87,15 @@ export function LivingHero({
     >
       {/* The bar is fixed and lives outside this section now, so the hero opens
           its own top clearance rather than having the navigation in flow. */}
-      <div className="relative z-10 mx-auto grid w-full max-w-[88rem] flex-1 items-center gap-12 px-6 pb-16 pt-28 md:px-10 md:pt-32 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,1fr)] lg:gap-16 lg:pb-20">
+      {/*
+        Side by side only from the extra-large width, not from large.
+        1024px is both the `lg` breakpoint and the width of a portrait tablet,
+        so splitting there put the copy and the field into two columns inside a
+        1024x1366 window: the field got about 435px, its three belts shrank to
+        134px cards, and the pair sat in a band of empty space top and bottom.
+        A tall narrow screen wants the two stacked, whatever its pixel width.
+      */}
+      <div className="relative z-10 mx-auto grid w-full max-w-[88rem] flex-1 items-center gap-12 px-6 pb-16 pt-28 md:px-10 md:pt-32 xl:grid-cols-[minmax(0,1.02fr)_minmax(0,1fr)] xl:gap-16 xl:pb-20">
         {/* ------------------------------------------------------- the claim */}
         <div className="max-w-[38rem]">
           <motion.p
@@ -154,16 +162,27 @@ export function LivingHero({
 
         {/* -------------------------------------------------------- the work */}
         {/*
-          Given a fixed height and its own overflow rather than letting the
-          cards size it: left to grow, the belts pushed the section past the
-          viewport and the lowest cards were cut off by the fold.
+          Shown at every width, not just the wide one. It was `hidden lg:block`,
+          so between a phone and 1024px the work simply was not there — the
+          hero's whole right-hand half was empty and the six cards the section
+          exists to show never appeared.
+
+          Three heights, because the field does three different jobs. Beside the
+          copy on a wide screen it is the other half of the composition and
+          wants the full run. Stacked under the copy on a tablet it has the
+          whole width to itself and a tall screen to fill, so it takes more than
+          a phone would. On a phone it is a footer to the hero, and the wide
+          height would push everything else off the screen.
+
+          Given a fixed height and its own overflow in every case: left to grow,
+          the belts push the section past the viewport and the lowest cards are
+          cut off by the fold.
         */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={ready ? { opacity: 1 } : {}}
           transition={{ delay: 0.45, duration: 1.1, ease: EASE }}
-          className="hidden overflow-hidden lg:block"
-          style={{ height: 'min(72vh, 640px)' }}
+          className="h-[clamp(260px,40vh,340px)] overflow-hidden md:h-[clamp(340px,42vh,540px)] xl:h-[min(72vh,640px)]"
         >
           <WorkField still={still} />
         </motion.div>
