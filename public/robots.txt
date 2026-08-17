@@ -1,0 +1,22 @@
+# Brief Theory
+#
+# ─────────────────────────────────────────────────────────────────────────────
+#  THIS FILE CURRENTLY BLOCKS ALL SEARCH ENGINES.
+#
+#  That is deliberate while the site is on a temporary preview URL: without it
+#  the preview can be crawled and indexed, and once it is, it competes with the
+#  real domain in search results and can outrank it. Removing a URL from an
+#  index afterwards is slow and not fully in your control.
+#
+#  BEFORE GOING LIVE ON THE REAL DOMAIN, replace everything below with:
+#
+#      User-agent: *
+#      Allow: /
+#      Sitemap: https://brieftheory.com/sitemap.xml
+#
+#  Shipping the launch without this edit means the live site is invisible to
+#  Google. It is the single easiest thing on this project to forget.
+# ─────────────────────────────────────────────────────────────────────────────
+
+User-agent: *
+Disallow: /

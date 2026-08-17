@@ -74,9 +74,11 @@ const CASE_DETAILS: Record<string, CaseDetail> = {
   HUFT: {
     period: 'Paid media strategy',
     media: [
-      { type: 'image', src: '/images/huft/Picture1.png' },
-      { type: 'image', src: '/images/huft/Picture3.png' },
-      { type: 'image', src: '/images/huft/Picture6.png' },
+      // Lowercase .jpg throughout: the originals were 4–10 MB PNGs at around
+      // 2400px square, against plates that render a few hundred pixels wide.
+      { type: 'image', src: '/images/huft/picture1.jpg' },
+      { type: 'image', src: '/images/huft/picture3.jpg' },
+      { type: 'image', src: '/images/huft/picture6.jpg' },
     ],
     metrics: [
       { value: 'Awareness', label: 'Store visits' },
@@ -244,9 +246,14 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
             style={{ y: index === 0 ? firstY : secondY }}
             className="relative min-h-[170px] overflow-hidden rounded-2xl border border-navy/10 bg-cream shadow-[0_14px_35px_rgba(4,46,105,0.08)] lg:min-h-0"
           >
+            {/* Deferred: this section sits several screens down, and fetched
+                eagerly its plates were competing with the hero for the first
+                connections the page has. */}
             <img
               src={media.type === 'video' ? media.poster ?? media.src : media.src}
               alt={`${study.client} campaign visual ${index + 1}`}
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 h-full w-full object-cover"
             />
           </motion.div>
@@ -259,6 +266,8 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
             style={{ y: heroY }}
             src={hero.type === 'video' ? hero.poster ?? hero.src : hero.src}
             alt={`${study.client} campaign`}
+            loading="lazy"
+            decoding="async"
             className="absolute -inset-y-[4%] inset-x-0 h-[108%] w-full object-cover"
           />
         </div>
