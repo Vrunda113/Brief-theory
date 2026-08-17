@@ -86,7 +86,11 @@ export function Chapters() {
                 ))}
               </div>
 
-              <div className="hidden justify-center md:flex" data-reveal>
+              {/* Shown on a phone too. It was `hidden md:flex`, so the one
+                  piece of moving work in the section was absent from exactly
+                  the device it was shot for. Stacked under the beliefs at the
+                  narrow width, beside them from medium. */}
+              <div className="mt-8 flex justify-center md:mt-0" data-reveal>
                 <PhoneFilm />
               </div>
             </div>
@@ -100,7 +104,10 @@ export function Chapters() {
 /** A deliberately quiet phone mockup: supporting texture, never the headline. */
 function PhoneFilm() {
   return (
-    <div className="relative w-full max-w-[11rem] rounded-[2.05rem] border border-navy/20 bg-[#071733] p-[5px] shadow-[0_18px_45px_rgba(0,0,0,0.28)] lg:max-w-[12rem]">
+    // Smaller on a phone: the sheet is one screen tall and already carries a
+    // heading and six beliefs, so at its full width the mockup was the thing
+    // that pushed the foot of the section past the fold.
+    <div className="relative w-full max-w-[7.5rem] rounded-[2.05rem] border border-navy/20 bg-[#071733] p-[5px] shadow-[0_18px_45px_rgba(0,0,0,0.28)] md:max-w-[11rem] lg:max-w-[12rem]">
       <div className="relative aspect-[9/19] overflow-hidden rounded-[1.72rem] bg-black">
         <CinematicVideo
           src="/video/core-beliefs-phone.mp4"
@@ -150,10 +157,19 @@ function Sheet({ folio, children }: { folio: string; children: ReactNode }) {
   )
 }
 
-/** The sheet's working area below the display line. */
+/**
+ * The sheet's working area below the display line.
+ *
+ * Aligned to the top, not centred. Centred inside a sheet that is always one
+ * whole screen, the beliefs floated further from their heading the taller the
+ * screen got — 155px away on a phone and 402px on a portrait tablet, which
+ * read as a missing block rather than as breathing room. Sitting under the
+ * heading at a fixed distance, the pair holds together at every height and the
+ * slack collects at the foot, where the folio numeral already lives.
+ */
 function Body({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-0 flex-1 items-center pt-[clamp(1rem,3vh,2.25rem)]">
+    <div className="flex min-h-0 flex-1 items-start pt-[clamp(1.5rem,4vh,3rem)]">
       <div className="w-full">{children}</div>
     </div>
   )
