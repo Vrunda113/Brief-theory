@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { BRAND, HERO, INDUSTRIES } from '../../config/copy'
+// BRAND goes with the eyebrow line below, which is commented out. The build
+// runs `tsc -b` with unused locals treated as errors, so leaving it imported
+// fails the deploy rather than merely warning — restore the two together.
+import { HERO, INDUSTRIES } from '../../config/copy'
 import { EASE } from '../../lib/motion'
 import { PALETTE } from '../../config/palette'
 import { ColdOpen } from '../cold-open/ColdOpen'
@@ -98,13 +101,13 @@ export function LivingHero({
       <div className="relative z-10 mx-auto grid w-full max-w-[88rem] flex-1 items-center gap-12 px-6 pb-16 pt-28 md:px-10 md:pt-32 xl:grid-cols-[minmax(0,1.02fr)_minmax(0,1fr)] xl:gap-16 xl:pb-20">
         {/* ------------------------------------------------------- the claim */}
         <div className="max-w-[38rem]">
-          <motion.p
+          {/* <motion.p
             {...rise(0.05, ready)}
             className="mb-7 text-[0.6rem] font-light uppercase sm:text-[0.68rem]"
             style={{ color: PALETTE.steel, letterSpacing: '0.34em' }}
           >
             Strategy-led creative practice — {BRAND.location}
-          </motion.p>
+          </motion.p> */}
 
           {/* The brand line, set as the display. Two weights in one sentence:
               the claim in roman, the turn in italic. */}

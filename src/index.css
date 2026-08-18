@@ -154,6 +154,20 @@ html.lenis body {
   }
 }
 
+/*
+ * A track that scrolls sideways without advertising a bar. The swipe itself and
+ * the peek of the next card are the affordance; a scrollbar under an editorial
+ * card only ever looks like a mistake.
+ */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* ---------------------------------------------------------------- pointer */
 
 .cursor-dot,

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import type { ElementType, ReactNode } from 'react'
+import { useMemo, type ElementType, type ReactNode } from 'react'
 import { EASE } from '../../lib/motion'
 
 type FadeInProps = {
@@ -25,7 +25,18 @@ export function FadeIn({
   style,
   id,
 }: FadeInProps) {
-  const Component = motion.create(as as ElementType)
+  /*
+   * Held across renders, and keyed only on the tag.
+   *
+   * Built inline, `motion.create` returned a brand new component type every
+   * render — and a new type is a different component as far as React is
+   * concerned, so it tore the subtree down and built it again on each pass,
+   * discarding the DOM underneath. Anything wrapped in a FadeIn that sits near
+   * changing state paid for it: the case studies heading was rebuilt on every
+   * swipe of the track, which also re-armed the entrance animation this is
+   * supposed to play once.
+   */
+  const Component = useMemo(() => motion.create(as as ElementType), [as])
 
   return (
     <Component
