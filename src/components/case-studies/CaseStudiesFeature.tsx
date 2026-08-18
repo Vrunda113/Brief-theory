@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   motion,
-  useMotionValue,
   useMotionValueEvent,
   useScroll,
   useTransform,
@@ -105,154 +104,62 @@ const CASE_DETAILS: Record<string, CaseDetail> = {
 export function CaseStudiesFeature() {
   const section = useRef<HTMLElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
-  /** True on the wide layout, where the pinned track drives everything. */
-  const [wide, setWide] = useState(true)
   const { scrollYProgress } = useScroll({
     target: section,
     offset: ['start start', 'end end'],
   })
 
-  useEffect(() => {
-    const query = window.matchMedia('(min-width: 1024px)')
-    const read = () => setWide(query.matches)
-    read()
-    query.addEventListener('change', read)
-    return () => query.removeEventListener('change', read)
-  }, [])
-
   /*
    * No spring here. Lenis already smooths the scroll for the whole page, so a
    * spring on top of it smooths a smoothed value — the transform lags the
    * scroll and never catches up before the section ends.
-   *
-   * Only while the pinned track is the one on show. Below it the section is
-   * an ordinary block of page, so this would count studies off against plain
-   * vertical scrolling while the swipe track sat on whichever card the reader
-   * had actually swiped to.
    */
   useMotionValueEvent(scrollYProgress, 'change', (value) => {
-    if (!wide) return
     const nextIndex = Math.min(FEATURED_CASES.length - 1, Math.floor(value * FEATURED_CASES.length))
     setActiveIndex((current) => (current === nextIndex ? current : nextIndex))
   })
-
-  const handleActive = useCallback((index: number) => {
-    setActiveIndex((current) => (current === index ? current : index))
-  }, [])
 
   return (
     <section
       id="case-studies"
       ref={section}
-      className="relative border-y border-navy/15 bg-cream px-6 py-20 md:px-10 md:py-24 lg:h-[300svh] lg:py-0"
+      // Three screens of scroll at every width now, not only the wide one.
+      // Below it the section used to be an ordinary block and the studies
+      // simply sat there, so the one thing this section is built to do — turn
+      // the cards over as you scroll — was the one thing a phone never got.
+      className="relative h-[300svh] border-y border-navy/15 bg-cream px-6 md:px-10"
     >
-      <div className="mx-auto max-w-7xl lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:justify-center">
+      <div className="sticky top-0 mx-auto flex h-svh max-w-7xl flex-col justify-center">
         <SectionHead activeIndex={activeIndex} />
 
         <CaseTrack scrollProgress={scrollYProgress} />
 
-        <SwipeTrack activeIndex={activeIndex} onActive={handleActive} />
+        <ProgressDots activeIndex={activeIndex} />
       </div>
     </section>
   )
 }
 
 /**
- * The studies on a touch screen: a swipe track under the thumb.
+ * Which study is on stage, for the narrow layout where the counter is hidden.
  *
- * Native overflow with scroll snapping, deliberately, rather than extending the
- * pinned track down from the wide layout. Pinning drives sideways movement from
- * vertical scroll, which on a touch screen means taking the scroll away from
- * the finger — and it needs each card to fit inside one viewport, where a study
- * measures about 1.26 screens on a 375px handset. What stood here instead was
- * the three studies simply stacked, so below 1024 there was no sideways
- * movement at all.
- *
- * Cards are bled to the screen edges and snap to centre, so the next one always
- * shows at the margin: the peek is what says this moves sideways.
+ * Indicative only — the track is turned by scrolling, so there is nothing to
+ * tap. It exists because on a phone the running count in the heading is not
+ * shown, and without it there is no sign that two more studies follow.
  */
-function SwipeTrack({
-  activeIndex,
-  onActive,
-}: {
-  activeIndex: number
-  onActive: (index: number) => void
-}) {
-  const scroller = useRef<HTMLDivElement>(null)
-  const settle = useRef(0)
-  /*
-   * The spreads drift their plates against a progress value. Here there is no
-   * scroll of their own to read, so they are held at the midpoint and sit
-   * still — the movement in this layout is the swipe itself.
-   */
-  const neutral = useMotionValue(0.5)
-
-  /*
-   * Whichever card sits nearest the centre is the one being read. Compared in
-   * viewport coordinates on both sides: `offsetLeft` is measured from the
-   * nearest positioned ancestor, which is not this scroller, so pitting it
-   * against `scrollLeft` compares two different origins and the answer comes
-   * back as the first card no matter where the track actually sits.
-   */
-  const read = useCallback(() => {
-    const el = scroller.current
-    if (!el) return
-    const frame = el.getBoundingClientRect()
-    const middle = frame.left + frame.width / 2
-    let nearest = 0
-    let shortest = Infinity
-    Array.from(el.children).forEach((child, index) => {
-      const card = child.getBoundingClientRect()
-      const distance = Math.abs(card.left + card.width / 2 - middle)
-      if (distance < shortest) {
-        shortest = distance
-        nearest = index
-      }
-    })
-    onActive(nearest)
-  }, [onActive])
-
-  // Settled position only: reporting every frame of a flick would re-render the
-  // heading several times over one swipe.
-  const handleScroll = useCallback(() => {
-    window.clearTimeout(settle.current)
-    settle.current = window.setTimeout(read, 90)
-  }, [read])
-
-  useEffect(() => {
-    read()
-    return () => window.clearTimeout(settle.current)
-  }, [read])
-
+function ProgressDots({ activeIndex }: { activeIndex: number }) {
   return (
-    <div className="lg:hidden">
-      <div
-        ref={scroller}
-        onScroll={handleScroll}
-        // Bled past the section's own padding so a card can reach the screen
-        // edge, with the padding given back inside to keep the first card in
-        // line with the heading above it.
-        className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain px-6 md:-mx-10 md:px-10"
-      >
-        {FEATURED_CASES.map((study) => (
-          <div key={study.client} className="w-[86vw] max-w-[34rem] shrink-0 snap-center">
-            <CaseStudySpread study={study} scrollProgress={neutral} />
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-7 flex items-center justify-center gap-2" aria-hidden="true">
-        {FEATURED_CASES.map((study, index) => (
-          <span
-            key={study.client}
-            className="h-[0.3rem] rounded-full bg-navy transition-all duration-500"
-            style={{
-              width: index === activeIndex ? '1.1rem' : '0.3rem',
-              opacity: index === activeIndex ? 0.75 : 0.25,
-            }}
-          />
-        ))}
-      </div>
+    <div className="mt-6 flex shrink-0 items-center justify-center gap-2 md:hidden" aria-hidden="true">
+      {FEATURED_CASES.map((study, index) => (
+        <span
+          key={study.client}
+          className="h-[0.3rem] rounded-full bg-navy transition-all duration-500"
+          style={{
+            width: index === activeIndex ? '1.1rem' : '0.3rem',
+            opacity: index === activeIndex ? 0.75 : 0.25,
+          }}
+        />
+      ))}
     </div>
   )
 }
@@ -265,10 +172,22 @@ function SectionHead({ activeIndex }: { activeIndex: number }) {
           <p className="mb-4 text-[0.62rem] font-light uppercase tracking-[0.42em] text-navy/70 sm:text-[0.7rem] lg:mb-2">
             Case studies
           </p>
-          <h2
-            className="max-w-2xl font-serif font-medium leading-[1.04] text-navy"
-            style={{ fontSize: 'clamp(2rem, 3.8vw, 3.5rem)' }}
-          >
+          {/*
+            One line, at every width.
+
+            The line is 13.68 times its own font size wide, so the size has to
+            come off the viewport rather than sit at a fixed 2rem — at 32px it
+            wanted 438px of a 327px column and broke in two. The vw term keeps
+            it inside the column; the cap stops it from turning into a poster on
+            a wide screen. `max-w-2xl` went with it: at the full size the line
+            is about 766px and that cap was 672px, so the desktop layout was
+            wrapping it too.
+          */}
+          {/* Two rates, because the room changes at medium: the running count
+              appears beside the heading there and takes about 115px out of the
+              line, so a single vw figure either wrapped at 768 or wasted the
+              width a phone actually has. */}
+          <h2 className="whitespace-nowrap font-serif font-medium leading-[1.04] text-navy text-[clamp(1rem,6.2vw,3.5rem)] md:text-[clamp(1rem,4.6vw,3.5rem)]">
             The thinking behind <em className="font-serif italic text-slate">the work.</em>
           </h2>
         </div>
@@ -296,7 +215,11 @@ function CaseTrack({ scrollProgress }: { scrollProgress: MotionValue<number> }) 
   const x = useTransform(scrollProgress, (p) => `${-trackOffset(p, total) * 100}%`)
 
   return (
-    <div className="relative hidden overflow-hidden lg:block lg:h-[min(560px,62svh)] lg:min-h-[480px]">
+    /* Below the wide layout the stage simply takes whatever height the heading
+       and dots leave behind, and the card fills it — so a study is always
+       exactly one screen and never has to be scrolled past to reach the next.
+       The wide layout keeps its tuned height. */
+    <div className="relative min-h-0 flex-1 overflow-hidden lg:h-[min(560px,62svh)] lg:min-h-[480px] lg:flex-none">
       <motion.div style={{ x }} className="flex h-full w-full will-change-transform">
         {FEATURED_CASES.map((study, index) => (
           <CaseSlide
@@ -355,8 +278,12 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
   const hero = plates[2] ?? plates[plates.length - 1]
 
   return (
-    <div className="grid gap-5 lg:h-full lg:grid-cols-[minmax(190px,0.32fr)_minmax(0,1fr)] lg:gap-7">
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-1 lg:grid-rows-2 lg:gap-5">
+    <div className="flex h-full flex-col gap-5 lg:grid lg:grid-cols-[minmax(190px,0.32fr)_minmax(0,1fr)] lg:gap-7">
+      {/* Both plates stay on a phone — three pieces of the campaign, not one.
+          Given a band of the screen's own height rather than their own square
+          shape: at 1:1 the pair stood 153px tall and, on a card that has only
+          one screen to spend, that came out of the campaign image below. */}
+      <div className="grid h-[clamp(68px,13svh,110px)] shrink-0 grid-cols-2 gap-3 lg:h-auto lg:grid-cols-1 lg:grid-rows-2 lg:gap-5">
         {[first, second].map((media, index) => (
           <motion.div
             key={media.src}
@@ -372,7 +299,7 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
              * forcing itself square inside a column that is supposed to fill
              * the row's height.
              */
-            className="relative aspect-square overflow-hidden rounded-2xl border border-navy/10 bg-cream shadow-[0_14px_35px_rgba(4,46,105,0.08)] lg:aspect-auto lg:min-h-0"
+            className="relative min-h-0 overflow-hidden rounded-2xl border border-navy/10 bg-cream shadow-[0_14px_35px_rgba(4,46,105,0.08)] lg:min-h-0"
           >
             {/* Deferred: this section sits several screens down, and fetched
                 eagerly its plates were competing with the hero for the first
@@ -388,10 +315,11 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
         ))}
       </div>
 
-      <article className="grid min-h-[460px] overflow-hidden rounded-[1.75rem] border border-navy/10 bg-[#fffdf9] shadow-[0_18px_50px_rgba(4,46,105,0.09)] md:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] lg:h-full lg:min-h-0">
-        {/* Shorter on a handset. At 280px the hero alone took a third of a
-            card that already ran past the fold. */}
-        <div className="relative min-h-[210px] overflow-hidden sm:min-h-[260px] md:min-h-0">
+      <article className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.75rem] border border-navy/10 bg-[#fffdf9] shadow-[0_18px_50px_rgba(4,46,105,0.09)] lg:grid lg:h-full lg:min-h-0 lg:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)]">
+        {/* The image takes whatever the writing does not. Given a fixed height
+            instead, the card came to whatever it came to — 917px against a
+            686px stage — and the foot of it was simply cut off. */}
+        <div className="relative min-h-0 flex-1 overflow-hidden lg:flex-none">
           <motion.img
             style={{ y: heroY }}
             src={hero.type === 'video' ? hero.poster ?? hero.src : hero.src}
@@ -402,18 +330,22 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
           />
         </div>
 
-        <div className="flex min-h-0 flex-col justify-between p-6 sm:p-9 lg:p-8 xl:p-9">
+        <div className="flex min-h-0 shrink-0 flex-col justify-between p-5 sm:p-9 lg:p-8 xl:p-9">
           <div>
-            <p className="mb-5 text-[0.58rem] font-light uppercase tracking-[0.32em] text-navy/70 lg:mb-3">
+            <p className="mb-3 text-[0.58rem] font-light uppercase tracking-[0.32em] text-navy/70 sm:mb-5 lg:mb-3">
               {[study.index, study.sector, detail?.period].filter(Boolean).join(' · ')}
             </p>
-            <h3 className="font-serif text-3xl font-medium leading-tight text-navy sm:text-4xl lg:text-3xl xl:text-4xl">
+            <h3 className="font-serif text-2xl font-medium leading-tight text-navy sm:text-4xl lg:text-3xl xl:text-4xl">
               {study.client}
             </h3>
-            <p className="mt-4 font-serif text-lg italic leading-snug text-navy/85 sm:mt-5 sm:text-2xl lg:mt-4 lg:text-[1.35rem] xl:text-2xl">
+            <p className="mt-3 font-serif text-base italic leading-snug text-navy/85 sm:mt-5 sm:text-2xl lg:mt-4 lg:text-[1.35rem] xl:text-2xl">
               {study.theory}
             </p>
-            <p className="mt-4 text-sm font-light leading-relaxed text-navy/75 sm:mt-6 sm:text-[0.95rem] lg:mt-4 lg:text-[0.86rem] lg:leading-[1.65] xl:text-[0.92rem]">
+            {/* Held to three lines on a phone. The card is one screen there and
+                the writing was taking it all, leaving the campaign image a
+                147px strip — the full paragraph returns as soon as there is
+                room for it. */}
+            <p className="mt-3 line-clamp-2 text-sm font-light leading-relaxed text-navy/75 sm:mt-6 sm:line-clamp-none sm:text-[0.95rem] lg:mt-4 lg:text-[0.86rem] lg:leading-[1.65] xl:text-[0.92rem]">
               {study.body}
             </p>
           </div>
@@ -421,7 +353,7 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
           {/* Figures are reported, not decorative — shown only where real ones
               are held for that client, never invented to fill the row. */}
           {detail?.metrics?.length ? (
-            <dl className="mt-6 grid grid-cols-3 border-t border-navy/15 pt-5 sm:mt-8 sm:pt-6 lg:mt-5 lg:pt-4">
+            <dl className="mt-4 grid grid-cols-3 border-t border-navy/15 pt-4 sm:mt-8 sm:pt-6 lg:mt-5 lg:pt-4">
               {detail.metrics.map((metric, index) => (
                 <Metric key={metric.label} value={metric.value} label={metric.label} bordered={index === 1} />
               ))}
