@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import type { CaseStudy } from '../../config/work'
 import { CinematicVideo } from '../shared/CinematicVideo'
@@ -11,6 +11,8 @@ type CaseCardProps = {
 }
 
 export function CaseCard({ study, index, total }: CaseCardProps) {
+  /** Phones only: the body is folded to three lines until it is asked for. */
+  const [expanded, setExpanded] = useState(false)
   const container = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: container,
@@ -86,9 +88,29 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
               {study.theory}
             </p>
           </div>
-          <p className="max-w-2xl self-end text-sm font-light leading-relaxed text-cream/60 sm:text-base">
-            {study.body}
-          </p>
+          {/* Folded to three lines on a phone rather than cut.
+              These cards stack sticky, so one taller than the screen is covered
+              by the next before it can be read — the card was 971px against an
+              896px handset. Folding keeps it well inside that, and opening it
+              is the reader's call. */}
+          <div className="self-end">
+            <p
+              className={`max-w-2xl text-sm font-light leading-relaxed text-cream/60 sm:line-clamp-none sm:text-base ${
+                expanded ? 'line-clamp-none' : 'line-clamp-3'
+              }`}
+            >
+              {study.body}
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setExpanded((open) => !open)}
+              aria-expanded={expanded}
+              className="mt-3 text-[0.58rem] font-light uppercase tracking-[0.28em] text-slate-steel underline underline-offset-4 transition-colors duration-300 hover:text-cream sm:hidden"
+            >
+              {expanded ? 'Read less' : 'Read more'}
+            </button>
+          </div>
         </div>
 
         <div className="order-2 md:order-3">
@@ -105,14 +127,15 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
  * The strip is five columns, so it takes the first five whatever the set
  * holds: a sixth would drop to a row of its own and read as an accident.
  *
- * Three of them on a phone, in one row rather than two. At two columns the
- * tiles came out 156x277 and the strip stood 554px tall — more than half a card
- * that was already 971px against an 896px screen, so the sticky stack slid the
- * next card over the top before this one had been read. Three narrower tiles
- * keep the reel shape and cost a third of the height.
+ * Four of them on a phone, in one row rather than two. At two columns the tiles
+ * came out 156x277 and the strip stood 554px tall — more than half a card that
+ * was already 971px against an 896px screen, so the sticky stack slid the next
+ * card over the top before this one had been read. Narrower tiles at the same
+ * ratio show more of the work for less of the card: four across cost less
+ * height than three, because the height follows the width.
  */
 const STRIP = 5
-const STRIP_NARROW = 3
+const STRIP_NARROW = 4
 
 function MediaStrip({ study }: { study: CaseStudy }) {
   return (
@@ -122,7 +145,7 @@ function MediaStrip({ study }: { study: CaseStudy }) {
      * left a row of two and a row of one — the odd tile read as a mistake
      * rather than as an edit.
      */
-    <div className="grid grid-cols-3 gap-2.5 md:grid-cols-5 md:gap-3">
+    <div className="grid grid-cols-4 gap-2 md:grid-cols-5 md:gap-3">
       {study.media.slice(0, STRIP).map((item, i) => (
         <div
           key={item.src}
