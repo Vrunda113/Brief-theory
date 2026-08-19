@@ -261,6 +261,8 @@ function CaseSlide({
 }
 
 function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollProgress: MotionValue<number> }) {
+  /** Phones only: the body is held to two lines until it is asked for. */
+  const [expanded, setExpanded] = useState(false)
   const firstY = useTransform(scrollProgress, [0, 1], [-16, 16])
   const secondY = useTransform(scrollProgress, [0, 1], [16, -16])
   const heroY = useTransform(scrollProgress, [0, 1], ['-2.5%', '2.5%'])
@@ -316,10 +318,12 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
       </div>
 
       <article className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.75rem] border border-navy/10 bg-[#fffdf9] shadow-[0_18px_50px_rgba(4,46,105,0.09)] lg:grid lg:h-full lg:min-h-0 lg:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)]">
-        {/* The image takes whatever the writing does not. Given a fixed height
-            instead, the card came to whatever it came to — 917px against a
-            686px stage — and the foot of it was simply cut off. */}
-        <div className="relative min-h-0 flex-1 overflow-hidden lg:flex-none">
+        {/* The image takes whatever the writing does not, but never less than
+            this. Given a fixed height instead, the card came to whatever it
+            came to — 917px against a 686px stage — and the foot was cut off;
+            given no floor, opening the body on a 360px handset drove it to
+            nothing and the campaign image vanished from the card entirely. */}
+        <div className="relative min-h-[6.5rem] flex-1 overflow-hidden lg:min-h-0 lg:flex-none">
           <motion.img
             style={{ y: heroY }}
             src={hero.type === 'video' ? hero.poster ?? hero.src : hero.src}
@@ -330,7 +334,11 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
           />
         </div>
 
-        <div className="flex min-h-0 shrink-0 flex-col justify-between p-5 sm:p-9 lg:p-8 xl:p-9">
+        {/* Scrollable once opened, so the paragraph has somewhere to go beyond
+            the room the image is willing to give up. Scroll chaining is left
+            alone deliberately: reaching the end of the text hands the scroll
+            back to the page, which is what turns the cards. */}
+        <div className="flex min-h-0 flex-col justify-between overflow-y-auto p-5 sm:p-9 lg:overflow-visible lg:p-8 xl:p-9">
           <div>
             <p className="mb-3 text-[0.58rem] font-light uppercase tracking-[0.32em] text-navy/70 sm:mb-5 lg:mb-3">
               {[study.index, study.sector, detail?.period].filter(Boolean).join(' · ')}
@@ -341,13 +349,27 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
             <p className="mt-3 font-serif text-base italic leading-snug text-navy/85 sm:mt-5 sm:text-2xl lg:mt-4 lg:text-[1.35rem] xl:text-2xl">
               {study.theory}
             </p>
-            {/* Held to three lines on a phone. The card is one screen there and
-                the writing was taking it all, leaving the campaign image a
-                147px strip — the full paragraph returns as soon as there is
-                room for it. */}
-            <p className="mt-3 line-clamp-2 text-sm font-light leading-relaxed text-navy/75 sm:mt-6 sm:line-clamp-none sm:text-[0.95rem] lg:mt-4 lg:text-[0.86rem] lg:leading-[1.65] xl:text-[0.92rem]">
+            {/* Held to two lines on a phone, and openable.
+                The card is one screen there and the writing was taking all of
+                it, leaving the campaign image a 147px strip — so the paragraph
+                is folded rather than cut, and the reader decides. It returns in
+                full, with no control, as soon as there is room for it. */}
+            <p
+              className={`mt-3 text-sm font-light leading-relaxed text-navy/75 sm:mt-6 sm:line-clamp-none sm:text-[0.95rem] lg:mt-4 lg:text-[0.86rem] lg:leading-[1.65] xl:text-[0.92rem] ${
+                expanded ? 'line-clamp-none' : 'line-clamp-2'
+              }`}
+            >
               {study.body}
             </p>
+
+            <button
+              type="button"
+              onClick={() => setExpanded((open) => !open)}
+              aria-expanded={expanded}
+              className="mt-2 text-[0.58rem] font-light uppercase tracking-[0.28em] text-navy/70 underline underline-offset-4 transition-colors duration-300 hover:text-navy sm:hidden"
+            >
+              {expanded ? 'Read less' : 'Read more'}
+            </button>
           </div>
 
           {/* Figures are reported, not decorative — shown only where real ones

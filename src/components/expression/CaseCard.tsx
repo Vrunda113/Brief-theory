@@ -30,20 +30,31 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
       className="sticky"
       style={{ top: `calc(4.5rem + ${index * 26}px)` }}
     >
+      {/*
+        A column with ordered parts, so the work can come before the writing on
+        a phone and after it from medium up. Spacing is carried by the gap
+        rather than by margins on the children — with the order swapping, a
+        margin-bottom belongs to whichever block happens to be last.
+      */}
       <motion.article
         style={{ scale }}
-        className="relative overflow-hidden rounded-[32px] border border-cream/20 bg-navy-deep p-5 sm:rounded-[44px] sm:p-7 md:rounded-[52px] md:p-9"
+        className="relative flex flex-col gap-6 overflow-hidden rounded-[32px] border border-cream/20 bg-navy-deep p-5 sm:rounded-[44px] sm:p-7 md:gap-9 md:rounded-[52px] md:p-9"
       >
-        <header className="mb-7 flex flex-wrap items-start justify-between gap-5 md:mb-9">
-          <div className="flex items-start gap-5 md:gap-8">
+        {/* Wrapping is a medium-and-up behaviour now. On a phone there was
+            never room for the link beside the client name, so it dropped to a
+            line of its own and read as something left over rather than placed.
+            Below that width the header is a column and the link sits under the
+            name on purpose. */}
+        <header className="order-1 flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-start md:justify-between md:gap-5">
+          <div className="flex items-start gap-4 md:gap-8">
             <p
               aria-hidden="true"
               className="font-black leading-none text-cream/15"
-              style={{ fontSize: 'clamp(2rem, 5vw, 4.25rem)' }}
+              style={{ fontSize: 'clamp(1.75rem, 5vw, 4.25rem)' }}
             >
               {study.index}
             </p>
-            <div className="pt-1 md:pt-3">
+            <div className="pt-0.5 md:pt-3">
               <p className="mb-2 text-[0.6rem] font-light uppercase tracking-[0.3em] text-slate-steel sm:text-[0.7rem]">
                 {study.category} · {study.sector}
               </p>
@@ -61,7 +72,9 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
           )}
         </header>
 
-        <div className="mb-7 grid gap-6 md:mb-9 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:gap-7">
+        {/* Third on a phone, second from medium up: the work leads on a small
+            screen, where there is only room to look at one thing first. */}
+        <div className="order-3 grid gap-4 md:order-2 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:gap-7">
           <div>
             <p className="mb-2 text-[0.6rem] font-light uppercase tracking-[0.3em] text-slate-steel sm:text-[0.7rem]">
               The theory
@@ -78,7 +91,9 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
           </p>
         </div>
 
-        <MediaStrip study={study} />
+        <div className="order-2 md:order-3">
+          <MediaStrip study={study} />
+        </div>
       </motion.article>
     </div>
   )
@@ -89,8 +104,15 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
  *
  * The strip is five columns, so it takes the first five whatever the set
  * holds: a sixth would drop to a row of its own and read as an accident.
+ *
+ * Three of them on a phone, in one row rather than two. At two columns the
+ * tiles came out 156x277 and the strip stood 554px tall — more than half a card
+ * that was already 971px against an 896px screen, so the sticky stack slid the
+ * next card over the top before this one had been read. Three narrower tiles
+ * keep the reel shape and cost a third of the height.
  */
 const STRIP = 5
+const STRIP_NARROW = 3
 
 function MediaStrip({ study }: { study: CaseStudy }) {
   return (
@@ -100,7 +122,7 @@ function MediaStrip({ study }: { study: CaseStudy }) {
      * left a row of two and a row of one — the odd tile read as a mistake
      * rather than as an edit.
      */
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
+    <div className="grid grid-cols-3 gap-2.5 md:grid-cols-5 md:gap-3">
       {study.media.slice(0, STRIP).map((item, i) => (
         <div
           key={item.src}
@@ -113,8 +135,8 @@ function MediaStrip({ study }: { study: CaseStudy }) {
            * band across the middle. The footage is 720x1280; giving the tile
            * that same ratio means nothing is cropped at any width.
            */
-          className={`relative aspect-[9/16] overflow-hidden rounded-2xl bg-navy sm:rounded-3xl ${
-            i > 3 ? 'hidden md:block' : ''
+          className={`relative aspect-[9/16] overflow-hidden rounded-xl bg-navy sm:rounded-2xl md:rounded-3xl ${
+            i >= STRIP_NARROW ? 'hidden md:block' : ''
           }`}
         >
           {item.type === 'video' ? (
