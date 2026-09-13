@@ -1,4 +1,4 @@
-import { reel, riccis, still, type CaseStudy } from './work'
+import { other, reel, still, type CaseStudy } from './work'
 
 /**
  * Selected Work — the pieces shown as stacked cards in the Expression section.
@@ -41,20 +41,15 @@ export const SELECTED_WORK: CaseStudy[] = [
   },
   {
     index: '03',
-    client: 'Caffe Riccis',
-    category: 'Client',
-    sector: 'Food & Beverage',
-    theory: 'Sell the making, not the menu.',
-    body: 'An espresso bar in a category where every feed looks the same — the finished cup, lit and styled. The theory: what actually separates one cafe from the next is visible in the making. The work leads with hands, steam and the people behind the counter, so the room is sold before the drink is.',
-    // Craft first, then the room, then the people — the order the theory argues
-    // for. The Tiramisu reel's stock map and aerial cutaways are left out.
-    media: [
-      riccis('espresso-martini'),
-      riccis('coffee-cup'),
-      riccis('evening'),
-      riccis('island'),
-      riccis('manager-away'),
-    ],
-    live: 'https://www.instagram.com/caffericcis',
+    // Titled plainly rather than given a client's name: the five clips in this
+    // strip are a kitchen, a product shot and a garage, not one story. Forcing
+    // a single theory and body over three unrelated businesses would read as
+    // one of them when it is none of them — so the card says what it is.
+    client: 'Other',
+    category: 'Selected clips',
+    sector: 'Assorted work',
+    theory: 'Not every piece needs its own case study.',
+    body: 'Shorter engagements collected here rather than pulled apart into cards of their own — a kitchen, a product, a launch.',
+    media: [other('v1'), other('v2'), other('v3'), other('v4'), other('v5')],
   },
 ]

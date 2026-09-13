@@ -93,18 +93,6 @@ export function Chapters() {
               */}
               <div className="grid grid-cols-2 gap-x-4 gap-y-[clamp(1.25rem,3.5vh,2.5rem)] sm:gap-x-8 lg:grid-cols-5">
                 {practice.pillars.map((pillar, i) => {
-                  // Five items in two columns leaves the last one alone in its
-                  // own row, pushed against the left edge with the second
-                  // column empty beside it — the one place two-up breaks down.
-                  // Below lg only (lg seats all five in a single row, where
-                  // every column is already the same shape), it spans both
-                  // columns and centres the block itself — not the text inside
-                  // it. Centring the text too put every line on its own
-                  // midpoint, and five lines of different lengths ("Social
-                  // media" against "Performance marketing") centred that way
-                  // reads as a ragged zigzag rather than a block; the numeral,
-                  // name and list stay left-aligned against each other and the
-                  // whole shape is what sits centred in the row.
                   const isLast = i === practice.pillars.length - 1
                   return (
                     <div

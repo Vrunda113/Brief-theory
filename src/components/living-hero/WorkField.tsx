@@ -45,10 +45,10 @@ const REST_PITCH = 2
  */
 const CARDS = [
   '/images/hero/picture0.jpg',
-  '/images/hero/espresso-martini.jpg',
+  '/images/hero/4.jpg',
   '/images/hero/real-estate-2.jpg',
   '/images/hero/picture12.jpg',
-  '/images/hero/matcha.jpg',
+  '/images/hero/2.jpg',
   '/images/hero/picture1.jpg',
 ] as const
 

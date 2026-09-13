@@ -33,12 +33,6 @@ export const still = (name: string): Media => ({
   src: `/images/skin-world/${name}.webp`,
 })
 
-export const riccis = (name: string): Media => ({
-  type: 'video',
-  src: `/video/riccis/${name}.mp4`,
-  poster: `/video/riccis/${name}.jpg`,
-})
-
 export const munchies = (n: string): Media => ({
   type: 'image',
   src: `/images/super-munchies/${n}.webp`,
@@ -52,3 +46,15 @@ export const munchies = (n: string): Media => ({
 export const huft = (n: string): Media => ({ type: 'image', src: `/images/huft-work/${n}.webp` })
 
 export const mason = (n: string): Media => ({ type: 'image', src: `/images/mason-home/${n}.webp` })
+
+/**
+ * A shelf of shorter clips that don't belong to one client's story — kitchens,
+ * product, a garage, whatever didn't earn a card of its own. Named `v1`
+ * through `v5` because they were never meant to be read individually; the
+ * card they sit in is titled plainly for the same reason.
+ */
+export const other = (n: string): Media => ({
+  type: 'video',
+  src: `/video/other/${n}.mp4`,
+  poster: `/video/other/${n}.jpg`,
+})

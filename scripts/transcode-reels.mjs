@@ -25,10 +25,18 @@ const SETS = [
     out: 'public/video/riccis',
     clips: 'RICCIS',
   },
+  {
+    source: 'source-videos/other',
+    out: 'public/video/other',
+    clips: 'OTHER',
+  },
 ]
 
 const FFMPEG_CANDIDATES = [
   process.env.FFMPEG_PATH,
+  // Anaconda's copy — installed once via `pip install imageio-ffmpeg`, so it
+  // survives past any one session's scratchpad.
+  'D:/anaconda3/Lib/site-packages/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe',
   'C:/Users/vrund/AppData/Local/Temp/claude/D--DeepFack-main/4e5e8675-6bf1-4504-94c3-282edbb43007/scratchpad/pylibs/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe',
   'ffmpeg',
 ].filter(Boolean)
@@ -65,7 +73,27 @@ const RICCIS = [
   { file: 'Tiramisu.mp4', name: 'tiramisu', start: 2, duration: 7 },
 ]
 
-const CLIP_SETS = { CAFE_PULP, RICCIS }
+/**
+ * A mixed set, not one client's story — kitchens, product, a garage. Arrived
+ * as raw phone exports at 10–36 MB, three of the five rotated (a displaymatrix
+ * side-data flag rather than baked-in pixels: v3 arrives 1920x1080 and reads as
+ * 90°, v5 arrives 3840x2160 and reads as -90°), one in HEVC, one in a .MOV
+ * container with the audio and video streams in reverse order. None of that
+ * survives contact with a browser `<video>` tag, so all five get the same
+ * treatment as everything else here regardless of source format.
+ */
+const OTHER = [
+  // The raw clip opens on a ~1.5s black-bar flash transition before the
+  // footage proper starts — skipped rather than trimmed off after the fact,
+  // since it would otherwise land as the poster frame too.
+  { file: 'v1.mp4', name: 'v1', start: 2, duration: 9 },
+  { file: 'v2.mp4', name: 'v2', start: 0, duration: 9 },
+  { file: 'v3.MP4', name: 'v3', start: 0, duration: 7.8 },
+  { file: 'v4.mp4', name: 'v4', start: 0, duration: 9 },
+  { file: 'v5.MOV', name: 'v5', start: 0, duration: 4.8 },
+]
+
+const CLIP_SETS = { CAFE_PULP, RICCIS, OTHER }
 
 async function resolveFfmpeg() {
   for (const candidate of FFMPEG_CANDIDATES) {
