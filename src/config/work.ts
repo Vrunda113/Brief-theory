@@ -7,7 +7,18 @@
  * either one re-declaring it.
  */
 
-export type Media = { type: 'video' | 'image'; src: string; poster?: string }
+export type Media = {
+  type: 'video' | 'image'
+  src: string
+  poster?: string
+  /**
+   * How the image fills its plate. Defaults to `'cover'` — the plates are
+   * built for full-bleed campaign photography and crop to fill their box.
+   * A product cutout on a transparent ground (a lipstick, a bottle) needs
+   * `'contain'` instead, or cover crops straight through it.
+   */
+  fit?: 'cover' | 'contain'
+}
 
 export type CaseStudy = {
   index: string

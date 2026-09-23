@@ -60,10 +60,12 @@ type CaseDetail = {
 const CASE_DETAILS: Record<string, CaseDetail> = {
   'Super Munchies': {
     period: 'December 2024',
+    // First is the hero plate now — reordered, not reshot, so the spread
+    // keeps showing the same image large as it did before.
     media: [
+      { type: 'image', src: '/images/super-munchies/04.webp' },
       { type: 'image', src: '/images/super-munchies/01.webp' },
       { type: 'image', src: '/images/super-munchies/02.webp' },
-      { type: 'image', src: '/images/super-munchies/04.webp' },
     ],
     metrics: [
       { value: '12,839', label: 'Impressions' },
@@ -73,12 +75,17 @@ const CASE_DETAILS: Record<string, CaseDetail> = {
   },
   HUFT: {
     period: 'Paid media strategy',
+    // Lowercase .jpg throughout: the originals were 4–10 MB PNGs at around
+    // 2400px square, against plates that render a few hundred pixels wide.
+    // First is the hero plate — reordered so the spread keeps showing the
+    // same image large as it did before.
     media: [
-      // Lowercase .jpg throughout: the originals were 4–10 MB PNGs at around
-      // 2400px square, against plates that render a few hundred pixels wide.
+      // Contain: a promotional ad graphic (wordmark, offer copy, a "Shop
+      // Now!" button) rather than campaign photography — cover was cropping
+      // into the text to fill the hero frame.
+      { type: 'image', src: '/images/huft/picture6.jpg', fit: 'contain' },
       { type: 'image', src: '/images/huft/picture1.jpg' },
       { type: 'image', src: '/images/huft/picture3.jpg' },
-      { type: 'image', src: '/images/huft/picture6.jpg' },
     ],
     metrics: [
       { value: 'Awareness', label: 'Store visits' },
@@ -88,15 +95,59 @@ const CASE_DETAILS: Record<string, CaseDetail> = {
   },
   'Mason Home': {
     period: '#YourSignatureSpace',
+    // First is the hero plate now — reordered so the spread keeps showing
+    // the same image large as it did before.
     media: [
+      { type: 'image', src: '/images/mason-home/03.webp' },
       { type: 'image', src: '/images/mason-home/01.webp' },
       { type: 'image', src: '/images/mason-home/02.webp' },
-      { type: 'image', src: '/images/mason-home/03.webp' },
     ],
     metrics: [
       { value: '297K', label: 'Instagram' },
       { value: '14K', label: 'Facebook' },
       { value: '806', label: 'YouTube' },
+    ],
+  },
+  Suta: {
+    period: 'Brand & content strategy',
+    // Saree photo as the hero, weaving close-up and the title card as the
+    // two smaller plates behind it — with only two images the second plate
+    // was repeating the first, so the title card fills that slot instead.
+    media: [
+      { type: 'image', src: '/images/suta/suta-saree.jpg' },
+      { type: 'image', src: '/images/suta/suta-weaving.jpg' },
+      // Contain: a text title card, not a photo — cover was cropping into
+      // the wordmark and tagline to fill the square plate.
+      { type: 'image', src: '/images/suta/suta-title.jpg', fit: 'contain' },
+    ],
+    // "Physical stores" was in the brief but with no figure attached — left
+    // out rather than invented; see the note above on this being reported,
+    // not decorative.
+    metrics: [
+      { value: '626K', label: 'Instagram' },
+      { value: '231K', label: 'Facebook' },
+      { value: 'US$60B', label: 'Market potential' },
+    ],
+  },
+  'LoveChild by Masaba': {
+    period: 'Paid media & content strategy',
+    // Title banner as the hero, in the order sent — same three images and
+    // order as caseStudies.ts.
+    media: [
+      // Contain: this is the hero slot and the banner is a text-and-photo
+      // collage rather than campaign photography — cover was cropping the
+      // "LOVECHILD masaba" wordmark at the edges to fill the frame.
+      { type: 'image', src: '/images/lovechild/lovechild-banner.jpg', fit: 'contain' },
+      // Contain, not cover: the tube is a tall cutout on a transparent
+      // ground, not a full-bleed photo — cover was cropping straight
+      // through it to fill the square plate.
+      { type: 'image', src: '/images/lovechild/lovechild-lipstick.png', fit: 'contain' },
+      { type: 'image', src: '/images/lovechild/lovechild-campaign.jpg' },
+    ],
+    metrics: [
+      { value: '5M', label: 'Campaign reach' },
+      { value: '5M', label: 'Engagement' },
+      { value: '+20%', label: 'Website traffic' },
     ],
   },
 }
@@ -272,12 +323,17 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
    * no entry, its own media carries the spread instead — reading `.media[0]`
    * straight off an undefined entry is what would throw the moment a fourth
    * study was added to the file.
+   *
+   * The first image in the list is always the main/hero shot — that is the
+   * convention new case studies are supplied in, so the data does not need
+   * reordering to read correctly here. The two smaller plates fill in behind
+   * it from whatever follows.
    */
   const detail = CASE_DETAILS[study.client] as CaseDetail | undefined
   const plates = detail?.media?.length ? detail.media : study.media
-  const first = plates[0]
-  const second = plates[1] ?? plates[0]
-  const hero = plates[2] ?? plates[plates.length - 1]
+  const hero = plates[0]
+  const first = plates[1] ?? plates[0]
+  const second = plates[2] ?? plates[1] ?? plates[0]
 
   return (
     <div className="flex h-full flex-col gap-5 lg:grid lg:grid-cols-[minmax(190px,0.32fr)_minmax(0,1fr)] lg:gap-7">
@@ -311,7 +367,9 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
               alt={`${study.client} campaign visual ${index + 1}`}
               loading="lazy"
               decoding="async"
-              className="absolute inset-0 h-full w-full object-cover"
+              className={`absolute inset-0 h-full w-full ${
+                media.fit === 'contain' ? 'object-contain p-2' : 'object-cover'
+              }`}
             />
           </motion.div>
         ))}
@@ -323,14 +381,21 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
             came to — 917px against a 686px stage — and the foot was cut off;
             given no floor, opening the body on a 360px handset drove it to
             nothing and the campaign image vanished from the card entirely. */}
-        <div className="relative min-h-[6.5rem] flex-1 overflow-hidden lg:min-h-0 lg:flex-none">
+        <div className="relative min-h-[6.5rem] flex-1 overflow-hidden bg-cream lg:min-h-0 lg:flex-none">
           <motion.img
             style={{ y: heroY }}
             src={hero.type === 'video' ? hero.poster ?? hero.src : hero.src}
             alt={`${study.client} campaign`}
             loading="lazy"
             decoding="async"
-            className="absolute -inset-y-[4%] inset-x-0 h-[108%] w-full object-cover"
+            // Cover for campaign photography, which is meant to fill the
+            // frame; contain for a graphic or title card, where cropping
+            // would cut into text or a wordmark.
+            className={
+              hero.fit === 'contain'
+                ? 'absolute inset-0 h-full w-full object-contain p-4'
+                : 'absolute -inset-y-[4%] inset-x-0 h-[108%] w-full object-cover'
+            }
           />
         </div>
 
