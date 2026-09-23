@@ -39,7 +39,7 @@ export function Prologue() {
             <div className="space-y-5">
               {LETTER.body.map((para, i) => (
                 <FadeIn key={para.slice(0, 24)} y={20} delay={0.14 + i * 0.06}>
-                  <p className="max-w-2xl text-sm font-light leading-relaxed text-navy/72 sm:text-base">
+                  <p className="max-w-2xl font-serif text-sm font-light leading-relaxed text-navy/72 sm:text-base">
                     {para}
                   </p>
                 </FadeIn>
@@ -48,7 +48,7 @@ export function Prologue() {
 
             <FadeIn y={20} delay={0.36}>
               <div className="mt-8 border-t border-navy/15 pt-6">
-                <p className="font-light italic leading-relaxed text-navy/72 sm:text-base">
+                <p className="font-serif font-light italic leading-relaxed text-navy/72 sm:text-base">
                   {LETTER.close}
                 </p>
               </div>
