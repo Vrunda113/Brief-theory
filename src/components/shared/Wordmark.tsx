@@ -13,7 +13,7 @@ export function Wordmark({ className = 'h-11 md:h-12', bare = false }: WordmarkP
   if (bare) {
     return (
       <img
-        src="/images/brand/logo-navy.svg"
+        src="/images/brand/brief-theory-exact.svg"
         alt="Brief Theory"
         className={`w-auto ${className}`}
       />
@@ -27,7 +27,7 @@ export function Wordmark({ className = 'h-11 md:h-12', bare = false }: WordmarkP
       className={`inline-flex items-center justify-center bg-cream px-5 py-3.5 sm:px-6 sm:py-4 ${className}`}
     >
       <img
-        src="/images/brand/logo-navy.svg"
+        src="/images/brand/brief-theory-exact.svg"
         alt="Brief Theory"
         className="h-full w-auto"
       />

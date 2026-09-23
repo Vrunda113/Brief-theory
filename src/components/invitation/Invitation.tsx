@@ -34,7 +34,12 @@ export function Invitation() {
 
             <FadeIn y={18} delay={0.16}>
               <div className="mt-7">
-                <ContactButton href={`mailto:${BRAND.email}`} on="cream">{INVITATION.cta}</ContactButton>
+                {/* Not magnetic here: this is the page's final call to action,
+                    and it drifting toward the cursor read as the button
+                    moving out from under the click rather than as a flourish. */}
+                <ContactButton href={`mailto:${BRAND.email}`} on="cream" magnetic={false}>
+                  {INVITATION.cta}
+                </ContactButton>
               </div>
             </FadeIn>
           </div>
@@ -92,16 +97,9 @@ export function Invitation() {
           </div>
         </div>
       </div>
-
-      {/* The last frame: their own closing line, earned by everything above it.
-          A full-bleed band rather than a block inside the gutter — the page
-          closes on the brand's own ground, and the colour change is the only
-          boundary it needs. */}
       <div
         className="border-t px-6 py-24 text-center md:px-10 md:py-32"
-        // Border set here rather than as a utility: the class form fell back to
-        // the framework's default grey, which drew a light rule across the top
-        // of a navy band.
+  
         style={{ backgroundColor: PALETTE.ink, borderTopColor: `${PALETTE.paper}1F` }}
       >
         <div className="mx-auto max-w-4xl">
@@ -111,9 +109,6 @@ export function Invitation() {
               text={line}
               dim={0.12}
               offset={['start 0.95', 'end 0.75']}
-              // The first line sets it up and the second lands it, so the
-              // second is the brighter of the two — the emphasis has to survive
-              // the inversion, not just the colours.
               className="font-light italic leading-tight"
               style={{
                 fontSize: 'clamp(1.3rem, 3.4vw, 2.6rem)',
@@ -130,9 +125,6 @@ export function Invitation() {
             </div>
             <p
               className="mt-8 text-[0.6rem] font-light uppercase tracking-[0.3em]"
-              // The paler blue, not the mid one: at this size and tracking the
-              // mid blue came out at 3.3:1 on the navy, which is under the
-              // readable floor for text this small.
               style={{ color: PALETTE.mist }}
             >
               {BRAND.tagline}

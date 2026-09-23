@@ -257,7 +257,7 @@ export const BACKGROUND_PLATES = {
 export const INVITATION = {
   eyebrow: '08 — An invitation',
   headline: 'Let’s build something thoughtful.',
-  body: 'If you’re launching, repositioning, or ready for clarity — send us the brief.',
+  body: 'If you’re launching, repositioning, or ready for clarity - send us the brief.',
   cta: 'Start the conversation',
   closing: ['Nothing before the thinking.', 'Everything after it.'],
   audience: [

@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { BRAND } from '../../config/copy'
-import { BRIEF_LETTERS, THEORY_PATHS, LOGO_VIEWBOX } from '../../config/logoPaths'
+import { BRIEF_LETTERS, LOGO_VIEWBOX } from '../../config/logoPaths'
 import { EASE, prefersReducedMotion } from '../../lib/motion'
 
 type ColdOpenProps = {
@@ -25,6 +25,17 @@ const BACKDROP_OPACITY = 0
 
 /** How long the sheet takes to clear and the mark to fall back. */
 const SETTLE = 1.4
+
+/**
+ * Placement of the real "Theory" wordmark image within the wordmark's own
+ * viewBox — where the old hand-traced line used to sit, under the written
+ * "Brief". Kept as named constants since the mask and the image it reveals
+ * both have to agree on the exact same box.
+ */
+const THEORY_X = 286.7
+const THEORY_Y = 814
+const THEORY_W = 237.6
+const THEORY_H = 26
 
 /** Paper grain — a turbulence tile, multiplied over the cream so it reads as stock. */
 const GRAIN =
@@ -180,6 +191,31 @@ export const ColdOpen = memo(function ColdOpen({ onComplete }: ColdOpenProps) {
                   </mask>
                 )
               })}
+
+              {/* Same technique as the letter masks above — a panel growing
+                  left to right — but swept once across the whole word
+                  instead of once per letter, so "Theory" arrives as a single
+                  slow reveal rather than a pop. */}
+              <mask
+                id="theory-reveal"
+                maskUnits="userSpaceOnUse"
+                x="190"
+                y="590"
+                width="460"
+                height="280"
+              >
+                <motion.rect
+                  x={THEORY_X}
+                  y={THEORY_Y}
+                  width={THEORY_W}
+                  height={THEORY_H}
+                  fill="white"
+                  style={{ transformBox: 'fill-box', transformOrigin: 'left center' }}
+                  initial={{ scaleX: 0 }}
+                  animate={phase === 'write' ? { scaleX: 0 } : { scaleX: 1 }}
+                  transition={{ duration: 1.3, ease: [0.55, 0.02, 0.35, 1] }}
+                />
+              </mask>
             </defs>
 
             {BRIEF_LETTERS.map((l, i) => (
@@ -192,17 +228,24 @@ export const ColdOpen = memo(function ColdOpen({ onComplete }: ColdOpenProps) {
               />
             ))}
 
-            {THEORY_PATHS.map((d, i) => (
-              <motion.path
-                key={i}
-                d={d}
-                fill="#16305C"
-                fillRule="evenodd"
-                initial={{ opacity: 0 }}
-                animate={phase === 'write' ? { opacity: 0 } : { opacity: 1 }}
-                transition={{ duration: 0.6, ease: EASE, delay: i * 0.05 }}
-              />
-            ))}
+            {/* The real "Theory" wordmark, cropped straight from the source
+                artwork rather than hand-traced — the traced version drifted
+                from the actual letterforms and tracking. Positioned to sit
+                where the traced line used to, under the written "Brief", and
+                revealed with the same left-to-right sweep as the letters
+                above rather than a flat fade. */}
+            <motion.image
+              href="/images/brand/theory-wordmark.png"
+              x={THEORY_X}
+              y={THEORY_Y}
+              width={THEORY_W}
+              height={THEORY_H}
+              preserveAspectRatio="xMidYMid meet"
+              mask="url(#theory-reveal)"
+              initial={{ opacity: 0 }}
+              animate={phase === 'write' ? { opacity: 0 } : { opacity: 1 }}
+              transition={{ duration: 0.3, ease: EASE }}
+            />
           </svg>
 
           {/* Set in the wordmark's own serif rather than the page's sans, and
