@@ -29,7 +29,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Client',
     sector: 'Food & Beverage',
     theory: 'Turning social performance into a clearer content system.',
-    body: 'Across India, the UK and Germany, the December 2024 work paired organic social content with audience and post-level analysis. India closed the month at 3,519 followers, 3,720 reach and 12,839 impressions, while the learnings around context, timing and audience behaviour shaped the next phase across content, paid media, website optimisation and influencer marketing.',
+    body: 'Across India, the UK and Germany, the December 2024 work paired organic social content with audience and post-level analysis. The learnings around context, timing and audience behaviour shaped the next phase across content, paid media, website optimisation and influencer marketing.',
     media: [
       munchies('01'),
       munchies('02'),
@@ -101,7 +101,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Client',
     sector: 'Real Estate & Luxury Lifestyle',
     theory: 'Transforming iconic real estate developments into emotional, community-driven living experiences.',
-    body: 'Backed by a global heritage spanning over 155 years and operations in 50+ countries, Shapoorji Pallonji’s integrated media strategy elevates real estate marketing beyond traditional property listings. Centered on the "Home Beyond Walls" campaign, the multi-channel framework targets affluent urban professionals and entrepreneurs seeking luxury lifestyle amenities, community, and long-term value. By combining performance-driven Google Search and Display ads with Meta Reels, YouTube video formats, LinkedIn outreach, and strategic OOH billboards, the connected campaign drives lead generation, virtual walkthroughs, and brand affinity.',
+    body: 'Backed by a long-standing global heritage and operations in 50+ countries, Shapoorji Pallonji’s integrated media strategy elevates real estate marketing beyond traditional property listings. Centered on the "Home Beyond Walls" campaign, the multi-channel framework targets affluent urban professionals and entrepreneurs seeking luxury lifestyle amenities, community, and long-term value. By combining performance-driven Google Search and Display ads with Meta Reels, YouTube video formats, LinkedIn outreach, and strategic OOH billboards, the connected campaign drives lead generation, virtual walkthroughs, and brand affinity.',
     // Tower flyer as the hero, in the order sent — the minimalist-suite
     // flyer and the OOH billboard fill the two smaller plates behind it.
     media: [

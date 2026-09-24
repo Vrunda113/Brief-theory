@@ -19,7 +19,7 @@ export function Invitation() {
 
             <FadeIn y={26} delay={0.05}>
               <h2
-                className="max-w-2xl font-black uppercase leading-[0.98] tracking-tight text-navy"
+                className="max-w-2xl font-serif font-medium leading-[1.04] text-navy"
                 style={{ fontSize: 'clamp(2rem, 4.1vw, 3.7rem)' }}
               >
                 {INVITATION.headline}

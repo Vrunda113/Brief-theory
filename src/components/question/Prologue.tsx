@@ -1,5 +1,4 @@
 import { LETTER } from '../../config/copy'
-import { AnimatedText } from '../shared/AnimatedText'
 import { FadeIn } from '../shared/FadeIn'
 
 /**
@@ -19,11 +18,22 @@ export function Prologue() {
 
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.15fr)] lg:gap-20">
           <div>
-            <AnimatedText
-              text={LETTER.heading}
-              className="font-light leading-[1.06] text-navy"
-              style={{ fontSize: 'clamp(2.2rem, 4.2vw, 3.8rem)' }}
-            />
+            {/* A plain heading, not the letter-by-letter reveal the rest of
+                the page uses — Playfair Display leans on kerning between its
+                letters, and splitting the text into one span per character
+                (what the reveal does) breaks that, so it came out visibly
+                different from every other serif heading on the page even
+                with the same class. Serif here, not the site's default
+                Kanit, to match the founder's name and the case-study
+                headings. */}
+            <FadeIn y={26}>
+              <h2
+                className="font-serif font-medium leading-[1.06] text-navy"
+                style={{ fontSize: 'clamp(2.2rem, 4.2vw, 3.8rem)' }}
+              >
+                {LETTER.heading}
+              </h2>
+            </FadeIn>
 
             <FadeIn y={22} delay={0.1}>
               <p

@@ -56,8 +56,8 @@ export function Chapters() {
 
   return (
     <section id="method" ref={root} className="relative border-t border-navy/15 bg-cream">
-      {/* ------------------------------------------ 07 · Where strategy becomes tangible */}
-      <Sheet folio="07">
+      {/* ------------------------------------------ 04 · Where strategy becomes tangible */}
+      <Sheet folio="04">
         {/*
           One grid for the whole sheet, not two stacked ones.
           The label, the display line and the pillars are a single column, so
@@ -68,7 +68,7 @@ export function Chapters() {
         */}
         <div className="grid md:grid-cols-[minmax(0,1fr)_clamp(12rem,28vw,20rem)] md:gap-[clamp(2rem,4vw,3.5rem)]">
           <div className="flex min-h-0 flex-col">
-            <Label>07 — Where strategy becomes tangible</Label>
+            <Label>04 — Where strategy becomes tangible</Label>
             <Display>
               We don’t create deliverables. <em className="italic">We build brand systems.</em>
             </Display>

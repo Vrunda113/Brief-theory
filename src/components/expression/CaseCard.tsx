@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import type { CaseStudy } from '../../config/work'
+import type { CaseStudy, Media } from '../../config/work'
 import { CinematicVideo } from '../shared/CinematicVideo'
-import { GhostButton } from '../shared/Buttons'
+import { VideoLightbox } from '../shared/VideoLightbox'
 
 type CaseCardProps = {
   study: CaseStudy
@@ -68,10 +68,6 @@ export function CaseCard({ study, index, total }: CaseCardProps) {
               </h3>
             </div>
           </div>
-
-          {study.live && (
-            <GhostButton href={study.live}>Live work</GhostButton>
-          )}
         </header>
 
         {/* Third on a phone, second from medium up: the work leads on a small
@@ -138,46 +134,72 @@ const STRIP = 5
 const STRIP_NARROW = 4
 
 function MediaStrip({ study }: { study: CaseStudy }) {
+  // Which clip, if any, is open full-screen. Images in the strip stay as they
+  // are — only video gets the popup, since a still is already shown at its
+  // full size in the tile.
+  const [open, setOpen] = useState<Media | null>(null)
+
   return (
-    /*
-     * Two across on a phone and five from the medium width, with nothing in
-     * between. At three columns the strip showed three of five tiles, which
-     * left a row of two and a row of one — the odd tile read as a mistake
-     * rather than as an edit.
-     */
-    <div className="grid grid-cols-4 gap-2 md:grid-cols-5 md:gap-3">
-      {study.media.slice(0, STRIP).map((item, i) => (
-        <div
-          key={item.src}
-          /*
-           * Shaped by ratio, not by a fixed height.
-           *
-           * The height used to be clamped, and on a phone it bottomed out at
-           * 140px inside a tile ~170px wide — a landscape box holding a 9:16
-           * reel, so `object-cover` threw away most of the frame and left a
-           * band across the middle. The footage is 720x1280; giving the tile
-           * that same ratio means nothing is cropped at any width.
-           */
-          className={`relative aspect-[9/16] overflow-hidden rounded-xl bg-navy sm:rounded-2xl md:rounded-3xl ${
-            i >= STRIP_NARROW ? 'hidden md:block' : ''
-          }`}
-        >
-          {item.type === 'video' ? (
-            <CinematicVideo
-              src={item.src}
-              poster={item.poster}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <img
-              src={item.src}
-              alt=""
-              loading="lazy"
-              className="h-full w-full object-cover"
-            />
-          )}
-        </div>
-      ))}
-    </div>
+    <>
+      {/*
+       * Two across on a phone and five from the medium width, with nothing in
+       * between. At three columns the strip showed three of five tiles, which
+       * left a row of two and a row of one — the odd tile read as a mistake
+       * rather than as an edit.
+       */}
+      <div className="grid grid-cols-4 gap-2 md:grid-cols-5 md:gap-3">
+        {study.media.slice(0, STRIP).map((item, i) => (
+          <div
+            key={item.src}
+            /*
+             * Shaped by ratio, not by a fixed height.
+             *
+             * The height used to be clamped, and on a phone it bottomed out at
+             * 140px inside a tile ~170px wide — a landscape box holding a 9:16
+             * reel, so `object-cover` threw away most of the frame and left a
+             * band across the middle. The footage is 720x1280; giving the tile
+             * that same ratio means nothing is cropped at any width.
+             */
+            className={`relative aspect-[9/16] overflow-hidden rounded-xl bg-navy sm:rounded-2xl md:rounded-3xl ${
+              i >= STRIP_NARROW ? 'hidden md:block' : ''
+            }`}
+          >
+            {item.type === 'video' ? (
+              <button
+                type="button"
+                onClick={() => setOpen(item)}
+                aria-label={`Play ${study.client} clip full screen`}
+                className="group block h-full w-full cursor-pointer appearance-none border-0 bg-transparent p-0"
+              >
+                <CinematicVideo
+                  src={item.src}
+                  poster={item.poster}
+                  className="h-full w-full object-cover"
+                />
+                {/* A play glyph that only shows on hover/focus — the tiles
+                    already read as video via the poster frame and motion, so
+                    this is a hint rather than a label. */}
+                <span className="absolute inset-0 flex items-center justify-center bg-navy/0 transition-colors duration-300 group-hover:bg-navy/30 group-focus-visible:bg-navy/30">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-cream/95 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 sm:h-11 sm:w-11">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                      <path d="M3 1.5L12.5 7L3 12.5V1.5Z" fill="#032B6D" />
+                    </svg>
+                  </span>
+                </span>
+              </button>
+            ) : (
+              <img
+                src={item.src}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            )}
+          </div>
+        ))}
+      </div>
+
+      <VideoLightbox src={open?.src ?? null} poster={open?.poster} onClose={() => setOpen(null)} />
+    </>
   )
 }

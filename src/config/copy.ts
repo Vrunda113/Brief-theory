@@ -132,7 +132,7 @@ export const PRACTICE = {
  * the held frame. The theory step is the turn the whole sequence builds to.
  */
 export const CASE_LOGIC = {
-  eyebrow: '02 — Thinking in practice',
+  eyebrow: '03 — Thinking in practice',
   heading: 'From brief to theory.',
   lede: 'One engagement, reduced to its logic.',
   steps: [

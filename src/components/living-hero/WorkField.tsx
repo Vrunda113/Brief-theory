@@ -31,26 +31,53 @@ const REST_TURN = -9
 const REST_PITCH = 2
 
 /**
- * The six cards.
+ * The hero cards, all in public/images/hero/.
  *
- * Their own set, held here rather than pulled from the case studies: the hero
- * is art-directed, and the first frame of whatever happens to be the newest
- * study is not the same thing as a picture chosen to open the site with.
+ * Pictures:  hero-01.jpg, hero-02.jpg, ...        count: HERO_IMAGE_COUNT
+ * Videos:    hero-video-01.mp4, hero-video-02.mp4 count: HERO_VIDEO_COUNT
+ *            each with a still of the same name,  hero-video-01.jpg, shown
+ *            while the clip loads (and instead of it when motion is reduced).
  *
- * The files come from the supplied section-one set, re-encoded on the way in.
- * As delivered they were 66 MB across six — a 6600px-wide PNG and one of
- * 31 MB — against cards that render at 173 x 225. They are now 1200px on the
- * long edge and 823 KB the set, which is still four times the density the
- * cards can show.
+ * To replace one: save the new file over the old one under the same name.
+ * Nothing in the code changes.
+ * To add one: save it as the next number and raise the matching count.
+ * To remove one: delete the highest-numbered file and lower the count — keep
+ * the numbers unbroken, since the list is built from them.
+ *
+ * Pictures: JPG, portrait, around 1200px on the long edge.
+ * Videos: MP4 (H.264), silent, portrait, around 540px wide. iPhone .mov files
+ * are HEVC, which Chrome on Windows often will not play — convert them first.
+ * The cards render at about 173 x 225, so anything larger only slows the
+ * first screen down.
  */
-const CARDS = [
-  '/images/hero/picture0.jpg',
-  '/images/hero/4.jpg',
-  '/images/hero/real-estate-2.jpg',
-  '/images/hero/picture12.jpg',
-  '/images/hero/2.jpg',
-  '/images/hero/picture1.jpg',
-] as const
+const HERO_IMAGE_COUNT = 5
+const HERO_VIDEO_COUNT = 1
+
+type Card = { type: 'image'; src: string } | { type: 'video'; src: string; poster: string }
+
+const num = (i: number) => String(i + 1).padStart(2, '0')
+
+const IMAGES: Card[] = Array.from({ length: HERO_IMAGE_COUNT }, (_, i) => ({
+  type: 'image',
+  src: `/images/hero/hero-${num(i)}.jpg`,
+}))
+
+const VIDEOS: Card[] = Array.from({ length: HERO_VIDEO_COUNT }, (_, i) => ({
+  type: 'video',
+  src: `/images/hero/hero-video-${num(i)}.mp4`,
+  poster: `/images/hero/hero-video-${num(i)}.jpg`,
+}))
+
+/**
+ * Videos are spread through the pictures rather than bunched at the end —
+ * the first lands second in the set, which deals it into the middle belt,
+ * the brightest of the three.
+ */
+const CARDS: Card[] = (() => {
+  const list = [...IMAGES]
+  VIDEOS.forEach((video, k) => list.splice(Math.min(1 + k * 3, list.length), 0, video))
+  return list
+})()
 
 /**
  * How many belts run, by width.
@@ -60,14 +87,20 @@ const CARDS = [
  * opposite reason — three would leave each card about 105px across, too small
  * to read as work rather than as wallpaper.
  *
- * All six are dealt either way; two belts simply carry three apiece.
+ * Every belt gets at least two cards, cycling back through the set if there
+ * are fewer pictures than slots — a belt with one card left an empty gap in
+ * its loop. So any number of hero images fills the field.
  */
 const WIDE_COLUMNS = 3
 const NARROW_COLUMNS = 2
+const MIN_PER_BELT = 2
 
-function buildColumns(count: number): string[][] {
-  const columns: string[][] = Array.from({ length: count }, () => [])
-  CARDS.forEach((src, i) => columns[i % count].push(src))
+function buildColumns(count: number): Card[][] {
+  const columns: Card[][] = Array.from({ length: count }, () => [])
+  const slots = Math.max(CARDS.length, count * MIN_PER_BELT)
+  for (let i = 0; i < slots; i += 1) {
+    columns[i % count].push(CARDS[i % CARDS.length])
+  }
   return columns
 }
 
@@ -96,11 +129,13 @@ function Belt({
   seconds,
   direction,
   offset,
+  still,
 }: {
-  frames: string[]
+  frames: Card[]
   seconds: number
   direction: 'up' | 'down'
   offset: number
+  still: boolean
 }) {
   return (
     <div
@@ -122,9 +157,9 @@ function Belt({
       >
         {/* The set, then the set again. The animation travels exactly one
             set's height, so the copy lands where the original started. */}
-        {[...frames, ...frames].map((src, i) => (
+        {[...frames, ...frames].map((card, i) => (
           <figure
-            key={`${src}-${i}`}
+            key={`${card.src}-${i}`}
             className="relative shrink-0 overflow-hidden"
             style={{
               aspectRatio: '4 / 5',
@@ -132,13 +167,28 @@ function Belt({
               boxShadow: `0 26px 54px -26px rgba(10,42,94,0.28)`,
             }}
           >
-            <img
-              src={src}
-              alt=""
-              decoding="async"
-              className="block h-full w-full object-cover"
-              style={{ filter: 'saturate(0.82)' }}
-            />
+            {card.type === 'video' && !still ? (
+              // Muted and inline, or mobile browsers refuse to autoplay it.
+              <video
+                src={card.src}
+                poster={card.poster}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="block h-full w-full object-cover"
+                style={{ filter: 'saturate(0.82)' }}
+              />
+            ) : (
+              <img
+                src={card.type === 'video' ? card.poster : card.src}
+                alt=""
+                decoding="async"
+                className="block h-full w-full object-cover"
+                style={{ filter: 'saturate(0.82)' }}
+              />
+            )}
             <div
               className="pointer-events-none absolute inset-0"
               style={{ boxShadow: `inset 0 0 0 1px ${PALETTE.ink}16` }}
@@ -228,6 +278,7 @@ export function WorkField({ still }: { still: boolean }) {
               // Alternating, so no two neighbouring belts travel together.
               direction={i % 2 === 0 ? 'up' : 'down'}
               offset={(beltSpeed(i) / columns.length) * i}
+              still={still}
             />
           </div>
         ))}

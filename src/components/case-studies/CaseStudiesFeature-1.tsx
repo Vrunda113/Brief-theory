@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   motion,
   useMotionValueEvent,
@@ -334,20 +334,6 @@ function CaseSlide({
 function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollProgress: MotionValue<number> }) {
   /** Phones only: the body is held to two lines until it is asked for. */
   const [expanded, setExpanded] = useState(false)
-  const bodyRef = useRef<HTMLParagraphElement>(null)
-  const [overflowing, setOverflowing] = useState(false)
-
-  // Whether the folded paragraph is hiding anything — measured, not guessed
-  // from character counts, so it stays right as the card changes width.
-  useEffect(() => {
-    const el = bodyRef.current
-    if (!el || expanded) return
-    const measure = () => setOverflowing(el.scrollHeight > el.clientHeight + 1)
-    measure()
-    const observer = new ResizeObserver(measure)
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [expanded, study.body])
   const firstY = useTransform(scrollProgress, [0, 1], [-16, 16])
   const secondY = useTransform(scrollProgress, [0, 1], [16, -16])
   const heroY = useTransform(scrollProgress, [0, 1], ['-2.5%', '2.5%'])
@@ -437,14 +423,8 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
             the room the image is willing to give up. Scroll chaining is left
             alone deliberately: reaching the end of the text hands the scroll
             back to the page, which is what turns the cards. */}
-        <div className="flex min-h-0 flex-col p-5 sm:p-9 lg:p-8 xl:p-9">
-          {/* The writing scrolls inside its own box once opened; the figures
-              below sit outside it, so a long write-up can never push them
-              off the foot of the card. */}
-          <div
-            className="min-h-0 flex-1 overflow-y-auto"
-            data-lenis-prevent={expanded ? '' : undefined}
-          >
+        <div className="flex min-h-0 flex-col justify-between overflow-y-auto p-5 sm:p-9 lg:overflow-visible lg:p-8 xl:p-9">
+          <div>
             <p className="mb-3 text-[0.58rem] font-light uppercase tracking-[0.32em] text-navy/70 sm:mb-5 lg:mb-3">
               {[study.index, study.sector, detail?.period].filter(Boolean).join(' · ')}
             </p>
@@ -454,34 +434,33 @@ function CaseStudySpread({ study, scrollProgress }: { study: CaseStudy; scrollPr
             <p className="mt-3 font-serif text-base italic leading-snug text-navy/85 sm:mt-5 sm:text-2xl lg:mt-4 lg:text-[1.35rem] xl:text-2xl">
               {study.theory}
             </p>
-            {/* Folded at every width, and openable. The control only appears
-                when the paragraph is actually longer than the fold, so the
-                short write-ups read in full with nothing to click. */}
+            {/* Held to two lines on a phone, and openable.
+                The card is one screen there and the writing was taking all of
+                it, leaving the campaign image a 147px strip — so the paragraph
+                is folded rather than cut, and the reader decides. It returns in
+                full, with no control, as soon as there is room for it. */}
             <p
-              ref={bodyRef}
-              className={`mt-3 text-sm font-light leading-relaxed text-navy/75 sm:mt-6 sm:text-[0.95rem] lg:mt-4 lg:text-[0.86rem] lg:leading-[1.65] xl:text-[0.92rem] ${
-                expanded ? 'line-clamp-none' : 'line-clamp-2 sm:line-clamp-4'
+              className={`mt-3 text-sm font-light leading-relaxed text-navy/75 sm:mt-6 sm:line-clamp-none sm:text-[0.95rem] lg:mt-4 lg:text-[0.86rem] lg:leading-[1.65] xl:text-[0.92rem] ${
+                expanded ? 'line-clamp-none' : 'line-clamp-2'
               }`}
             >
               {study.body}
             </p>
 
-            {(overflowing || expanded) && (
-              <button
-                type="button"
-                onClick={() => setExpanded((open) => !open)}
-                aria-expanded={expanded}
-                className="mt-2 text-[0.58rem] font-light uppercase tracking-[0.28em] text-navy/70 underline underline-offset-4 transition-colors duration-300 hover:text-navy"
-              >
-                {expanded ? 'Read less' : 'Read more'}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setExpanded((open) => !open)}
+              aria-expanded={expanded}
+              className="mt-2 text-[0.58rem] font-light uppercase tracking-[0.28em] text-navy/70 underline underline-offset-4 transition-colors duration-300 hover:text-navy sm:hidden"
+            >
+              {expanded ? 'Read less' : 'Read more'}
+            </button>
           </div>
 
           {/* Figures are reported, not decorative — shown only where real ones
               are held for that client, never invented to fill the row. */}
           {detail?.metrics?.length ? (
-            <dl className="mt-4 grid shrink-0 grid-cols-3 border-t border-navy/15 pt-4 sm:mt-6 sm:pt-5 lg:mt-5 lg:pt-4">
+            <dl className="mt-4 grid grid-cols-3 border-t border-navy/15 pt-4 sm:mt-8 sm:pt-6 lg:mt-5 lg:pt-4">
               {detail.metrics.map((metric, index) => (
                 <Metric key={metric.label} value={metric.value} label={metric.label} bordered={index === 1} />
               ))}
