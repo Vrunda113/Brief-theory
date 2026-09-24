@@ -33,7 +33,9 @@ const SETTLE = 1.4
  * both have to agree on the exact same box.
  */
 const THEORY_X = 286.7
-const THEORY_Y = 814
+// 826, not 814: at 814 the tail of the "f" (it reaches y 818) ran into the top
+// of the "Y". The reveal mask reads this same constant, so it moves with it.
+const THEORY_Y = 826
 const THEORY_W = 237.6
 const THEORY_H = 26
 

@@ -58,7 +58,7 @@ export function Prologue() {
 
             <FadeIn y={20} delay={0.36}>
               <div className="mt-8 border-t border-navy/15 pt-6">
-                <p className="font-serif font-light italic leading-relaxed text-navy/72 sm:text-base">
+                <p className="font-serif text-sm font-light leading-relaxed text-navy/72 sm:text-base">
                   {LETTER.close}
                 </p>
               </div>
